@@ -1,4 +1,4 @@
-helloworld.o: helloworld.c ../libopencm3/include/libopencm3/stm32/rcc.h \
+HAL.o: HAL.c ../libopencm3/include/libopencm3/stm32/rcc.h \
  ../libopencm3/include/libopencm3/cm3/common.h \
  /usr/lib/gcc/arm-none-eabi/4.9.3/include/stdint.h \
  /usr/arm-none-eabi/include/stdint.h \
@@ -16,4 +16,11 @@ helloworld.o: helloworld.c ../libopencm3/include/libopencm3/stm32/rcc.h \
  ../libopencm3/include/libopencm3/stm32/l0/gpio.h \
  ../libopencm3/include/libopencm3/stm32/common/gpio_common_f24.h \
  ../libopencm3/include/libopencm3/stm32/common/gpio_common_f234.h \
- ../libopencm3/include/libopencm3/stm32/common/gpio_common_all.h
+ ../libopencm3/include/libopencm3/stm32/common/gpio_common_all.h \
+ ../libopencm3/include/libopencm3/stm32/timer.h \
+ ../libopencm3/include/libopencm3/stm32/l0/timer.h \
+ ../libopencm3/include/libopencm3/stm32/common/timer_common_all.h \
+ ../libopencm3/include/libopencm3/cm3/nvic.h \
+ ../libopencm3/include/libopencm3/dispatch/nvic.h \
+ ../libopencm3/include/libopencm3/stm32/l0/nvic.h \
+ ../libopencm3/include/libopencm3/cm3/systick.h HAL.h

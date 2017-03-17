@@ -17,11 +17,12 @@
 ## along with this library.  If not, see <http://www.gnu.org/licenses/>.
 ##
 
-BINARY = helloworld
+BINARY = main
+
+OBJS = HAL.o
 
 OPENCM3_DIR = ../libopencm3
 
 LDSCRIPT = $(OPENCM3_DIR)/lib/stm32/l0/stm32l0xx4.ld
 
 include libopencm3.target.mk
-
