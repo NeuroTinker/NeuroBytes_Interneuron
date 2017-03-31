@@ -19,7 +19,7 @@
 
 BINARY = main
 
-OBJS = HAL.o
+OBJS = comm.o HAL.o
 
 OPENCM3_DIR = ../libopencm3
 

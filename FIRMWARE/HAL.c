@@ -1,12 +1,272 @@
-#include <libopencm3/stm32/rcc.h>
-#include <libopencm3/stm32/gpio.h>
-#include <libopencm3/stm32/timer.h>
-#include <libopencm3/cm3/nvic.h>
-#include <libopencm3/cm3/systick.h>
 
 #include "HAL.h"
 
-volatile uint8_t tick = 0;
+volatile uint8_t toggle = 0;
+
+
+void clock_setup(void)
+{
+	// STM32F0 command:	rcc_clock_setup_in_hsi_out_48mhz();
+	rcc_set_sysclk_source(RCC_HSI16);
+	rcc_osc_on(RCC_HSI16);
+	main_tick = 0;
+	tick = 0;
+}
+
+void gpio_setup(void)
+{
+	/*	Enable GPIO clocks */
+	rcc_periph_clock_enable(RCC_GPIOA);
+	rcc_periph_clock_enable(RCC_GPIOB);
+	rcc_periph_clock_enable(RCC_GPIOC);
+
+	/*	Set up LED pins, NeuroBytes v1.01:
+		Alternative Function Mode with no pullup/pulldown
+		Output options: push-pull, high speed
+		PIN_R_LED (PA2): AF2, TIM2_CH3
+		PIN_G_LED (PA5): AF5, TIM2_CH1
+		PIN_B_LED (PA3): AF2, TIM2_CH4 
+	*/
+	gpio_mode_setup(PORT_LED, GPIO_MODE_AF, GPIO_PUPD_NONE, PIN_R_LED | PIN_G_LED | PIN_B_LED);
+	gpio_set_output_options(PORT_LED, GPIO_OTYPE_PP, GPIO_OSPEED_HIGH, PIN_R_LED | PIN_G_LED | PIN_B_LED);
+	gpio_set_af(PORT_LED, GPIO_AF2, PIN_R_LED | PIN_B_LED);
+	gpio_set_af(PORT_LED, GPIO_AF5, PIN_G_LED);
+
+	/* 
+		Setup axon pins:
+		Axon Excitatory PA10 TIM21_CH1	(temporarily output)
+		Axon Inhibitory PA9  TIM21_CH2	(temporarily input)
+	*/
+
+	gpio_mode_setup(PORT_AXON_OUT, GPIO_MODE_OUTPUT, GPIO_PUPD_PULLDOWN, PIN_AXON_OUT);
+	gpio_mode_setup(PORT_AXON_IN, GPIO_MODE_INPUT, GPIO_PUPD_NONE, PIN_AXON_IN);
+
+	/*
+		All dendrites pins are initially set to be inputs.
+		Setup dendrite pins:
+		Dendrite 1 Excit/Inhib-- PB0/PB1 
+	*/
+
+	setAsInput(PORT_DEND1_EX, PIN_DEND1_EX);
+	setAsInput(PORT_DEND1_IN, PIN_DEND1_IN);
+	setAsInput(PORT_DEND2_EX, PIN_DEND2_EX);
+	setAsInput(PORT_DEND2_IN, PIN_DEND2_IN);
+	/*setAsInput(PORT_DEND3_EX, PIN_DEND3_EX);
+	setAsInput(PORT_DEND3_IN, PIN_DEND3_IN);
+	setAsInput(PORT_DEND4_EX, PIN_DEND4_EX);
+	setAsInput(PORT_DEND4_IN, PIN_DEND4_IN);*/
+	setAsInput(PORT_DEND5_EX, PIN_DEND5_EX);
+	setAsInput(PORT_DEND5_IN, PIN_DEND5_IN);
+
+	// setup gpio interrupts
+}
+
+void setAsInput(gpio_port port, gpio_pin pin)
+{
+	// setup gpio as an input pin
+	gpio_mode_setup(port, GPIO_MODE_INPUT, GPIO_PUPD_NONE, pin);
+
+	// setup interrupt for the pin going high
+	exti_select_source(pin, port);
+	exti_set_trigger(pin, EXTI_TRIGGER_RISING);
+	exti_enable_request(pin);
+}
+
+void setAsOutput(gpio_port port, gpio_pin pin)
+{
+	// disable input interrupts
+	exti_disable_request(pin);
+
+	// setup gpio as an output pin. pulldown
+	gpio_mode_setup(port, GPIO_MODE_OUTPUT, GPIO_PUPD_PULLDOWN, pin);
+}
+
+// working interrupt pins: 0,1,3,4,6,7
+
+void exti0_isr(void)
+{
+	// dendrite 1 inhibitory
+	active_input_pins[2] = PIN_DEND1_IN;
+}
+
+void exti1_isr(void)
+{
+	// dendrite 1 excitatory
+	active_input_pins[1] = PIN_DEND1_EX;
+}
+
+void exti3_isr(void)
+{
+	// dendrite 5 inhibitory
+	active_input_pins[10] = PIN_DEND5_IN;
+}
+
+void exti4_isr(void)
+{
+	// dendrite 5 excitatory
+	active_input_pins[9] = PIN_DEND5_EX;
+}
+
+void exti6_isr(void)
+{
+	// dendrite 2 inhibitory
+	active_input_pins[4] = PIN_DEND2_IN;
+}
+
+void exti7_isr(void)
+{
+	// dendrite 2 excitatory
+	active_input_pins[3] = PIN_DEND2_EX;
+}
+
+void tim_setup(void)
+{
+	/* 	Enable and reset TIM2 clock */
+	rcc_periph_clock_enable(RCC_TIM2);
+	timer_reset(TIM2);
+
+	// Setup TIM2 interrupts	rcc_set_sysclk_source(RCC_HSI16);
+	rcc_osc_on(RCC_HSI16);
+	nvic_enable_irq(NVIC_TIM2_IRQ);
+	//rcc_periph_reset_pulse(RST_TIM2);
+
+	/* 	Set up TIM2 mode to no clock divider ratio, edge alignment, and up direction */
+	timer_set_mode(TIM2, TIM_CR1_CKD_CK_INT, TIM_CR1_CMS_EDGE, TIM_CR1_DIR_UP);
+
+	/*	Set prescaler to 0: 16 MHz clock */
+	timer_set_prescaler(TIM2, 0);
+
+	/* 	Set timer period to 9600: 5 kHz PWM with 9600 steps */
+	timer_set_period(TIM2, 9600);
+
+	// 	Set TIM2 Output Compare mode to PWM1 on channels 1, 3, and 4 (NeuroBytes v1.01) 
+	timer_set_oc_mode(TIM2, TIM_OC1, TIM_OCM_PWM1);
+	timer_set_oc_mode(TIM2, TIM_OC3, TIM_OCM_PWM1);
+	timer_set_oc_mode(TIM2, TIM_OC4, TIM_OCM_PWM1); 
+
+	// 	Set starting output compare values (NeuroBytes v1.01) 
+	timer_set_oc_value(TIM2, TIM_OC1, 0);
+	timer_set_oc_value(TIM2, TIM_OC3, 0);
+	timer_set_oc_value(TIM2, TIM_OC4, 0); 
+
+	// 	Enable outputs (NeuroBytes v1.01) 
+	timer_enable_oc_output(TIM2, TIM_OC1);
+	timer_enable_oc_output(TIM2, TIM_OC3);
+	timer_enable_oc_output(TIM2, TIM_OC4);
+
+
+	/*	Enable counter */
+	timer_enable_counter(TIM2);
+
+	// Enable TIM2 interrupts (600 us)
+	timer_enable_irq(TIM2, TIM_DIER_CC1IE);
+
+	//TIM21 not yet enabled in libopencm3
+	/*
+	// Enable and reset TIM21 clock
+	rcc_periph_clock_enable(RCC_TIM21);
+	timer_reset(TIM21);
+
+	// Set TIM21 interrupts
+	nvic_enable_irq(NVIC_TIM21_IRQ);
+
+	// Set TIM21 mode w/ no clock divider ratio, edge alignment, and up direction
+	timer_set_mode(TIM21, TIM_CR1_CKD_CK_INT, TIM_CR1_CMS_EDGE, TIM_CR1_DIR_UP);
+
+	// Set prescaler to 8 => 2 MHz clock => 0.5 us 
+	timer_set_prescaler(TIM21, TIM_IC_PSC_8);
+
+	// Set period to 200 => 100 us interrupts
+	timer_set_period(TIM21, 200);
+	// Set period to 20 => 10 us interrupts
+	timer_set_period(TIM21, 20);
+
+	// Enable counter and interrupts
+	timer_enable_counter(TIM21);
+	timer_enable_irq(TIM21, TIM_DIER_CC1IE);
+	*/
+}
+
+void tim21_isr(void)
+{
+	/*
+		TIM21 is the communication clock. 
+		Each interrupt is one read and write of gpios.
+		Interrupts occur every 100 us.
+	*/
+	if (timer_get_flag(TIM2, TIM_SR_CC1IF)){
+		if (++tick == 50){
+			main_tick = 1;
+			tick = 0;
+		}
+
+		readInputs();
+		
+		if (downstream_write_buffer_ready != 0){
+			writeDownstream();
+			downstream_write_buffer_ready--;
+			downstream_write_buffer = 0;
+		}
+	}
+}
+
+void tim2_isr(void)
+{
+	if (timer_get_flag(TIM2, TIM_SR_CC1IF)){
+		// temporarily testing this in TIM2 interrupt b/c TIM21 is broken in libopencm3
+		if (++tick == 50){
+			main_tick = 1;
+			tick = 0;
+		}
+
+		readInputs();
+		
+		if (downstream_write_buffer_ready != 0){
+			writeDownstream();
+			downstream_write_buffer_ready--;
+			downstream_write_buffer = 0;
+		}
+		timer_clear_flag(TIM2, TIM_SR_CC1IF);
+	}
+}
+
+void LEDfullWhite(void) 
+{
+	timer_set_oc_value(TIM2, TIM_OC1, 9600);
+	timer_set_oc_value(TIM2, TIM_OC3, 9600);
+	timer_set_oc_value(TIM2, TIM_OC4, 9600);
+}
+
+void setLED(uint16_t r, uint16_t g, uint16_t b)
+{
+	if (r <= 1023) 
+	{
+		timer_set_oc_value(TIM2, TIM_OC3, gamma_lookup[r]);
+	}
+	else 
+	{
+		timer_set_oc_value(TIM2, TIM_OC3, 9600);
+	}
+
+	if (g <= 1023) 
+	{
+		timer_set_oc_value(TIM2, TIM_OC1, gamma_lookup[g]);
+	}
+	else
+	{
+		timer_set_oc_value(TIM2, TIM_OC1, 9600);
+	}
+
+	if (b <= 1023)
+	{
+		timer_set_oc_value(TIM2, TIM_OC4, gamma_lookup[b]);
+	}
+	else
+	{
+		timer_set_oc_value(TIM2, TIM_OC4, 9600);
+	}
+}
+
 
 static const uint16_t gamma_lookup[1024] = {
 	/*	Gamma = 2, input range = 0-1023, output range = 0-9600 */
@@ -74,175 +334,3 @@ static const uint16_t gamma_lookup[1024] = {
   8738,8756,8774,8792,8810,8828,8846,8864,8882,8900,8918,8936,8954,8972,8991,9009,
   9027,9045,9063,9082,9100,9118,9137,9155,9173,9192,9210,9228,9247,9265,9284,9302,
   9321,9339,9358,9376,9395,9413,9432,9450,9469,9488,9506,9525,9544,9563,9581,9600 };
-
-void sys_tick_handler(void)
-{
-	tick = 1;
-}
-
-void systick_setup(int freq) 
-{
-
-	systick_set_clocksource(STK_CSR_CLKSOURCE_AHB);
-	STK_CVR = 0;
-// STM32F0 command:	systick_set_reload(rcc_ahb_frequency / freq);
-	systick_counter_enable();
-	systick_interrupt_enable();
-}
-
-void clock_setup(void)
-{
-// STM32F0 command:	rcc_clock_setup_in_hsi_out_48mhz();
-}
-
-void gpio_setup(void)
-{
-	/*	Enable GPIO clocks */
-	rcc_periph_clock_enable(RCC_GPIOA);
-	rcc_periph_clock_enable(RCC_GPIOB);
-	rcc_periph_clock_enable(RCC_GPIOC);
-
-	/*	Set up LED pins, NeuroBytes v1.01:
-		Alternative Function Mode with no pullup/pulldown
-		Output options: push-pull, high speed
-		PIN_R_LED (PA2): AF2, TIM2_CH3
-		PIN_G_LED (PA5): AF5, TIM2_CH1
-		PIN_B_LED (PA3): AF2, TIM2_CH4 
-	gpio_mode_setup(PORT_LED, GPIO_MODE_AF, GPIO_PUPD_NONE, PIN_R_LED | PIN_G_LED | PIN_B_LED);
-	gpio_set_output_options(PORT_LED, GPIO_OTYPE_PP, GPIO_OSPEED_HIGH, PIN_R_LED | PIN_G_LED | PIN_B_LED);
-	gpio_set_af(PORT_LED, GPIO_AF2, PIN_R_LED | PIN_B_LED);
-	gpio_set_af(PORT_LED, GPIO_AF5, PIN_G_LED);
-	*/
-
-	/*	Set up LED pins, Motor Neuron:
-		Alternative Function Mode with no pullup/pulldown
-		Output options: push-pull, high speed 
-		PIN_R_LED (PA0): AF2, TIM2_CH1
-		PIN_G_LED (PA2): AF2, TIM2_CH3
-		PIN_B_LED (PA1): AF2, TIM2_CH2 */
-	gpio_mode_setup(PORT_LED, GPIO_MODE_AF, GPIO_PUPD_NONE, PIN_R_LED | PIN_G_LED | PIN_B_LED);
-	gpio_set_output_options(PORT_LED, GPIO_OTYPE_PP, GPIO_OSPEED_HIGH, PIN_R_LED | PIN_G_LED | PIN_B_LED);
-	gpio_set_af(PORT_LED, GPIO_AF2, PIN_R_LED | PIN_G_LED | PIN_B_LED);
-
-}
-
-void tim_setup(void)
-{
-	/* 	Enable and reset TIM2 clock */
-	rcc_periph_clock_enable(RCC_TIM2);
-	timer_reset(TIM2);
-
-	/* 	Set up TIM2 mode to no clock divider ratio, edge alignment, and up direction */
-	timer_set_mode(TIM2, TIM_CR1_CKD_CK_INT, TIM_CR1_CMS_EDGE, TIM_CR1_DIR_UP);
-
-	/*	Set prescaler to 0: 48 MHz clock */
-	timer_set_prescaler(TIM2, 0);
-
-	/* 	Set timer period to 9600: 5 kHz PWM with 9600 steps */
-	timer_set_period(TIM2, 9600);
-
-	/* 	Set TIM2 Output Compare mode to PWM1 on channels 1, 3, and 4 (NeuroBytes v1.01) 
-	timer_set_oc_mode(TIM2, TIM_OC1, TIM_OCM_PWM1);
-	timer_set_oc_mode(TIM2, TIM_OC3, TIM_OCM_PWM1);
-	timer_set_oc_mode(TIM2, TIM_OC4, TIM_OCM_PWM1); */
-
-	/* 	Set TIM2 Output Compare mode to PWM1 on channels 1, 2, and 3 (Motor Neuron) */
-	timer_set_oc_mode(TIM2, TIM_OC1, TIM_OCM_PWM1);
-	timer_set_oc_mode(TIM2, TIM_OC2, TIM_OCM_PWM1);
-	timer_set_oc_mode(TIM2, TIM_OC3, TIM_OCM_PWM1); 
-
-	/* 	Set starting output compare values (NeuroBytes v1.01) 
-	timer_set_oc_value(TIM2, TIM_OC1, 0);
-	timer_set_oc_value(TIM2, TIM_OC3, 0);
-	timer_set_oc_value(TIM2, TIM_OC4, 0); */
-
-	/* 	Set starting output compare values (Motor Neuron) */
-	timer_set_oc_value(TIM2, TIM_OC1, 0);
-	timer_set_oc_value(TIM2, TIM_OC2, 0);
-	timer_set_oc_value(TIM2, TIM_OC3, 0); 
-
-	/* 	Enable outputs (NeuroBytes v1.01) 
-	timer_enable_oc_output(TIM2, TIM_OC1);
-	timer_enable_oc_output(TIM2, TIM_OC3);
-	timer_enable_oc_output(TIM2, TIM_OC4); */
-
-	/* 	Enable outputs (NeuroBytes v1.01) */ 
-	timer_enable_oc_output(TIM2, TIM_OC1);
-	timer_enable_oc_output(TIM2, TIM_OC2);
-	timer_enable_oc_output(TIM2, TIM_OC3);
-
-	/*	Enable counter */
-	timer_enable_counter(TIM2);
-}
-
-void LEDfullWhite(void) 
-{
-	/* NeuroBytes v1.01
-	timer_set_oc_value(TIM2, TIM_OC1, 9600);
-	timer_set_oc_value(TIM2, TIM_OC3, 9600);
-	timer_set_oc_value(TIM2, TIM_OC4, 9600); */
-
-	/* Motor Neuron */
-	timer_set_oc_value(TIM2, TIM_OC1, 9600);
-	timer_set_oc_value(TIM2, TIM_OC2, 9600);
-	timer_set_oc_value(TIM2, TIM_OC3, 9600);
-}
-
-void setLED(uint16_t r, uint16_t g, uint16_t b)
-{
-	/* NeuroBytes v1.01
-	if (r <= 1023) 
-	{
-		timer_set_oc_value(TIM2, TIM_OC3, gamma_lookup[r]);
-	}
-	else 
-	{
-		timer_set_oc_value(TIM2, TIM_OC3, 9600);
-	}
-
-	if (g <= 1023) 
-	{
-		timer_set_oc_value(TIM2, TIM_OC1, gamma_lookup[g]);
-	}
-	else
-	{
-		timer_set_oc_value(TIM2, TIM_OC1, 9600);
-	}
-
-	if (b <= 1023)
-	{
-		timer_set_oc_value(TIM2, TIM_OC4, gamma_lookup[b]);
-	}
-	else
-	{
-		timer_set_oc_value(TIM2, TIM_OC4, 9600);
-	} */
-
-	/* Motor Neuron */
-	if (r <= 1023) 
-	{
-		timer_set_oc_value(TIM2, TIM_OC1, gamma_lookup[r]);
-	}
-	else 
-	{
-		timer_set_oc_value(TIM2, TIM_OC1, 9600);
-	}
-
-	if (g <= 1023) 
-	{
-		timer_set_oc_value(TIM2, TIM_OC3, gamma_lookup[g]);
-	}
-	else
-	{
-		timer_set_oc_value(TIM2, TIM_OC3, 9600);
-	}
-
-	if (b <= 1023)
-	{
-		timer_set_oc_value(TIM2, TIM_OC2, gamma_lookup[b]);
-	}
-	else
-	{
-		timer_set_oc_value(TIM2, TIM_OC2, 9600);
-	} 
-}
