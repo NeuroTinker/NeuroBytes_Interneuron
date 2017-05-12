@@ -42,28 +42,33 @@ void gpio_setup(void)
 	/*	Set up LED pins, NeuroBytes v1.01:
 		Alternative Function Mode with no pullup/pulldown
 		Output options: push-pull, high speed
-		PIN_R_LED (PA2): AF2, TIM2_CH3
-		PIN_G_LED (PA5): AF5, TIM2_CH1
-		PIN_B_LED (PA3): AF2, TIM2_CH4 
+		PIN_R_LED (PB7): AF5, TIM2_CH4
+		PIN_G_LED (PA1): AF2, TIM2_CH2
+		PIN_B_LED (PB6): AF5, TIM2_CH3
 	*/
-	
-	gpio_mode_setup(PORT_LED, GPIO_MODE_AF, GPIO_PUPD_NONE, PIN_R_LED | PIN_G_LED | PIN_B_LED);
-	gpio_set_output_options(PORT_LED, GPIO_OTYPE_PP, GPIO_OSPEED_HIGH, PIN_R_LED | PIN_G_LED | PIN_B_LED);
-	gpio_set_af(PORT_LED, GPIO_AF2, PIN_R_LED | PIN_B_LED);
-	gpio_set_af(PORT_LED, GPIO_AF5, PIN_G_LED);
+
+	gpio_mode_setup(PORT_R_LED, GPIO_MODE_AF, GPIO_PUPD_NONE, PIN_R_LED);
+	gpio_mode_setup(PORT_G_LED, GPIO_MODE_AF, GPIO_PUPD_NONE, PIN_G_LED);
+	gpio_mode_setup(PORT_B_LED, GPIO_MODE_AF, GPIO_PUPD_NONE, PIN_B_LED);
+	gpio_set_output_options(PORT_R_LED, GPIO_OTYPE_PP, GPIO_OSPEED_HIGH, PIN_R_LED);
+	gpio_set_output_options(PORT_G_LED, GPIO_OTYPE_PP, GPIO_OSPEED_HIGH, PIN_G_LED);
+	gpio_set_output_options(PORT_B_LED, GPIO_OTYPE_PP, GPIO_OSPEED_HIGH, PIN_B_LED);
+	gpio_set_af(PORT_R_LED, GPIO_AF5, PIN_R_LED);
+	gpio_set_af(PORT_G_LED, GPIO_AF2, PIN_G_LED);
+	gpio_set_af(PORT_B_LED, GPIO_AF5, PIN_B_LED);
+
 	
 	/* 
 		Setup axon pins:
 		Axon Excitatory PA10 TIM21_CH1	(temporarily output)
 		Axon Inhibitory PA9  TIM21_CH2	(temporarily input)
 	*/
+	setAsInput(PORT_AXON1_IN, PIN_AXON1_IN);
+	setAsOutput(PORT_AXON1_EX, PIN_AXON1_EX);
+	setAsInput(PORT_AXON2_IN, PIN_AXON2_IN);
+	setAsOutput(PORT_AXON2_EX, PIN_AXON2_EX);
 
-	gpio_mode_setup(PORT_AXON_OUT, GPIO_MODE_OUTPUT, GPIO_PUPD_PULLDOWN, PIN_AXON_OUT);
-	gpio_mode_setup(PORT_AXON_IN, GPIO_MODE_INPUT, GPIO_PUPD_NONE, PIN_AXON_IN);
-
-	setAsInput(PORT_AXON_IN, PIN_AXON_IN);
-
-	gpio_mode_setup(PORT_IDENTIFY, GPIO_MODE_INPUT, GPIO_PUPD_PULLDOWN, PIN_IDENTIFY);
+	gpio_mode_setup(PORT_IDENTIFY, GPIO_MODE_INPUT, GPIO_PUPD_PULLUP, PIN_IDENTIFY);
 
 	/*
 		All dendrites pins are initially set to be inputs.
@@ -75,18 +80,12 @@ void gpio_setup(void)
 	setAsInput(PORT_DEND1_IN, PIN_DEND1_IN);
 	setAsInput(PORT_DEND2_EX, PIN_DEND2_EX);
 	setAsInput(PORT_DEND2_IN, PIN_DEND2_IN);
-	/*
+	
 	setAsInput(PORT_DEND3_EX, PIN_DEND3_EX);
 	setAsInput(PORT_DEND3_IN, PIN_DEND3_IN);
 	setAsInput(PORT_DEND4_EX, PIN_DEND4_EX);
 	setAsInput(PORT_DEND4_IN, PIN_DEND4_IN);
-	*/
-	setAsInput(PORT_DEND5_EX, PIN_DEND5_EX);
-	setAsInput(GPIOB, EXTI3);
 
-	// temp NID interface w/ clk
-	setAsOutput(PORT_DEND3_IN, PIN_DEND3_IN);
-	setAsOutput(PORT_DEND2_IN, PIN_DEND2_IN);
 
 	//MMIO32(SYSCFG_BASE + 0x08) |= 0b0001 << 12;
 
@@ -132,14 +131,13 @@ void setAsOutput(uint32_t port, uint32_t pin)
 
 void exti0_1_isr(void)
 {
-	// interrupt handler for pins 0,1
-	//setLED(0,200,200);
+	// interrupt handler for pins 0,1 (dend1_in, dend1_ex)
 	if ((EXTI_PR & PIN_DEND1_IN) != 0){
-		active_input_pins[2] = PIN_DEND1_IN;
+		active_input_pins[4] = PIN_DEND1_IN;
 		EXTI_PR |= PIN_DEND1_IN; // clear interrupt flag
 		//EXTI_PR &= ~(PIN_DEND1_IN);
 	} else if ((EXTI_PR & PIN_DEND1_EX) != 0){
-		active_input_pins[1] = PIN_DEND1_EX;
+		active_input_pins[3] = PIN_DEND1_EX;
 		EXTI_PR |= PIN_DEND1_EX;
 		//EXTI_PR &= ~(PIN_DEND1_EX);
 	}
@@ -150,11 +148,14 @@ void exti2_3_isr(void)
 	// interrupt handler for pins 2,3
 	//setLED(200,0,0);
 	//gpio_toggle(PORT_AXON_OUT, PIN_AXON_OUT);
-	if ((EXTI_PR & PIN_DEND5_IN) != 0){
+	if ((EXTI_PR & PIN_DEND4_IN) != 0){
 		//setLED(200,0,200);
 		//gpio_toggle(PORT_AXON_OUT, PIN_AXON_OUT);
-		active_input_pins[10] = PIN_DEND5_IN;
+		active_input_pins[10] = PIN_DEND4_IN;
 		EXTI_PR |= EXTI3;
+	} else if ((EXTI_PR & PIN_DEND4_EX) != 0){
+		active_input_pins[9] = PIN_DEND4_EX;
+		EXTI_PR |= PIN_DEND4_EX;
 	}
 }
 
@@ -163,19 +164,31 @@ void exti4_15_isr(void)
 	// interrupt handler for pins 4-15
 	//setLED(0,0,200);
 	//gpio_toggle(PORT_AXON_OUT, PIN_AXON_OUT);
-	if ((EXTI_PR & PIN_DEND5_EX) != 0){
+	if ((EXTI_PR & PIN_DEND3_IN) != 0){
 		//gpio_toggle(PORT_AXON_OUT, PIN_AXON_OUT);
-		active_input_pins[9] = PIN_DEND5_EX;
-		EXTI_PR |= PIN_DEND5_EX;
+		active_input_pins[8] = PIN_DEND3_IN;
+		EXTI_PR |= PIN_DEND3_IN;
+	} else if ((EXTI_PR & PIN_DEND3_EX) != 0){
+		active_input_pins[7] = PIN_DEND3_EX;
+		EXTI_PR |= PIN_DEND3_EX;
 	} else if ((EXTI_PR & PIN_DEND2_IN) != 0){
-		active_input_pins[4] = PIN_DEND2_IN;
+		// pin 6
+		active_input_pins[6] = PIN_DEND2_IN;
 		EXTI_PR |= PIN_DEND2_IN;
 	} else if ((EXTI_PR & PIN_DEND2_EX) != 0){
-		active_input_pins[3] = PIN_DEND2_EX;
+		active_input_pins[5] = PIN_DEND2_EX;
 		EXTI_PR |= PIN_DEND2_EX;
-	} else if ((EXTI_PR & PIN_AXON_IN) != 0){
-		active_input_pins[0] = PIN_AXON_IN;
-		EXTI_PR |= PIN_AXON_IN;
+	} else if ((EXTI_PR & PIN_AXON2_IN) != 0){
+		// pin 9
+		active_input_pins[1] = PIN_AXON2_IN;
+		EXTI_PR |= PIN_AXON2_IN;
+	} else if ((EXTI_PR & PIN_AXON3_IN) != 0){
+		// pin 10
+		active_input_pins[2] = PIN_AXON3_IN;
+		EXTI_PR |= PIN_AXON3_IN;
+	} else if ((EXTI_PR & PIN_AXON1_IN) != 0){
+		active_input_pins[0] = PIN_AXON1_IN;
+		EXTI_PR |= PIN_AXON1_IN;
 	}
 }
 
@@ -210,17 +223,17 @@ void tim_setup(void)
 	
 
 	// 	Set TIM2 Output Compare mode to PWM1 on channels 1, 3, and 4 (NeuroBytes v1.01) 
-	timer_set_oc_mode(TIM2, TIM_OC1, TIM_OCM_PWM1);
+	timer_set_oc_mode(TIM2, TIM_OC2, TIM_OCM_PWM1);
 	timer_set_oc_mode(TIM2, TIM_OC3, TIM_OCM_PWM1);
 	timer_set_oc_mode(TIM2, TIM_OC4, TIM_OCM_PWM1); 
 
 	// 	Set starting output compare values (NeuroBytes v1.01) 
-	timer_set_oc_value(TIM2, TIM_OC1, 0);
+	timer_set_oc_value(TIM2, TIM_OC2, 0);
 	timer_set_oc_value(TIM2, TIM_OC3, 0);
 	timer_set_oc_value(TIM2, TIM_OC4, 0); 
 
 	// 	Enable outputs (NeuroBytes v1.01) 
-	timer_enable_oc_output(TIM2, TIM_OC1);
+	timer_enable_oc_output(TIM2, TIM_OC2);
 	timer_enable_oc_output(TIM2, TIM_OC3);
 	timer_enable_oc_output(TIM2, TIM_OC4);
 	
@@ -275,9 +288,6 @@ void tim21_isr(void)
 	readInputs();
 	write();
 
-	// temp NID debug clk
-	gpio_toggle(PORT_DEND3_IN, PIN_DEND3_IN);
-
 	/*
 	if (write_count == 0){
 		if (downstream_write_buffer_ready != 0){
@@ -302,7 +312,7 @@ void tim2_isr(void)
 
 void LEDFullWhite(void) 
 {
-	timer_set_oc_value(TIM2, TIM_OC1, 9600);
+	timer_set_oc_value(TIM2, TIM_OC2, 9600);
 	timer_set_oc_value(TIM2, TIM_OC3, 9600);
 	timer_set_oc_value(TIM2, TIM_OC4, 9600);
 }
@@ -311,29 +321,29 @@ void setLED(uint16_t r, uint16_t g, uint16_t b)
 {
 	if (r <= 1023) 
 	{
-		timer_set_oc_value(TIM2, TIM_OC3, gamma_lookup[r]);
+		timer_set_oc_value(TIM2, TIM_OC4, gamma_lookup[r]);
 	}
 	else 
 	{
-		timer_set_oc_value(TIM2, TIM_OC3, 9600);
+		timer_set_oc_value(TIM2, TIM_OC4, 9600);
 	}
 
 	if (g <= 1023) 
 	{
-		timer_set_oc_value(TIM2, TIM_OC1, gamma_lookup[g]);
+		timer_set_oc_value(TIM2, TIM_OC2, gamma_lookup[g]);
 	}
 	else
 	{
-		timer_set_oc_value(TIM2, TIM_OC1, 9600);
+		timer_set_oc_value(TIM2, TIM_OC2, 9600);
 	}
 
 	if (b <= 1023)
 	{
-		timer_set_oc_value(TIM2, TIM_OC4, gamma_lookup[b]);
+		timer_set_oc_value(TIM2, TIM_OC3, gamma_lookup[b]);
 	}
 	else
 	{
-		timer_set_oc_value(TIM2, TIM_OC4, 9600);
+		timer_set_oc_value(TIM2, TIM_OC3, 9600);
 	}
 }
 

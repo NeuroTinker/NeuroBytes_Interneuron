@@ -1,4 +1,4 @@
-main.o: main.c ../libopencm3/include/libopencm3/stm32/rcc.h \
+comm.o: comm.c comm.h ../libopencm3/include/libopencm3/stm32/rcc.h \
  ../libopencm3/include/libopencm3/cm3/common.h \
  /usr/lib/gcc/arm-none-eabi/4.9.3/include/stdint.h \
  /usr/include/newlib/stdint.h \
@@ -25,5 +25,4 @@ main.o: main.c ../libopencm3/include/libopencm3/stm32/rcc.h \
  ../libopencm3/include/libopencm3/cm3/systick.h \
  ../libopencm3/include/libopencm3/stm32/exti.h \
  ../libopencm3/include/libopencm3/stm32/l0/exti.h \
- ../libopencm3/include/libopencm3/stm32/common/exti_common_all.h comm.h \
- HAL.h neuron.h
+ ../libopencm3/include/libopencm3/stm32/common/exti_common_all.h HAL.h

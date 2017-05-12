@@ -9,9 +9,9 @@ uint8_t message_buffer_count[11];
 
 extern volatile uint16_t active_input_pins[11] = {0,0,0,0,0,0,0,0,0,0,0};
 
-extern volatile uint16_t active_output_pins[11] = {PIN_AXON_OUT,0,0,0,0,0,0,0,0,0,0};
+extern volatile uint16_t active_output_pins[11] = {PIN_AXON1_IN, PIN_AXON2_IN,0,0,0,0,0,0,0,0,0};
 
-extern volatile uint32_t dendrite_pulses[5] = {0,0,0,0,0};
+extern volatile uint32_t dendrite_pulses[4] = {0,0,0,0};
 extern volatile uint8_t dendrite_pulse_count = 0;
 
 extern volatile uint8_t blink_flag = 0;
@@ -29,7 +29,8 @@ extern volatile uint32_t  nid_keep_alive = NID_PING_KEEP_ALIVE;
 /* 
 All available input pins are
     = {
-        PIN_AXON_IN,
+        PIN_AXON1_IN,
+        PIN_AXON2_IN,
         PIN_DEND1_EX,
         PIN_DEND1_IN, 
         PIN_DEND2_EX,
@@ -37,14 +38,14 @@ All available input pins are
         PIN_DEND3_EX,
         PIN_DEND3_IN,
         PIN_DEND4_EX,
-        PIN_DEND4_IN,
-        PIN_DEND5_EX,
-        PIN_DEND5_IN
+        PIN_DEND4_IN
     };
 */
 
 extern uint32_t active_input_ports[11] = {
-    PORT_AXON_IN,
+    PORT_AXON1_IN,
+    PORT_AXON2_IN,
+    PORT_AXON3_IN,
     PORT_DEND1_EX,
     PORT_DEND1_IN,
     PORT_DEND2_EX,
@@ -52,13 +53,13 @@ extern uint32_t active_input_ports[11] = {
     PORT_DEND3_EX,
     PORT_DEND3_IN,
     PORT_DEND4_EX,
-    PORT_DEND4_IN,
-    PORT_DEND5_EX,
-    PORT_DEND5_IN
+    PORT_DEND4_IN
 };
 
 extern uint32_t active_output_ports[11] = {
-    PORT_AXON_OUT,
+    PORT_AXON1_EX,
+    PORT_AXON2_EX,
+    PORT_AXON3_EX,
     PORT_DEND1_EX,
     PORT_DEND1_IN,
     PORT_DEND2_EX,
@@ -66,13 +67,13 @@ extern uint32_t active_output_ports[11] = {
     PORT_DEND3_EX,
     PORT_DEND3_IN,
     PORT_DEND4_EX,
-    PORT_DEND4_IN,
-    PORT_DEND5_EX,
-    PORT_DEND5_IN
+    PORT_DEND4_IN
 };
 
 extern uint16_t complimentary_pins[11] = {
-    0,
+    PORT_AXON1_EX,
+    PORT_AXON2_EX,
+    PORT_AXON3_EX,
     PIN_DEND1_IN,
     PIN_DEND1_EX,
     PIN_DEND2_IN,
@@ -80,9 +81,7 @@ extern uint16_t complimentary_pins[11] = {
     PIN_DEND3_IN,
     PIN_DEND3_EX,
     PIN_DEND4_IN,
-    PIN_DEND4_EX,
-    PIN_DEND5_IN,
-    PIN_DEND5_EX
+    PIN_DEND4_EX
 };
 
 // complimentary port is same port
@@ -320,9 +319,11 @@ void writeDownstream(void)
 
     // we should have both axon out pins be on the same port that way they can be written together
     if (value != 0){
-        gpio_set(PORT_AXON_OUT, PIN_AXON_OUT);
+        gpio_set(PORT_AXON1_EX, PIN_AXON1_EX);
+        gpio_set(PORT_AXON2_EX, PIN_AXON2_EX);
     }else{
-        gpio_clear(PORT_AXON_OUT, PIN_AXON_OUT);
+        gpio_clear(PORT_AXON1_EX, PIN_AXON1_EX);
+        gpio_clear(PORT_AXON2_EX, PIN_AXON2_EX);
     }
 }
 
@@ -333,8 +334,8 @@ void writeAll(void)
     uint32_t value;
     value = write_buffer.all[0] & 0x80000000;
     write_buffer.all[0] <<= 1;
-    active_output_ports[0] = PORT_AXON_OUT;
-    active_output_pins[0] = PIN_AXON_OUT;
+    active_output_ports[0] = PORT_AXON1_EX;
+    active_output_pins[1] = PIN_AXON2_EX;
     for (i=0;i<11;i++){
         if (active_output_pins[i] != 0 && active_output_pins[i] != complimentary_pins[write_buffer.source_pin]){
             if (value != 0){

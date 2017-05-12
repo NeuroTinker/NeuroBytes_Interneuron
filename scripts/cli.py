@@ -9,7 +9,7 @@ import queue
 import time
 import hipsterplot
 
-ser = serial.Serial('/dev/ttyACM0')
+ser = serial.Serial('/dev/ttyACM1')
 command_buffer = queue.Queue()
 plt.axis = ([0,40,0,150])
 plt.ion()

@@ -3,17 +3,17 @@
 #include "comm.h"
 
 uint16_t input_pins[11] = {
-    PIN_AXON_IN,
-    PIN_DEND1_EX,
-    PIN_DEND1_IN,
-    PIN_DEND2_EX,
-    PIN_DEND2_IN,
-    PIN_DEND3_EX,
-    PIN_DEND3_IN,
-    PIN_DEND4_EX,
-    PIN_DEND4_IN,
-    PIN_DEND5_EX,
-    PIN_DEND5_IN
+    PIN_AXON1_IN,
+	PIN_AXON2_IN,
+	PIN_AXON3_IN,
+	PIN_DEND1_EX,
+	PIN_DEND1_IN, 
+	PIN_DEND2_EX,
+	PIN_DEND2_IN,
+	PIN_DEND3_EX,
+	PIN_DEND3_IN,
+	PIN_DEND4_EX,
+	PIN_DEND4_IN
 };
 
 void neuronInit(neuron_t *n)
@@ -38,11 +38,10 @@ void neuronInit(neuron_t *n)
 		n->dendrites[i].alive_time = 0;
 	}
 
-	n->dendrites[0].magnitude = 100;
-	n->dendrites[1].magnitude = 100;
-	n->dendrites[2].magnitude = 100;
-	n->dendrites[3].magnitude = 100;
-	n->dendrites[4].magnitude = 100;
+	n->dendrites[0].magnitude = 140;
+	n->dendrites[1].magnitude = 120;
+	n->dendrites[2].magnitude = 80;
+	n->dendrites[3].magnitude = 50;
 	
 	n->dendrite_ping_time[0] = 0;
 	n->dendrite_ping_time[1] = 0;
@@ -54,7 +53,6 @@ void neuronInit(neuron_t *n)
 	n->dendrite_ping_time[7] = 0;
 	n->dendrite_ping_time[8] = 0;
 	n->dendrite_ping_time[9] = 0;
-	n->dendrite_ping_time[10] = 0;
 }
 
 void checkDendrites(neuron_t * n)
@@ -62,7 +60,7 @@ void checkDendrites(neuron_t * n)
 	uint8_t i;
 	dendrite_states current_state = OFF;
 	
-	for (i=1; i<11; i++){
+	for (i=3; i<11; i++){
 		
 		if (dendrite_ping_flag[i] != 0){
 
@@ -110,7 +108,6 @@ void checkDendrites(neuron_t * n)
 					n->dendrites[1].state = ON;
 					n->dendrites[1].pulse_time = 0;
 					break;
-				/*
 				case PIN_DEND3_EX:
 					n->dendrites[2].type = EXCITATORY;
 					n->dendrites[2].state = ON;
@@ -131,17 +128,7 @@ void checkDendrites(neuron_t * n)
 					n->dendrites[3].state = ON;
 					n->dendrites[3].pulse_time = 0;
 					break;
-				*/
-				case PIN_DEND5_EX:
-					n->dendrites[4].type = EXCITATORY;
-					n->dendrites[4].state = ON;
-					n->dendrites[4].pulse_time = 0;
-					break;
-				case PIN_DEND5_IN:
-					n->dendrites[4].type = INHIBITORY;
-					n->dendrites[4].state = ON;
-					n->dendrites[4].pulse_time = 0;
-					break;
+				
 				default:
 					break;
 			}

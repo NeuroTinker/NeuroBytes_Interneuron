@@ -55,7 +55,7 @@ int main(void)
 		//setLED(0,0,10);
 		if (main_tick == 1){
 			// 5 ms
-			//setLED(200,0,200);
+			//setLED(0,200,200);
 			main_tick = 0;
 			//gpio_toggle(PORT_AXON_OUT, PIN_AXON_OUT);
 			//downstream_write_buffer = 0b01010101010101010101010101010101;
@@ -101,7 +101,7 @@ int main(void)
 			}
 
 			button_status = gpio_get(PORT_IDENTIFY, PIN_IDENTIFY);
-			button_status >>= 8;
+			button_status >>= 3;
 			button_status &= 0b1;
 			if (identify_time > 0){
 				identify_time -= 1;

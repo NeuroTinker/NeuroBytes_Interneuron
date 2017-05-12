@@ -5,7 +5,7 @@
 
 #define MEMBRANE_THRESHOLD      140
 #define HYPERPOLARIZATION		-140
-#define DENDRITE_COUNT          5
+#define DENDRITE_COUNT          4
 #define PULSE_LENGTH            5 // led white time
 
 #define DENDRITE_ALIVE_TIME     200
