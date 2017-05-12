@@ -1,9 +1,18 @@
 #ifndef NEURON_H_
 #define NEURON_H_
 
-#define MEMBRANE_THRESHOLD      120
-#define HYPERPOLARIZATION		-200
+#include "comm.h"
+
+#define MEMBRANE_THRESHOLD      140
+#define HYPERPOLARIZATION		-140
 #define DENDRITE_COUNT          5
+#define PULSE_LENGTH            5 // led white time
+
+#define DENDRITE_ALIVE_TIME     200
+#define FIRE_LED_TIME           5
+
+//typedef enum gpio_pins gpio_pin;
+//typedef enum gpio_ports gpio_port;
 
 typedef enum{
 NC =   0,
@@ -21,24 +30,24 @@ INHIBITORY = 1
 } dendrite_types;
 
 typedef struct{
-gpio_port          port;
-gpio_pin           pin;
-dendrite_states     state;
-dendrite_status     status;
-dendrite_types      type;
+uint32_t          port;
+uint16_t          pin;
+dendrite_states     state; // is pulse being received or not
+dendrite_status     status; // not connected / connected
+dendrite_types      type; // excitatory or inhibitory
+uint16_t            alive_time;
 int16_t             magnitude; // weighting
-int16_t             current_value;
+int16_t             current_value; // current contribution to the membrane potential
 uint8_t             nid_flag; // is this dendrite the closest to the NID
 uint8_t             read_flag; // dendrite is currently getting a message
 uint8_t             read_time; // message length decrementor
-uint8_t             history;
+uint8_t             pulse_time; // time elapsed since pulse was received
 uint16_t			timestamp; // last input pulse (used for learning)
 } dendrite_t;
 
 typedef enum{
 INTEGRATE =       0,
-FIRE =          1,
-REST =			2 // izhik
+FIRE =          1
 } neuron_states;
 
 typedef enum{
@@ -51,6 +60,7 @@ typedef struct{
 // mode independent vars
 int16_t     potential;
 dendrite_t  dendrites[DENDRITE_COUNT];
+uint16_t    dendrite_ping_time[11];
 neuron_states   state;
 learning_states learning_state; // Hebb learning mode
 
@@ -67,11 +77,9 @@ uint16_t	ms_count;
 void neuronInit(neuron_t *n);
 void checkDendrites(neuron_t * n);
 int16_t calcNeuronPotential(neuron_t *n);
-void dendriteDecayStep(dendrite_t * dendrites);
+void dendriteDecayStep(neuron_t * n);
 void membraneDecayStep(neuron_t * n);
 void dendriteSwitchOff(dendrite_t * dendrite);
 void incrementHebbTime(neuron_t *n);
-
-int16_t dendrite_magnitude_lookup[5];
 
 #endif
