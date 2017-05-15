@@ -1,3 +1,6 @@
 [submodule "libopencm3"]
 	path = libopencm3
 	url = https://github.com/libopencm3/libopencm3
+[submodule "HARDWARE/NeuroBytes_Schematic_Lib"]
+	path = HARDWARE/NeuroBytes_Schematic_Lib
+	url = https://github.com/NeuroTinker/NeuroBytes_Schematic_Lib
