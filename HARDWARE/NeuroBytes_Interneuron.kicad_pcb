@@ -1,9 +1,9 @@
 (kicad_pcb (version 4) (host pcbnew 4.0.5-e0-6337~49~ubuntu14.04.1)
 
   (general
-    (links 102)
-    (no_connects 0)
-    (area 123.4 55.4 205.150001 112.850001)
+    (links 94)
+    (no_connects 7)
+    (area 130.981826 77.457008 189.52129 102.557002)
     (thickness 1.6)
     (drawings 120)
     (tracks 467)
@@ -203,7 +203,7 @@
     (fp_text reference P6 (at 0.65 0.4 360) (layer F.Fab)
       (effects (font (size 1 1) (thickness 0.15)))
     )
-    (fp_text value CONN_01X04 (at 0 6.099998 90) (layer B.Fab) hide
+    (fp_text value "JST GH 4-POS" (at 0 6.099998 90) (layer B.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (fp_line (start 1.9 4.15) (end -1.9 4.15) (layer B.SilkS) (width 0.15))
@@ -218,10 +218,8 @@
       (net 1 +5V))
     (pad 1 smd rect (at -2.4 -1.875) (size 0.6 1.7) (layers B.Cu B.Paste B.Mask)
       (net 2 GND))
-    (pad "" smd rect (at 0.65 3.8) (size 1 2.7) (layers B.Cu B.Paste B.Mask)
-      (net 2 GND))
-    (pad "" smd rect (at 0.65 -3.8) (size 1 2.7) (layers B.Cu B.Paste B.Mask)
-      (net 2 GND))
+    (pad "" smd rect (at 0.65 3.8) (size 1 2.7) (layers B.Cu B.Paste B.Mask))
+    (pad "" smd rect (at 0.65 -3.8) (size 1 2.7) (layers B.Cu B.Paste B.Mask))
   )
 
   (module KiCad_Footprints:ZF_LOGO_Interneuron (layer F.Cu) (tedit 0) (tstamp 58F79269)
@@ -1122,7 +1120,7 @@
     (fp_text reference P2 (at 0.85 -0.6 180) (layer F.Fab)
       (effects (font (size 1 1) (thickness 0.15)))
     )
-    (fp_text value CONN_01X04 (at 0 6.099998 180) (layer B.Fab) hide
+    (fp_text value "JST GH 4-POS" (at 0 6.099998 180) (layer B.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (fp_line (start 1.9 4.15) (end -1.9 4.15) (layer B.SilkS) (width 0.15))
@@ -1137,10 +1135,8 @@
       (net 1 +5V))
     (pad 1 smd rect (at -2.4 -1.875 90) (size 0.6 1.7) (layers B.Cu B.Paste B.Mask)
       (net 2 GND))
-    (pad "" smd rect (at 0.65 3.8 90) (size 1 2.7) (layers B.Cu B.Paste B.Mask)
-      (net 2 GND))
-    (pad "" smd rect (at 0.65 -3.8 90) (size 1 2.7) (layers B.Cu B.Paste B.Mask)
-      (net 2 GND))
+    (pad "" smd rect (at 0.65 3.8 90) (size 1 2.7) (layers B.Cu B.Paste B.Mask))
+    (pad "" smd rect (at 0.65 -3.8 90) (size 1 2.7) (layers B.Cu B.Paste B.Mask))
   )
 
   (module KiCad_Footprints:ZF_CONN_JST_GH (layer B.Cu) (tedit 5907BE91) (tstamp 58F6CCA7)
@@ -1150,7 +1146,7 @@
     (fp_text reference P3 (at 0.848528 0 540) (layer F.Fab)
       (effects (font (size 1 1) (thickness 0.15)))
     )
-    (fp_text value CONN_01X04 (at 0 6.099998 225) (layer B.Fab) hide
+    (fp_text value "JST GH 4-POS" (at 0 6.099998 225) (layer B.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (fp_line (start 1.9 4.15) (end -1.9 4.15) (layer B.SilkS) (width 0.15))
@@ -1165,10 +1161,8 @@
       (net 1 +5V))
     (pad 1 smd rect (at -2.4 -1.875 135) (size 0.6 1.7) (layers B.Cu B.Paste B.Mask)
       (net 2 GND))
-    (pad "" smd rect (at 0.65 3.8 135) (size 1 2.7) (layers B.Cu B.Paste B.Mask)
-      (net 2 GND))
-    (pad "" smd rect (at 0.65 -3.8 135) (size 1 2.7) (layers B.Cu B.Paste B.Mask)
-      (net 2 GND))
+    (pad "" smd rect (at 0.65 3.8 135) (size 1 2.7) (layers B.Cu B.Paste B.Mask))
+    (pad "" smd rect (at 0.65 -3.8 135) (size 1 2.7) (layers B.Cu B.Paste B.Mask))
   )
 
   (module KiCad_Footprints:ZF_SMD_NonPol_0603 (layer B.Cu) (tedit 591A4F62) (tstamp 58F6CC33)
@@ -1177,7 +1171,7 @@
     (fp_text reference C1 (at 0 -1.5 360) (layer F.Fab)
       (effects (font (size 1 1) (thickness 0.15)))
     )
-    (fp_text value C (at 0 4.7 270) (layer B.Fab) hide
+    (fp_text value 1u0 (at 0 4.7 270) (layer B.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (pad 1 smd rect (at -1 0 270) (size 1 1.2) (layers B.Cu B.Paste B.Mask)
@@ -1192,7 +1186,7 @@
     (fp_text reference C2 (at 3.4 -0.1) (layer F.Fab)
       (effects (font (size 1 1) (thickness 0.15)))
     )
-    (fp_text value CP (at 0 3.6) (layer B.Fab) hide
+    (fp_text value 10u (at 0 3.6) (layer B.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (fp_line (start 2.3 0.7) (end 2.3 -0.7) (layer B.SilkS) (width 0.15))
@@ -1211,7 +1205,7 @@
     (fp_text reference C3 (at 0.282843 1.272792 180) (layer F.Fab)
       (effects (font (size 1 1) (thickness 0.15)))
     )
-    (fp_text value C (at 0 1.5 135) (layer B.Fab) hide
+    (fp_text value 0u1 (at 0 1.5 135) (layer B.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (pad 1 smd rect (at -0.6 0 135) (size 0.8 0.5) (layers B.Cu B.Paste B.Mask)
@@ -1231,7 +1225,7 @@
     (fp_text reference C4 (at 0 -1.5 180) (layer F.Fab)
       (effects (font (size 1 1) (thickness 0.15)))
     )
-    (fp_text value C (at 0 4.7 90) (layer B.Fab) hide
+    (fp_text value 1u0 (at 0 4.7 90) (layer B.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (pad 1 smd rect (at -1 0 90) (size 1 1.2) (layers B.Cu B.Paste B.Mask)
@@ -1246,7 +1240,7 @@
     (fp_text reference C5 (at 0 1) (layer F.Fab)
       (effects (font (size 1 1) (thickness 0.15)))
     )
-    (fp_text value C (at 0 1.5) (layer B.Fab) hide
+    (fp_text value 0u1 (at 0 1.5) (layer B.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (pad 1 smd rect (at -0.6 0) (size 0.8 0.5) (layers B.Cu B.Paste B.Mask)
@@ -1267,7 +1261,7 @@
     (fp_text reference P1 (at 0.65 0 360) (layer F.Fab)
       (effects (font (size 1 1) (thickness 0.15)))
     )
-    (fp_text value CONN_01X04 (at 0 6.099998 90) (layer B.Fab) hide
+    (fp_text value "JST GH 4-POS" (at 0 6.099998 90) (layer B.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (fp_line (start 1.9 4.15) (end -1.9 4.15) (layer B.SilkS) (width 0.15))
@@ -1282,10 +1276,8 @@
       (net 1 +5V))
     (pad 1 smd rect (at -2.4 -1.875) (size 0.6 1.7) (layers B.Cu B.Paste B.Mask)
       (net 2 GND))
-    (pad "" smd rect (at 0.65 3.8) (size 1 2.7) (layers B.Cu B.Paste B.Mask)
-      (net 2 GND))
-    (pad "" smd rect (at 0.65 -3.8) (size 1 2.7) (layers B.Cu B.Paste B.Mask)
-      (net 2 GND))
+    (pad "" smd rect (at 0.65 3.8) (size 1 2.7) (layers B.Cu B.Paste B.Mask))
+    (pad "" smd rect (at 0.65 -3.8) (size 1 2.7) (layers B.Cu B.Paste B.Mask))
   )
 
   (module KiCad_Footprints:ZF_CONN_JST_GH (layer B.Cu) (tedit 5907BE70) (tstamp 58F6CCB5)
@@ -1295,7 +1287,7 @@
     (fp_text reference P4 (at 0.85 -0.15 540) (layer F.Fab)
       (effects (font (size 1 1) (thickness 0.15)))
     )
-    (fp_text value CONN_01X04 (at 0 6.099998 270) (layer B.Fab) hide
+    (fp_text value "JST GH 4-POS" (at 0 6.099998 270) (layer B.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (fp_line (start 1.9 4.15) (end -1.9 4.15) (layer B.SilkS) (width 0.15))
@@ -1310,10 +1302,8 @@
       (net 1 +5V))
     (pad 1 smd rect (at -2.4 -1.875 180) (size 0.6 1.7) (layers B.Cu B.Paste B.Mask)
       (net 2 GND))
-    (pad "" smd rect (at 0.65 3.8 180) (size 1 2.7) (layers B.Cu B.Paste B.Mask)
-      (net 2 GND))
-    (pad "" smd rect (at 0.65 -3.8 180) (size 1 2.7) (layers B.Cu B.Paste B.Mask)
-      (net 2 GND))
+    (pad "" smd rect (at 0.65 3.8 180) (size 1 2.7) (layers B.Cu B.Paste B.Mask))
+    (pad "" smd rect (at 0.65 -3.8 180) (size 1 2.7) (layers B.Cu B.Paste B.Mask))
   )
 
   (module KiCad_Footprints:ZF_CONN_JST_GH (layer B.Cu) (tedit 5907BE74) (tstamp 58F6CCD1)
@@ -1323,7 +1313,7 @@
     (fp_text reference P7 (at 1.272792 0.707107 180) (layer F.Fab)
       (effects (font (size 1 1) (thickness 0.15)))
     )
-    (fp_text value CONN_01X04 (at 0 6.099998 45) (layer B.Fab) hide
+    (fp_text value "JST GH 4-POS" (at 0 6.099998 45) (layer B.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (fp_line (start 1.9 4.15) (end -1.9 4.15) (layer B.SilkS) (width 0.15))
@@ -1338,10 +1328,8 @@
       (net 1 +5V))
     (pad 1 smd rect (at -2.4 -1.875 315) (size 0.6 1.7) (layers B.Cu B.Paste B.Mask)
       (net 2 GND))
-    (pad "" smd rect (at 0.65 3.8 315) (size 1 2.7) (layers B.Cu B.Paste B.Mask)
-      (net 2 GND))
-    (pad "" smd rect (at 0.65 -3.8 315) (size 1 2.7) (layers B.Cu B.Paste B.Mask)
-      (net 2 GND))
+    (pad "" smd rect (at 0.65 3.8 315) (size 1 2.7) (layers B.Cu B.Paste B.Mask))
+    (pad "" smd rect (at 0.65 -3.8 315) (size 1 2.7) (layers B.Cu B.Paste B.Mask))
   )
 
   (module KiCad_Footprints:ZF_CONN_JST_GH (layer B.Cu) (tedit 5907BE5C) (tstamp 58F6CCDF)
@@ -1351,7 +1339,7 @@
     (fp_text reference P5 (at 0.65 0.1) (layer F.Fab)
       (effects (font (size 1 1) (thickness 0.15)))
     )
-    (fp_text value CONN_01X04 (at 0 6.099998) (layer B.Fab) hide
+    (fp_text value "JST GH 4-POS" (at 0 6.099998) (layer B.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (fp_line (start 1.9 4.15) (end -1.9 4.15) (layer B.SilkS) (width 0.15))
@@ -1366,44 +1354,8 @@
       (net 1 +5V))
     (pad 1 smd rect (at -2.4 -1.875 270) (size 0.6 1.7) (layers B.Cu B.Paste B.Mask)
       (net 2 GND))
-    (pad "" smd rect (at 0.65 3.8 270) (size 1 2.7) (layers B.Cu B.Paste B.Mask)
-      (net 2 GND))
-    (pad "" smd rect (at 0.65 -3.8 270) (size 1 2.7) (layers B.Cu B.Paste B.Mask)
-      (net 2 GND))
-  )
-
-  (module KiCad_Footprints:ZF_CONN_JST_GH_7POS (layer B.Cu) (tedit 5907BE69) (tstamp 58F6CD04)
-    (at 169 100.25 270)
-    (path /58B5DF5E)
-    (attr smd)
-    (fp_text reference P12 (at 0.35 0.1 540) (layer F.Fab)
-      (effects (font (size 1 1) (thickness 0.15)))
-    )
-    (fp_text value CONN_01X07 (at 0 11 270) (layer B.Fab) hide
-      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
-    )
-    (fp_line (start 1.9 6.025) (end -1.9 6.025) (layer B.SilkS) (width 0.15))
-    (fp_line (start -1.9 6.025) (end -1.9 -6.025) (layer B.SilkS) (width 0.15))
-    (fp_line (start -1.9 -6.025) (end 1.9 -6.025) (layer B.SilkS) (width 0.15))
-    (fp_line (start 1.9 -6.025) (end 1.9 6.025) (layer B.SilkS) (width 0.15))
-    (pad 3 smd rect (at -2.4 -1.25 180) (size 0.6 1.7) (layers B.Cu B.Paste B.Mask)
-      (net 41 SWDIO/SCK))
-    (pad 4 smd rect (at -2.4 0 180) (size 0.6 1.7) (layers B.Cu B.Paste B.Mask)
-      (net 42 SWCLK/MISO))
-    (pad 2 smd rect (at -2.4 -2.5 180) (size 0.6 1.7) (layers B.Cu B.Paste B.Mask)
-      (net 4 RESET))
-    (pad 1 smd rect (at -2.4 -3.75 180) (size 0.6 1.7) (layers B.Cu B.Paste B.Mask)
-      (net 2 GND))
-    (pad "" smd rect (at 0.65 5.675 180) (size 1 2.7) (layers B.Cu B.Paste B.Mask)
-      (net 2 GND))
-    (pad "" smd rect (at 0.65 -5.675 180) (size 1 2.7) (layers B.Cu B.Paste B.Mask)
-      (net 2 GND))
-    (pad 5 smd rect (at -2.4 1.25 270) (size 1.7 0.6) (layers B.Cu B.Paste B.Mask)
-      (net 43 NSS))
-    (pad 6 smd rect (at -2.4 2.5 270) (size 1.7 0.6) (layers B.Cu B.Paste B.Mask)
-      (net 16 MOSI))
-    (pad 7 smd rect (at -2.4 3.75 270) (size 1.7 0.6) (layers B.Cu B.Paste B.Mask)
-      (net 1 +5V))
+    (pad "" smd rect (at 0.65 3.8 270) (size 1 2.7) (layers B.Cu B.Paste B.Mask))
+    (pad "" smd rect (at 0.65 -3.8 270) (size 1 2.7) (layers B.Cu B.Paste B.Mask))
   )
 
   (module KiCad_Footprints:ZF_SMD_NonPol_0402 (layer B.Cu) (tedit 591A4F80) (tstamp 58F6CD28)
@@ -1412,7 +1364,7 @@
     (fp_text reference R1 (at 0.25 1.35 360) (layer F.Fab)
       (effects (font (size 1 1) (thickness 0.15)))
     )
-    (fp_text value R (at 0 1.5 270) (layer B.Fab) hide
+    (fp_text value 150 (at 0 1.5 270) (layer B.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (pad 1 smd rect (at -0.6 0 270) (size 0.8 0.5) (layers B.Cu B.Paste B.Mask)
@@ -1432,7 +1384,7 @@
     (fp_text reference R2 (at 0.5 -2.1 180) (layer F.Fab)
       (effects (font (size 1 1) (thickness 0.15)))
     )
-    (fp_text value R (at 0 1.5 90) (layer B.Fab) hide
+    (fp_text value 100 (at 0 1.5 90) (layer B.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (pad 1 smd rect (at -0.6 0 90) (size 0.8 0.5) (layers B.Cu B.Paste B.Mask)
@@ -1452,7 +1404,7 @@
     (fp_text reference R3 (at -0.2 -1.5 180) (layer F.Fab)
       (effects (font (size 1 1) (thickness 0.15)))
     )
-    (fp_text value R (at 0 1.5 90) (layer B.Fab) hide
+    (fp_text value 100 (at 0 1.5 90) (layer B.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (pad 1 smd rect (at -0.6 0 90) (size 0.8 0.5) (layers B.Cu B.Paste B.Mask)
@@ -1472,7 +1424,7 @@
     (fp_text reference R4 (at -0.1 -1.1 180) (layer F.Fab)
       (effects (font (size 1 1) (thickness 0.15)))
     )
-    (fp_text value R (at 0 1.5 180) (layer B.Fab) hide
+    (fp_text value JMP (at 0 1.5 180) (layer B.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (pad 1 smd rect (at -0.6 0 180) (size 0.8 0.5) (layers B.Cu B.Paste B.Mask)
@@ -2031,15 +1983,14 @@
     (fp_text reference SW1 (at -0.1 -0.95 180) (layer F.Fab)
       (effects (font (size 1 1) (thickness 0.15)))
     )
-    (fp_text value SW_PUSH (at 0 4.25 180) (layer B.Fab) hide
+    (fp_text value SW_PUSH_TL3330AF130QG (at 0 4.25 180) (layer B.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (fp_line (start 3.5 0) (end 3.5 2.5) (layer B.SilkS) (width 0.15))
     (fp_line (start 3.5 2.5) (end -3.5 2.5) (layer B.SilkS) (width 0.15))
     (fp_line (start -3.5 2.5) (end -3.5 0) (layer B.SilkS) (width 0.15))
     (fp_line (start -3.5 0) (end 3.5 0) (layer B.SilkS) (width 0.15))
-    (pad "" smd rect (at 0 0.5 180) (size 9 1) (layers B.Cu B.Paste B.Mask)
-      (net 2 GND))
+    (pad "" smd rect (at 0 0.5 180) (size 9 1) (layers B.Cu B.Paste B.Mask))
     (pad 1 smd rect (at -2.1 2.65 180) (size 1 1.4) (layers B.Cu B.Paste B.Mask)
       (net 2 GND))
     (pad 2 smd rect (at 2.1 2.65 180) (size 1 1.4) (layers B.Cu B.Paste B.Mask)
@@ -2100,6 +2051,38 @@
       (net 20 "Net-(Q1-Pad5)"))
     (pad 6 smd rect (at -0.65 1) (size 0.3 0.8) (layers B.Cu B.Paste B.Mask)
       (net 21 "Net-(Q1-Pad6)"))
+  )
+
+  (module KiCad_Footprints:ZF_CONN_JST_GH_7POS (layer B.Cu) (tedit 58B5A309) (tstamp 591A65EF)
+    (at 169 100.25 270)
+    (path /58B5DF5E)
+    (attr smd)
+    (fp_text reference P8 (at 0 0 360) (layer F.Fab)
+      (effects (font (size 1 1) (thickness 0.15)))
+    )
+    (fp_text value "JST GH 7-POS" (at 0 11 270) (layer B.Fab) hide
+      (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
+    )
+    (fp_line (start 1.9 6.025) (end -1.9 6.025) (layer B.SilkS) (width 0.15))
+    (fp_line (start -1.9 6.025) (end -1.9 -6.025) (layer B.SilkS) (width 0.15))
+    (fp_line (start -1.9 -6.025) (end 1.9 -6.025) (layer B.SilkS) (width 0.15))
+    (fp_line (start 1.9 -6.025) (end 1.9 6.025) (layer B.SilkS) (width 0.15))
+    (pad 3 smd rect (at -2.4 -1.25 180) (size 0.6 1.7) (layers B.Cu B.Paste B.Mask)
+      (net 41 SWDIO/SCK))
+    (pad 4 smd rect (at -2.4 0 180) (size 0.6 1.7) (layers B.Cu B.Paste B.Mask)
+      (net 42 SWCLK/MISO))
+    (pad 2 smd rect (at -2.4 -2.5 180) (size 0.6 1.7) (layers B.Cu B.Paste B.Mask)
+      (net 4 RESET))
+    (pad 1 smd rect (at -2.4 -3.75 180) (size 0.6 1.7) (layers B.Cu B.Paste B.Mask)
+      (net 2 GND))
+    (pad "" smd rect (at 0.65 5.675 180) (size 1 2.7) (layers B.Cu B.Paste B.Mask))
+    (pad "" smd rect (at 0.65 -5.675 180) (size 1 2.7) (layers B.Cu B.Paste B.Mask))
+    (pad 5 smd rect (at -2.4 1.25 270) (size 1.7 0.6) (layers B.Cu B.Paste B.Mask)
+      (net 43 NSS))
+    (pad 6 smd rect (at -2.4 2.5 270) (size 1.7 0.6) (layers B.Cu B.Paste B.Mask)
+      (net 16 MOSI))
+    (pad 7 smd rect (at -2.4 3.75 270) (size 1.7 0.6) (layers B.Cu B.Paste B.Mask)
+      (net 1 +5V))
   )
 
   (gr_text "NOTES:\n1. FOOTPRINTS ORIENTED PER IPC-7351FC LEVEL B (PIN 1 IN LOWER LEFT)\n2. COMPONENT ROTATION IN DEGREES COUNTER-CLOCKWISE\n3. ALL COMPONENTS MOUNTED ON B.CU LAYER (LED IS BOTTOM-MOUNT)\n4. PCB IS 1.6mm FR4 RATED FOR ROHS REFLOW, 1OZ COPPER, ENIG FINISH\n5. MATTE BLACK SOLDER MASK WITH WHITE SILKSCREEN\n6. SOLDER PASTE MUST BE ROHS COMPLIANT (LEAD-FREE)\n7. NO MARKS (E-TEST, QA, SERIAL NUMBER, ETC) ON FRONT (LOGO SIDE) OF BOARD\n8. BOARDS TO BE SHIPPED IN CUSTOMER-SUPPLIED FOAM TRAYS" (at 124.4 125.6) (layer F.Fab)

@@ -1,0 +1,35 @@
+Title,NeuroBytes Interneuron,,,,,,,
+Revision,C,,,,,,,
+Date,2017-05-15,,,,,,,
+Generated,Mon 15 May 2017 08:22:36 PM CDT,,,,,,,
+Company,NeuroTinker, LLC,,,,,,
+Comment 1,,,,,,,,
+Comment 2,,,,,,,,
+Comment 3,,,,,,,,
+Comment 4,,,,,,,,
+Total Parts,24,,,,,,,
+Total Unique Parts,14,,,,,,,
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
+Ref,Qty,Value,Link,Mfr,Mfr Part #,Package,RoHS,Subs Allowed
+C3 C5,2,100 nF,https://www.digikey.com/product-detail/en/taiyo-yuden/LMK105BJ104KV-F/587-1227-2-ND/930579,Taiyo Yuden,LMK105BJ104KV-F,0402,Yes,No
+C1 C4 ,2,1 uF,https://www.digikey.com/product-detail/en/taiyo-yuden/LMK107B7105KA-T/587-1242-2-ND/930594,Taiyo Yuden,LMK107B7105KA-T,0603,Yes,Yes
+C2 ,1,10 uF,https://www.digikey.com/product-detail/en/kemet/T491A106K010AT/399-3684-2-ND/818545,Kemet,T491A106K010AT,1206,Yes,No
+D1 ,1,RGB LED CA,https://www.digikey.com/product-detail/en/sunled/XZMDKCBDDG45S-9/1497-1257-1-ND/5169746,SunLED,XZMDKCBDDG45S-9,4-PLCC  bottom mtg,Yes,No
+P1 P6 P7 P2 P3 P4 P5 ,7,JST GH 4-POS,N/A (NeuroTinker supplied),JST,SM04B-GHS-GD-TB(LF)(SN),SMT,Yes,No
+P8,1,JST GH 7-POS,https://www.digikey.com/product-detail/en/jst-sales-america-inc/SM07B-GHS-TB(LF)(SN)/455-1569-1-ND/807837,JST,SM07B-GHS-TB(LF)(SN),SMT,Yes,No
+Q2 Q1 ,2,NPN 3904 Dual,https://www.digikey.com/product-detail/en/on-semiconductor/MBT3904DW1T1G/MBT3904DW1T1GOSCT-ND/918012,ON Semiconductor,MBT3904DW1T1G,SOT-363,Yes,Yes
+R1 ,1,150,https://www.digikey.com/product-detail/en/yageo/RC0402FR-07150RL/311-150LRCT-ND/729490,Yageo,RC0402FR-07150RL,0402,Yes,Yes
+R2 R3 ,2,100,https://www.digikey.com/product-detail/en/yageo/RC0402FR-07100RP/YAG1248CT-ND/4935363,Yageo,RC0402FR-07100RP,0402,Yes,Yes
+R4 ,1,Jumper (0 ohm),https://www.digikey.com/product-detail/en/yageo/RC0402JR-070RL/311-0.0JRTR-ND/726406,Yageo,RC0402JR-070RL,0402,Yes,Yes
+RN1 ,1,1k (x4),https://www.digikey.com/product-detail/en/cts-resistor-products/741C083102JP/741C083102JPTR-ND/1124492,CTS Resistor Products,741C083103JP,0804,Yes,Yes
+SW1 ,1,SW_PUSH_TL3330AF130QG,https://www.digikey.com/product-detail/en/e-switch/TL3330AF130QG/EG4388CT-ND/1426858,E-Switch,TL3330AF130QG,Gull Wing,Yes,No
+U1 ,1,STM32L011Gx,N/A (NeuroTinker supplied),ST Microelectronics,STM32L011G4U6,28-UFQFN,Yes,No
+U2 ,1,LDO_LD3985M33R,https://www.digikey.com/product-detail/en/stmicroelectronics/LD3985M33R/497-3504-1-ND/669344,ST Microelectronics,LD3985M33R,SOT-23-5,Yes,No
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
+BOM made with KICAD_BOM_WIZARD (https://github.com/HashDefineElectronics/KiCad_BOM_Wizard.git),,,,,,,,
+Generated Mon 15 May 2017 08:22:36 PM CDT,,,,,,,,

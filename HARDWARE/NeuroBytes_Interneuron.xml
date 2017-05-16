@@ -1,0 +1,720 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<export version="D">
+  <design>
+    <source>/home/zach/Documents/NeuroTinker/Products/NeuroBytes_Interneuron/HARDWARE/NeuroBytes_Interneuron.sch</source>
+    <date>Mon 15 May 2017 08:22:36 PM CDT</date>
+    <tool>Eeschema 4.0.5-e0-6337~49~ubuntu14.04.1</tool>
+    <sheet number="1" name="/" tstamps="/">
+      <title_block>
+        <title>NeuroBytes Interneuron</title>
+        <company>NeuroTinker, LLC</company>
+        <rev>C</rev>
+        <date>2017-05-15</date>
+        <source>NeuroBytes_Interneuron.sch</source>
+        <comment number="1" value=""/>
+        <comment number="2" value=""/>
+        <comment number="3" value=""/>
+        <comment number="4" value=""/>
+      </title_block>
+    </sheet>
+  </design>
+  <components>
+    <comp ref="C3">
+      <value>0u1</value>
+      <footprint>KiCad_Footprints:ZF_SMD_NonPol_0402_cap</footprint>
+      <fields>
+        <field name="Subs Allowed">No</field>
+        <field name="RoHS">Yes</field>
+      </fields>
+      <libsource lib="device" part="C"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>58B4A97E</tstamp>
+    </comp>
+    <comp ref="D1">
+      <value>LED_RABG</value>
+      <footprint>KiCad_Footprints:ZF_LED_RGB_SunLED_XZMDKCBDDG45S-9_cast</footprint>
+      <fields>
+        <field name="Subs Allowed">No</field>
+        <field name="RoHS">Yes</field>
+      </fields>
+      <libsource lib="device" part="LED_RABG"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>58B4B5D1</tstamp>
+    </comp>
+    <comp ref="Q2">
+      <value>NPN_dual</value>
+      <footprint>KiCad_Footprints:ZF_SMD_SOT-363</footprint>
+      <fields>
+        <field name="Subs Allowed">Yes</field>
+        <field name="RoHS">Yes</field>
+      </fields>
+      <libsource lib="NeuroTinker_schematic_symbols" part="NPN_dual"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>58B4BE96</tstamp>
+    </comp>
+    <comp ref="P1">
+      <value>JST GH 4-POS</value>
+      <footprint>KiCad_Footprints:ZF_CONN_JST_GH</footprint>
+      <fields>
+        <field name="Subs Allowed">No</field>
+        <field name="RoHS">Yes</field>
+      </fields>
+      <libsource lib="conn" part="CONN_01X04"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>58B59D8D</tstamp>
+    </comp>
+    <comp ref="P6">
+      <value>JST GH 4-POS</value>
+      <footprint>KiCad_Footprints:ZF_CONN_JST_GH</footprint>
+      <fields>
+        <field name="Subs Allowed">No</field>
+        <field name="RoHS">Yes</field>
+      </fields>
+      <libsource lib="conn" part="CONN_01X04"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>58B5B32F</tstamp>
+    </comp>
+    <comp ref="P7">
+      <value>JST GH 4-POS</value>
+      <footprint>KiCad_Footprints:ZF_CONN_JST_GH</footprint>
+      <fields>
+        <field name="Subs Allowed">No</field>
+        <field name="RoHS">Yes</field>
+      </fields>
+      <libsource lib="conn" part="CONN_01X04"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>58B5B3DE</tstamp>
+    </comp>
+    <comp ref="U1">
+      <value>STM32L011Gx</value>
+      <footprint>KiCad_Footprints:ZF_IC_UFQFPN28-050</footprint>
+      <fields>
+        <field name="Subs Allowed">No</field>
+        <field name="RoHS">Yes</field>
+      </fields>
+      <libsource lib="NeuroTinker_schematic_symbols" part="STM32L011Gx"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>58B5C156</tstamp>
+    </comp>
+    <comp ref="U2">
+      <value>LD3985G33R</value>
+      <footprint>KiCad_Footprints:ZF_SOT23-5L</footprint>
+      <fields>
+        <field name="Subs Allowed">No</field>
+        <field name="RoHS">Yes</field>
+      </fields>
+      <libsource lib="regul" part="LD3985G33R"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>58B5C9D0</tstamp>
+    </comp>
+    <comp ref="C1">
+      <value>1u0</value>
+      <footprint>KiCad_Footprints:ZF_SMD_NonPol_0603</footprint>
+      <fields>
+        <field name="Subs Allowed">Yes</field>
+        <field name="RoHS">Yes</field>
+      </fields>
+      <libsource lib="device" part="C"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>58B5CACA</tstamp>
+    </comp>
+    <comp ref="C4">
+      <value>1u0</value>
+      <footprint>KiCad_Footprints:ZF_SMD_NonPol_0603</footprint>
+      <fields>
+        <field name="Subs Allowed">Yes</field>
+        <field name="RoHS">Yes</field>
+      </fields>
+      <libsource lib="device" part="C"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>58B5D1F9</tstamp>
+    </comp>
+    <comp ref="C2">
+      <value>10u</value>
+      <footprint>KiCad_Footprints:ZF_SMD_pol_1206</footprint>
+      <fields>
+        <field name="Subs Allowed">No</field>
+        <field name="RoHS">Yes</field>
+      </fields>
+      <libsource lib="device" part="CP"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>58B5DAAA</tstamp>
+    </comp>
+    <comp ref="P12">
+      <value>JST GH 7-POS</value>
+      <footprint>KiCad_Footprints:ZF_CONN_JST_GH_7POS</footprint>
+      <fields>
+        <field name="Subs Allowed">No</field>
+        <field name="RoHS">Yes</field>
+      </fields>
+      <libsource lib="conn" part="CONN_01X07"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>58B5DF5E</tstamp>
+    </comp>
+    <comp ref="SW1">
+      <value>SW_PUSH_TL3330AF130QG</value>
+      <footprint>KiCad_Footprints:ZF_SW_Momentary_SideMtg</footprint>
+      <fields>
+        <field name="Subs Allowed">No</field>
+        <field name="RoHS">Yes</field>
+      </fields>
+      <libsource lib="NeuroTinker_schematic_symbols" part="SW_PUSH"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>58B5A249</tstamp>
+    </comp>
+    <comp ref="P2">
+      <value>JST GH 4-POS</value>
+      <footprint>KiCad_Footprints:ZF_CONN_JST_GH</footprint>
+      <fields>
+        <field name="Subs Allowed">No</field>
+        <field name="RoHS">Yes</field>
+      </fields>
+      <libsource lib="conn" part="CONN_01X04"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>58B5B05D</tstamp>
+    </comp>
+    <comp ref="P3">
+      <value>JST GH 4-POS</value>
+      <footprint>KiCad_Footprints:ZF_CONN_JST_GH</footprint>
+      <fields>
+        <field name="Subs Allowed">No</field>
+        <field name="RoHS">Yes</field>
+      </fields>
+      <libsource lib="conn" part="CONN_01X04"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>58B5B0E3</tstamp>
+    </comp>
+    <comp ref="P4">
+      <value>JST GH 4-POS</value>
+      <footprint>KiCad_Footprints:ZF_CONN_JST_GH</footprint>
+      <fields>
+        <field name="Subs Allowed">No</field>
+        <field name="RoHS">Yes</field>
+      </fields>
+      <libsource lib="conn" part="CONN_01X04"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>58B5B14B</tstamp>
+    </comp>
+    <comp ref="R1">
+      <value>150</value>
+      <footprint>KiCad_Footprints:ZF_SMD_NonPol_0402</footprint>
+      <fields>
+        <field name="Subs Allowed">Yes</field>
+        <field name="RoHS">Yes</field>
+      </fields>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>58B5C233</tstamp>
+    </comp>
+    <comp ref="R2">
+      <value>100</value>
+      <footprint>KiCad_Footprints:ZF_SMD_NonPol_0402</footprint>
+      <fields>
+        <field name="Subs Allowed">Yes</field>
+        <field name="RoHS">Yes</field>
+      </fields>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>58B5C2BE</tstamp>
+    </comp>
+    <comp ref="R3">
+      <value>100</value>
+      <footprint>KiCad_Footprints:ZF_SMD_NonPol_0402</footprint>
+      <fields>
+        <field name="Subs Allowed">Yes</field>
+        <field name="RoHS">Yes</field>
+      </fields>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>58B5C32A</tstamp>
+    </comp>
+    <comp ref="Q1">
+      <value>NPN_dual</value>
+      <footprint>KiCad_Footprints:ZF_SMD_SOT-363</footprint>
+      <fields>
+        <field name="Subs Allowed">Yes</field>
+        <field name="RoHS">Yes</field>
+      </fields>
+      <libsource lib="NeuroTinker_schematic_symbols" part="NPN_dual"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>58B5E1EC</tstamp>
+    </comp>
+    <comp ref="RN1">
+      <value>R_Pack04</value>
+      <footprint>KiCad_Footprints:ZF_RN_4iso_CTS-0804</footprint>
+      <fields>
+        <field name="Subs Allowed">Yes</field>
+        <field name="RoHS">Yes</field>
+      </fields>
+      <libsource lib="device" part="R_Pack04"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>58B6E430</tstamp>
+    </comp>
+    <comp ref="C5">
+      <value>0u1</value>
+      <footprint>KiCad_Footprints:ZF_SMD_NonPol_0402_cap</footprint>
+      <fields>
+        <field name="Subs Allowed">Yes</field>
+        <field name="RoHS">Yes</field>
+      </fields>
+      <libsource lib="device" part="C"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>58B73F8A</tstamp>
+    </comp>
+    <comp ref="P5">
+      <value>JST GH 4-POS</value>
+      <footprint>KiCad_Footprints:ZF_CONN_JST_GH</footprint>
+      <fields>
+        <field name="Subs Allowed">No</field>
+        <field name="RoHS">Yes</field>
+      </fields>
+      <libsource lib="conn" part="CONN_01X04"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>58F6D44B</tstamp>
+    </comp>
+    <comp ref="R4">
+      <value>JMP</value>
+      <footprint>KiCad_Footprints:ZF_SMD_NonPol_0402</footprint>
+      <fields>
+        <field name="Subs Allowed">Yes</field>
+        <field name="RoHS">Yes</field>
+      </fields>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>58F6DFBC</tstamp>
+    </comp>
+  </components>
+  <libparts>
+    <libpart lib="device" part="C">
+      <description>Unpolarized capacitor</description>
+      <footprints>
+        <fp>C?</fp>
+        <fp>C_????_*</fp>
+        <fp>C_????</fp>
+        <fp>SMD*_c</fp>
+        <fp>Capacitor*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">C</field>
+        <field name="Value">C</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="passive"/>
+        <pin num="2" name="~" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="conn" part="CONN_01X04">
+      <description>Connector, single row, 01x04</description>
+      <footprints>
+        <fp>Pin_Header_Straight_1X04</fp>
+        <fp>Pin_Header_Angled_1X04</fp>
+        <fp>Socket_Strip_Straight_1X04</fp>
+        <fp>Socket_Strip_Angled_1X04</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">P</field>
+        <field name="Value">CONN_01X04</field>
+      </fields>
+      <pins>
+        <pin num="1" name="P1" type="passive"/>
+        <pin num="2" name="P2" type="passive"/>
+        <pin num="3" name="P3" type="passive"/>
+        <pin num="4" name="P4" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="conn" part="CONN_01X07">
+      <description>Connector, single row, 01x07</description>
+      <footprints>
+        <fp>Pin_Header_Straight_1X07</fp>
+        <fp>Pin_Header_Angled_1X07</fp>
+        <fp>Socket_Strip_Straight_1X07</fp>
+        <fp>Socket_Strip_Angled_1X07</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">P</field>
+        <field name="Value">CONN_01X07</field>
+      </fields>
+      <pins>
+        <pin num="1" name="P1" type="passive"/>
+        <pin num="2" name="P2" type="passive"/>
+        <pin num="3" name="P3" type="passive"/>
+        <pin num="4" name="P4" type="passive"/>
+        <pin num="5" name="P5" type="passive"/>
+        <pin num="6" name="P6" type="passive"/>
+        <pin num="7" name="P7" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="device" part="CP">
+      <description>Polarised capacitor</description>
+      <footprints>
+        <fp>CP*</fp>
+        <fp>C_Axial*</fp>
+        <fp>C_Radial*</fp>
+        <fp>TantalC*</fp>
+        <fp>C*elec</fp>
+        <fp>c_elec*</fp>
+        <fp>SMD*_Pol</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">C</field>
+        <field name="Value">CP</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="passive"/>
+        <pin num="2" name="~" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="regul" part="LD3985G122R">
+      <aliases>
+        <alias>LD3985G18R</alias>
+        <alias>LD3985G25R</alias>
+        <alias>LD3985G26R</alias>
+        <alias>LD3985G27R</alias>
+        <alias>LD3985G28R</alias>
+        <alias>LD3985G30R</alias>
+        <alias>LD3985G33R</alias>
+        <alias>LD3985G47R</alias>
+      </aliases>
+      <description>150 mA Low Dropout Voltage Regulator, Fixed Output 1.22V, TSOT-23-5</description>
+      <docs>http://www.st.com/internet/com/TECHNICAL_RESOURCES/TECHNICAL_LITERATURE/DATASHEET/CD00003395.pdf</docs>
+      <footprints>
+        <fp>TSOT*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">U</field>
+        <field name="Value">LD3985G122R</field>
+        <field name="Footprint">TSOT-23-5</field>
+      </fields>
+      <pins>
+        <pin num="1" name="VIN" type="input"/>
+        <pin num="2" name="GND" type="power_in"/>
+        <pin num="3" name="INH" type="input"/>
+        <pin num="4" name="BYP" type="input"/>
+        <pin num="5" name="VOUT" type="power_out"/>
+      </pins>
+    </libpart>
+    <libpart lib="device" part="LED_RABG">
+      <description>LED RGB, common anode</description>
+      <fields>
+        <field name="Reference">D</field>
+        <field name="Value">LED_RABG</field>
+      </fields>
+      <pins>
+        <pin num="1" name="RK" type="passive"/>
+        <pin num="2" name="A" type="passive"/>
+        <pin num="3" name="BK" type="passive"/>
+        <pin num="4" name="GK" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="NeuroTinker_schematic_symbols" part="NPN_dual">
+      <fields>
+        <field name="Reference">Q</field>
+        <field name="Value">NPN_dual</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="input"/>
+        <pin num="2" name="BASE2" type="input"/>
+        <pin num="3" name="~" type="input"/>
+        <pin num="4" name="~" type="input"/>
+        <pin num="5" name="BASE1" type="input"/>
+        <pin num="6" name="~" type="input"/>
+      </pins>
+    </libpart>
+    <libpart lib="device" part="R">
+      <description>Resistor</description>
+      <footprints>
+        <fp>R_*</fp>
+        <fp>Resistor_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">R</field>
+        <field name="Value">R</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="passive"/>
+        <pin num="2" name="~" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="device" part="R_Pack04">
+      <description>4 Resistor network, parallel topology, DIP package</description>
+      <footprints>
+        <fp>DIP*</fp>
+        <fp>SOIC*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">RN</field>
+        <field name="Value">R_Pack04</field>
+      </fields>
+      <pins>
+        <pin num="1" name="R1.1" type="passive"/>
+        <pin num="2" name="R2.1" type="passive"/>
+        <pin num="3" name="R3.1" type="passive"/>
+        <pin num="4" name="R4.1" type="passive"/>
+        <pin num="5" name="R4.2" type="passive"/>
+        <pin num="6" name="R3.2" type="passive"/>
+        <pin num="7" name="R2.2" type="passive"/>
+        <pin num="8" name="R1.2" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="NeuroTinker_schematic_symbols" part="STM32L011Gx">
+      <fields>
+        <field name="Reference">U</field>
+        <field name="Value">STM32L011Gx</field>
+      </fields>
+      <pins>
+        <pin num="1" name="BOOT" type="input"/>
+        <pin num="2" name="PC14_5V" type="input"/>
+        <pin num="3" name="PC15_3V3" type="input"/>
+        <pin num="4" name="NRST" type="input"/>
+        <pin num="5" name="VDDA" type="input"/>
+        <pin num="6" name="PA0_3V3/TIM2_CH1" type="input"/>
+        <pin num="7" name="PA1_5V/TIM2_CH2" type="input"/>
+        <pin num="8" name="PA2_3V3/TIM2_CH3/TIM21_CH1" type="input"/>
+        <pin num="9" name="PA3_5V/TIM2_CH4/TIM21_CH2" type="input"/>
+        <pin num="10" name="PA4_3V3/NSS" type="input"/>
+        <pin num="11" name="PA5_3V3/TIM2_CH1" type="input"/>
+        <pin num="12" name="PA6_5V" type="input"/>
+        <pin num="13" name="PA7_5V/MOSI" type="input"/>
+        <pin num="14" name="PB0_5V/TIM2_CH2/3" type="input"/>
+        <pin num="15" name="PB1_5V/MOSI/TIM2_CH4" type="input"/>
+        <pin num="16" name="VSS" type="input"/>
+        <pin num="17" name="VDD" type="input"/>
+        <pin num="18" name="PA8_5V/TIM2_CH1" type="input"/>
+        <pin num="19" name="PA9_5V/TIM21_CH2" type="input"/>
+        <pin num="20" name="PA10_5V/TIM21_CH1" type="input"/>
+        <pin num="21" name="PA13/SWDIO/SCK" type="input"/>
+        <pin num="22" name="PA14/SWCLK/MISO" type="input"/>
+        <pin num="23" name="PA15_5V/NSS/TIM2_CH1" type="input"/>
+        <pin num="24" name="PB3_5V/TIM2_CH2" type="input"/>
+        <pin num="25" name="PB4_5V" type="input"/>
+        <pin num="26" name="PB5_5V/MOSI/TIM21_CH1" type="input"/>
+        <pin num="27" name="PB6_5V/TIM2_CH3" type="input"/>
+        <pin num="28" name="PB7_5V/TIM2_CH4" type="input"/>
+      </pins>
+    </libpart>
+    <libpart lib="NeuroTinker_schematic_symbols" part="SW_PUSH">
+      <fields>
+        <field name="Reference">SW</field>
+        <field name="Value">SW_PUSH</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="passive"/>
+        <pin num="2" name="2" type="passive"/>
+      </pins>
+    </libpart>
+  </libparts>
+  <libraries>
+    <library logical="NeuroTinker_schematic_symbols">
+      <uri>/home/zach/Documents/NeuroTinker/Products/NeuroBytes_Interneuron/HARDWARE/NeuroBytes_Schematic_Lib/NeuroTinker_schematic_symbols.lib</uri>
+    </library>
+    <library logical="device">
+      <uri>/usr/share/kicad/library/device.lib</uri>
+    </library>
+    <library logical="regul">
+      <uri>/usr/share/kicad/library/regul.lib</uri>
+    </library>
+    <library logical="conn">
+      <uri>/usr/share/kicad/library/conn.lib</uri>
+    </library>
+  </libraries>
+  <nets>
+    <net code="1" name="D4IN">
+      <node ref="P4" pin="3"/>
+      <node ref="U1" pin="8"/>
+    </net>
+    <net code="2" name="D4EX">
+      <node ref="P4" pin="4"/>
+      <node ref="U1" pin="9"/>
+    </net>
+    <net code="3" name="D3IN">
+      <node ref="U1" pin="10"/>
+      <node ref="P3" pin="3"/>
+    </net>
+    <net code="4" name="D3EX">
+      <node ref="U1" pin="11"/>
+      <node ref="P3" pin="4"/>
+    </net>
+    <net code="5" name="D2EX">
+      <node ref="P2" pin="4"/>
+      <node ref="U1" pin="13"/>
+    </net>
+    <net code="6" name="Net-(D1-Pad4)">
+      <node ref="D1" pin="4"/>
+      <node ref="R2" pin="1"/>
+    </net>
+    <net code="7" name="Net-(D1-Pad1)">
+      <node ref="R1" pin="1"/>
+      <node ref="D1" pin="1"/>
+    </net>
+    <net code="8" name="+5V">
+      <node ref="P6" pin="2"/>
+      <node ref="D1" pin="2"/>
+      <node ref="P7" pin="2"/>
+      <node ref="U2" pin="3"/>
+      <node ref="C1" pin="1"/>
+      <node ref="P4" pin="2"/>
+      <node ref="P1" pin="2"/>
+      <node ref="P3" pin="2"/>
+      <node ref="P2" pin="2"/>
+      <node ref="P5" pin="2"/>
+      <node ref="U2" pin="1"/>
+      <node ref="P12" pin="7"/>
+    </net>
+    <net code="9" name="LED_R">
+      <node ref="U1" pin="28"/>
+      <node ref="RN1" pin="2"/>
+    </net>
+    <net code="10" name="LED_B">
+      <node ref="U1" pin="27"/>
+      <node ref="RN1" pin="3"/>
+    </net>
+    <net code="11" name="A1EX">
+      <node ref="U1" pin="18"/>
+      <node ref="P6" pin="4"/>
+    </net>
+    <net code="12" name="D1EX">
+      <node ref="P1" pin="4"/>
+      <node ref="U1" pin="15"/>
+    </net>
+    <net code="13" name="D1IN">
+      <node ref="U1" pin="14"/>
+      <node ref="P1" pin="3"/>
+    </net>
+    <net code="14" name="Net-(D1-Pad3)">
+      <node ref="R3" pin="1"/>
+      <node ref="D1" pin="3"/>
+    </net>
+    <net code="15" name="LED_G">
+      <node ref="RN1" pin="4"/>
+      <node ref="U1" pin="7"/>
+    </net>
+    <net code="16" name="GND">
+      <node ref="Q2" pin="4"/>
+      <node ref="C4" pin="2"/>
+      <node ref="U2" pin="2"/>
+      <node ref="U1" pin="16"/>
+      <node ref="P1" pin="1"/>
+      <node ref="P7" pin="1"/>
+      <node ref="C3" pin="2"/>
+      <node ref="P6" pin="1"/>
+      <node ref="P2" pin="1"/>
+      <node ref="Q2" pin="1"/>
+      <node ref="SW1" pin="1"/>
+      <node ref="P12" pin="1"/>
+      <node ref="C2" pin="2"/>
+      <node ref="C1" pin="2"/>
+      <node ref="R4" pin="2"/>
+      <node ref="P3" pin="1"/>
+      <node ref="P4" pin="1"/>
+      <node ref="Q1" pin="1"/>
+      <node ref="P5" pin="1"/>
+      <node ref="C5" pin="2"/>
+    </net>
+    <net code="17" name="D2IN">
+      <node ref="U1" pin="12"/>
+      <node ref="P2" pin="3"/>
+    </net>
+    <net code="18" name="Net-(Q2-Pad6)">
+      <node ref="Q2" pin="6"/>
+      <node ref="R3" pin="2"/>
+    </net>
+    <net code="19" name="Net-(Q2-Pad3)">
+      <node ref="R2" pin="2"/>
+      <node ref="Q2" pin="3"/>
+    </net>
+    <net code="20" name="Net-(Q1-Pad6)">
+      <node ref="R1" pin="2"/>
+      <node ref="Q1" pin="6"/>
+    </net>
+    <net code="21" name="A2EX">
+      <node ref="P7" pin="4"/>
+      <node ref="U1" pin="25"/>
+    </net>
+    <net code="22" name="A2IN">
+      <node ref="U1" pin="19"/>
+      <node ref="P7" pin="3"/>
+    </net>
+    <net code="23" name="A3IN">
+      <node ref="P5" pin="3"/>
+      <node ref="U1" pin="20"/>
+    </net>
+    <net code="24" name="Net-(R4-Pad1)">
+      <node ref="U1" pin="1"/>
+      <node ref="R4" pin="1"/>
+    </net>
+    <net code="25" name="A1IN">
+      <node ref="U1" pin="3"/>
+      <node ref="P6" pin="3"/>
+    </net>
+    <net code="26" name="SWDIO/SCK">
+      <node ref="P12" pin="3"/>
+      <node ref="U1" pin="21"/>
+    </net>
+    <net code="27" name="MOSI">
+      <node ref="U1" pin="26"/>
+      <node ref="P12" pin="6"/>
+    </net>
+    <net code="28" name="SWCLK/MISO">
+      <node ref="P12" pin="4"/>
+      <node ref="U1" pin="22"/>
+    </net>
+    <net code="29" name="NSS">
+      <node ref="U1" pin="23"/>
+      <node ref="P12" pin="5"/>
+    </net>
+    <net code="30" name="RESET">
+      <node ref="C5" pin="1"/>
+      <node ref="U1" pin="4"/>
+      <node ref="P12" pin="2"/>
+    </net>
+    <net code="31" name="A3EX">
+      <node ref="U1" pin="2"/>
+      <node ref="P5" pin="4"/>
+    </net>
+    <net code="32" name="Net-(Q2-Pad5)">
+      <node ref="RN1" pin="5"/>
+      <node ref="Q2" pin="5"/>
+    </net>
+    <net code="33" name="Net-(Q2-Pad2)">
+      <node ref="Q2" pin="2"/>
+      <node ref="RN1" pin="6"/>
+    </net>
+    <net code="34" name="Net-(Q1-Pad2)">
+      <node ref="RN1" pin="7"/>
+      <node ref="Q1" pin="2"/>
+    </net>
+    <net code="35" name="SWITCH">
+      <node ref="U1" pin="24"/>
+      <node ref="SW1" pin="2"/>
+    </net>
+    <net code="36" name="+3V3">
+      <node ref="U1" pin="17"/>
+      <node ref="C2" pin="1"/>
+      <node ref="U2" pin="5"/>
+      <node ref="C4" pin="1"/>
+      <node ref="U1" pin="5"/>
+      <node ref="C3" pin="1"/>
+    </net>
+    <net code="37" name="Net-(U1-Pad6)">
+      <node ref="U1" pin="6"/>
+    </net>
+    <net code="38" name="Net-(Q1-Pad5)">
+      <node ref="Q1" pin="5"/>
+    </net>
+    <net code="39" name="Net-(Q1-Pad4)">
+      <node ref="Q1" pin="4"/>
+    </net>
+    <net code="40" name="Net-(Q1-Pad3)">
+      <node ref="Q1" pin="3"/>
+    </net>
+    <net code="41" name="Net-(RN1-Pad8)">
+      <node ref="RN1" pin="8"/>
+    </net>
+    <net code="42" name="Net-(RN1-Pad1)">
+      <node ref="RN1" pin="1"/>
+    </net>
+    <net code="43" name="Net-(U2-Pad4)">
+      <node ref="U2" pin="4"/>
+    </net>
+  </nets>
+</export>

@@ -21,16 +21,16 @@
   )
 
   (layers
-    (0 F.Cu signal hide)
+    (0 F.Cu signal)
     (31 B.Cu signal)
     (32 B.Adhes user)
     (33 F.Adhes user)
     (34 B.Paste user)
     (35 F.Paste user)
-    (36 B.SilkS user hide)
-    (37 F.SilkS user hide)
+    (36 B.SilkS user)
+    (37 F.SilkS user)
     (38 B.Mask user)
-    (39 F.Mask user hide)
+    (39 F.Mask user)
     (40 Dwgs.User user)
     (41 Cmts.User user)
     (42 Eco1.User user)
@@ -70,7 +70,7 @@
     (pad_drill 0)
     (pad_to_mask_clearance 0)
     (aux_axis_origin 129.4 103.6)
-    (grid_origin 138.4 94.6)
+    (grid_origin 129.4 103.6)
     (visible_elements FFFFFF7F)
     (pcbplotparams
       (layerselection 0x010f0_80000001)
@@ -2102,7 +2102,7 @@
       (net 21 "Net-(Q1-Pad6)"))
   )
 
-  (gr_text "NOTES:\n1. FOOTPRINTS ORIENTED PER IPC-7351FC LEVEL B (PIN 1 IN LOWER LEFT)\n2. COMPONENT ROTATION IN DEGREES COUNTER-CLOCKWISE\n3. ALL COMPONENTS MOUNTED ON B.CU LAYER (LED IS BOTTOM-MOUNT)\n4. PCB IS 1.6mm FR4 RATED FOR ROHS REFLOW, 1OZ COPPER, ENIG FINISH\n5. MATTE BLACK SOLDER MASK WITH WHITE SILKSCREEN\n6. SOLDER PASTE MUST BE ROHS COMPLIANT (LEAD-FREE)\n7. NO MARKS (E-TEST, QA, SERIAL NUMBER, ETC) ON FRONT (LOGO SIDE) OF BOARD\n8. BOARDS TO BE SHIPPED IN CUSTOMER-SUPPLIED TRAYS" (at 124.4 125.6) (layer F.Fab)
+  (gr_text "NOTES:\n1. FOOTPRINTS ORIENTED PER IPC-7351FC LEVEL B (PIN 1 IN LOWER LEFT)\n2. COMPONENT ROTATION IN DEGREES COUNTER-CLOCKWISE\n3. ALL COMPONENTS MOUNTED ON B.CU LAYER (LED IS BOTTOM-MOUNT)\n4. PCB IS 1.6mm FR4 RATED FOR ROHS REFLOW, 1OZ COPPER, ENIG FINISH\n5. MATTE BLACK SOLDER MASK WITH WHITE SILKSCREEN\n6. SOLDER PASTE MUST BE ROHS COMPLIANT (LEAD-FREE)\n7. NO MARKS (E-TEST, QA, SERIAL NUMBER, ETC) ON FRONT (LOGO SIDE) OF BOARD\n8. BOARDS TO BE SHIPPED IN CUSTOMER-SUPPLIED FOAM TRAYS" (at 124.4 125.6) (layer F.Fab)
     (effects (font (size 1.5 1.5) (thickness 0.3)) (justify left))
   )
   (gr_line (start 131.4 106.6) (end 133.4 106.6) (layer F.Fab) (width 0.2))
