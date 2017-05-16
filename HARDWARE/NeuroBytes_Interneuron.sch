@@ -36,8 +36,8 @@ $Descr A4 11693 8268
 encoding utf-8
 Sheet 1 1
 Title "NeuroBytes Interneuron"
-Date "2017-04-19"
-Rev "A"
+Date "2017-05-15"
+Rev "C"
 Comp "NeuroTinker, LLC"
 Comment1 ""
 Comment2 ""
