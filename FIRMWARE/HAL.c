@@ -4,7 +4,7 @@
 
 volatile uint8_t toggle = 0;
 volatile uint8_t tick = 0;
-extern volatile uint8_t main_tick = 0;
+volatile uint8_t main_tick = 0;
 
 void clock_setup(void)
 {

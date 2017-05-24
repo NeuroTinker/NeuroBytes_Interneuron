@@ -7,23 +7,23 @@ write_buffer_t write_buffer;
 uint32_t message_buffer[11] = {0,0,0,0,0,0,0,0,0,0,0};
 uint8_t message_buffer_count[11];
 
-extern volatile uint16_t active_input_pins[11] = {0,0,0,0,0,0,0,0,0,0,0};
+volatile uint16_t active_input_pins[11] = {0,0,0,0,0,0,0,0,0,0,0};
 
-extern volatile uint16_t active_output_pins[11] = {PIN_AXON1_IN, PIN_AXON2_IN,0,0,0,0,0,0,0,0,0};
+volatile uint16_t active_output_pins[11] = {PIN_AXON1_IN, PIN_AXON2_IN,0,0,0,0,0,0,0,0,0};
 
-extern volatile uint32_t dendrite_pulses[4] = {0,0,0,0};
-extern volatile uint8_t dendrite_pulse_count = 0;
+volatile uint32_t dendrite_pulses[4] = {0,0,0,0};
+volatile uint8_t dendrite_pulse_count = 0;
 
-extern volatile uint8_t blink_flag = 0;
+volatile uint8_t blink_flag = 0;
 
-extern volatile uint32_t nid_ping_time = 0;
+volatile uint32_t nid_ping_time = 0;
 
-extern volatile uint16_t nid_pin = 0;
+volatile uint16_t nid_pin = 0;
 uint32_t nid_port = 0;
-extern volatile uint16_t nid_pin_out = 0;
+volatile uint16_t nid_pin_out = 0;
 uint32_t nid_port_out = 0;
 uint8_t nid_i      =    4;
-extern volatile uint32_t  nid_keep_alive = NID_PING_KEEP_ALIVE;
+volatile uint32_t  nid_keep_alive = NID_PING_KEEP_ALIVE;
 
 
 /* 
@@ -42,7 +42,7 @@ All available input pins are
     };
 */
 
-extern uint32_t active_input_ports[11] = {
+uint32_t active_input_ports[11] = {
     PORT_AXON1_IN,
     PORT_AXON2_IN,
     PORT_AXON3_IN,
@@ -56,7 +56,7 @@ extern uint32_t active_input_ports[11] = {
     PORT_DEND4_IN
 };
 
-extern uint32_t active_output_ports[11] = {
+uint32_t active_output_ports[11] = {
     PORT_AXON1_EX,
     PORT_AXON2_EX,
     PORT_AXON3_EX,
@@ -70,7 +70,7 @@ extern uint32_t active_output_ports[11] = {
     PORT_DEND4_IN
 };
 
-extern uint16_t complimentary_pins[11] = {
+uint16_t complimentary_pins[11] = {
     PIN_AXON1_EX,
     PIN_AXON2_EX,
     PIN_AXON3_EX,
@@ -84,11 +84,11 @@ extern uint16_t complimentary_pins[11] = {
     PIN_DEND4_EX
 };
 
-extern volatile uint8_t dendrite_pulse_flag[11] = {0,0,0,0,0,0,0,0,0,0,0};
-extern volatile uint8_t dendrite_ping_flag[11] = {0,0,0,0,0,0,0,0,0,0,0};
+volatile uint8_t dendrite_pulse_flag[11] = {0,0,0,0,0,0,0,0,0,0,0};
+volatile uint8_t dendrite_ping_flag[11] = {0,0,0,0,0,0,0,0,0,0,0};
 uint8_t write_count = 0;
-extern volatile uint16_t identify_time = 0;
-extern uint8_t identify_channel = 0;
+volatile uint16_t identify_time = 0;
+uint8_t identify_channel = 0;
 
 void commInit(void)
 {
@@ -123,8 +123,7 @@ void readInputs(void)
             message_buffer[i] |= value;
 
             if (++message_buffer_count[i] == 32){ // done reading message
-                // Process message and send to appropriate handler
-                // It might be better to buffer the message and process it later
+                // Process message and set appropriate flags for main() or add messages to message buffer
                 recipient_id = (message_buffer[i] & RECIPIENT_MASK) >> 28; // 3-bit recipient id 28
                 keep_alive = (message_buffer[i] & KEEP_ALIVE_MASK) >> 22; // 6-bit keep alive 22
                 sender_id = (message_buffer[i] & SENDER_MASK) >> 19; // 3-bit sender id 19
@@ -176,8 +175,8 @@ void readInputs(void)
                 } else if (header == PULSE){
                     dendrite_pulse_flag[i] = 1;
                 } else if (header == IDENTIFY){
-                    if (identify_time == 0){
-                        identify_time = IDENTIFY_TIME;
+                    if (identify_time > IDENTIFY_TIME){
+                        identify_time = 0;
                         identify_channel = data_frame;
                     }
                     if (keep_alive > 0){

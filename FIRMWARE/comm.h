@@ -30,7 +30,7 @@
 #define HEADER_MASK             0b00000000000001110000000000000000
 #define DATA_MASK               0b00000000000000001111111111111111
 
-#define IDENTIFY_TIME       200 // 1000 ms
+#define IDENTIFY_TIME       50 // 250 ms
 
 /*
     This and comm.c define all communication protocol
