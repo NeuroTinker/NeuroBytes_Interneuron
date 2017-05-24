@@ -71,9 +71,9 @@ extern uint32_t active_output_ports[11] = {
 };
 
 extern uint16_t complimentary_pins[11] = {
-    PORT_AXON1_EX,
-    PORT_AXON2_EX,
-    PORT_AXON3_EX,
+    PIN_AXON1_EX,
+    PIN_AXON2_EX,
+    PIN_AXON3_EX,
     PIN_DEND1_IN,
     PIN_DEND1_EX,
     PIN_DEND2_IN,
@@ -84,14 +84,6 @@ extern uint16_t complimentary_pins[11] = {
     PIN_DEND4_EX
 };
 
-// complimentary port is same port
-
-extern volatile uint32_t downstream_write_buffer = 0;
-extern volatile uint8_t downstream_write_buffer_ready = 0;
-extern volatile uint32_t all_write_buffer = 0;
-extern volatile uint8_t all_write_buffer_ready = 0;
-extern volatile uint32_t nid_write_buffer = 0;
-extern volatile uint8_t nid_write_buffer_ready = 0;
 extern volatile uint8_t dendrite_pulse_flag[11] = {0,0,0,0,0,0,0,0,0,0,0};
 extern volatile uint8_t dendrite_ping_flag[11] = {0,0,0,0,0,0,0,0,0,0,0};
 uint8_t write_count = 0;
@@ -133,7 +125,6 @@ void readInputs(void)
             if (++message_buffer_count[i] == 32){ // done reading message
                 // Process message and send to appropriate handler
                 // It might be better to buffer the message and process it later
-                //gpio_toggle(PORT_AXON_OUT,PIN_AXON_OUT); // debug
                 recipient_id = (message_buffer[i] & RECIPIENT_MASK) >> 28; // 3-bit recipient id 28
                 keep_alive = (message_buffer[i] & KEEP_ALIVE_MASK) >> 22; // 6-bit keep alive 22
                 sender_id = (message_buffer[i] & SENDER_MASK) >> 19; // 3-bit sender id 19
@@ -141,16 +132,7 @@ void readInputs(void)
                 data_frame = message_buffer[i] & DATA_MASK; // 16-bit data frame
 
                 // decrement keep alive
-                //message_buffer[i] = (((keep_alive - 1) << 22) & message_buffer[i]) | (message_buffer[i] & ~KEEP_ALIVE_MASK);
                 message_buffer[i] = (((keep_alive - 1) << 22) & KEEP_ALIVE_MASK) | (message_buffer[i] & ~KEEP_ALIVE_MASK);
-                // debug send downstream
-                
-                /*
-                downstream_write_buffer = message_buffer[i];
-                downstream_write_buffer_ready = 1;
-                */
-
-                //addWrite(NID_BUFF, message_buffer[i]);
                 
                 if (header == BLINK && recipient_id == ALL){
                     blink_flag = 1;
@@ -160,9 +142,6 @@ void readInputs(void)
                     
                 } else if (recipient_id == NID){
                     addWrite(NID_BUFF, message_buffer[i]);
-                  
-                    //nid_write_buffer = message_buffer[i] | ((keep_alive - 1) << 22);
-                    //nid_write_buffer_ready = 1;
                 } else if (header == PING){
                     if (recipient_id == DOWNSTREAM){
                         // receive upstream keep-alive
@@ -177,30 +156,19 @@ void readInputs(void)
                             active_output_pins[i-1] = complimentary_pins[i];
                         }
                     } else if (recipient_id == ALL){
-                        // receive NID keep-alive
-                        /*
-                        nid_pin = active_input_pins[i];
-                            nid_pin_out = complimentary_pins[i];
-                            nid_port = active_input_ports[i];
-                            nid_port_out = active_input_ports[i];
-                            nid_ping_time += NID_PING_TIME;
-                            nid_keep_alive = keep_alive;
-                            setAsOutput(nid_port_out, nid_pin_out);
-                            */
+                        // receive NID ping
                         if (active_input_pins[i] == nid_pin){
                             nid_ping_time = NID_PING_TIME;
                             if (keep_alive > 0){
                                 addWrite(ALL_BUFF, message_buffer[i]);
                                 write_buffer.source_pin = i;
                             }
-                            //all_write_buffer = message_buffer[i] | ((keep_alive -1) << 22); // decrement keep-alive and pass
-                            //all_write_buffer_ready = 1;
                         } else if ((NID_PING_KEEP_ALIVE - keep_alive) < nid_keep_alive){
                             nid_pin = active_input_pins[i];
                             nid_pin_out = complimentary_pins[i];
                             nid_port = active_input_ports[i];
                             nid_port_out = active_input_ports[i];
-                            nid_ping_time = NID_PING_TIME;
+                            nid_ping_time = 0;
                             nid_keep_alive = NID_PING_KEEP_ALIVE - keep_alive;
                             setAsOutput(nid_port_out, nid_pin_out);
                         }
@@ -312,8 +280,6 @@ void write()
 void writeDownstream(void)
 {
     uint32_t value;
-    //value = downstream_write_buffer | 0b1;
-    //value = (downstream_write_buffer >> 31) | 0b1;
     value = write_buffer.downstream[0] & 0x80000000;
     write_buffer.downstream[0] <<= 1;
 

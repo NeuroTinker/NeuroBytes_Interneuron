@@ -58,7 +58,6 @@ void neuronInit(neuron_t *n)
 void checkDendrites(neuron_t * n)
 {
 	uint8_t i;
-	dendrite_states current_state = OFF;
 	
 	for (i=3; i<11; i++){
 		
