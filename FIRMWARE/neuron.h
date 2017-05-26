@@ -69,6 +69,8 @@ uint16_t	hebb_time;
 uint8_t		time_multiple;
 uint16_t	ms_count;
 
+uint16_t    leaky_current;
+
 } neuron_t;
 
 void neuronInit(neuron_t *n);

@@ -139,6 +139,7 @@ int main(void)
 			// current membrane potential comes from dendrites and any left over firing potential
 			neuron.potential = calcNeuronPotential(&neuron);
 			neuron.potential += neuron.fire_potential;
+			neuron.fire_potential += leaky_current;
 
 			// if membrane potential is greater than threshold, fire
 			if (neuron.potential > MEMBRANE_THRESHOLD){
