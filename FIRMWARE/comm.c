@@ -133,6 +133,8 @@ void readInputs(void)
                 // decrement keep alive
                 message_buffer[i] = (((keep_alive - 1) << 22) & KEEP_ALIVE_MASK) | (message_buffer[i] & ~KEEP_ALIVE_MASK);
                 
+                // analyze message header and determine what to do with it
+
                 if (header == BLINK && recipient_id == ALL){
                     blink_flag = 1;
                     
@@ -294,6 +296,10 @@ void writeDownstream(void)
 
 void writeAll(void)
 {
+    /*
+        Write to all pins on the NeuroByte except for the pin that received the message
+    */
+
     uint8_t i;
 
     uint32_t value;
