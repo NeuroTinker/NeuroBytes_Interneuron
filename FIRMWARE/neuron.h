@@ -3,8 +3,8 @@
 
 #include "comm.h"
 
-#define MEMBRANE_THRESHOLD      140
-#define HYPERPOLARIZATION		-140
+#define MEMBRANE_THRESHOLD      1000
+#define HYPERPOLARIZATION		-1000
 #define DENDRITE_COUNT          4
 #define PULSE_LENGTH            5 // led white time
 

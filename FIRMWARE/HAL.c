@@ -15,18 +15,16 @@ void clock_setup(void)
 
 void sys_tick_handler(void)
 {
-    // gpio_toggle(PORT_AXON_OUT, PIN_AXON_OUT);
+    // Switch TIM21 ISR to this
 }
 
 void systick_setup(int xms)
 {
-	
     systick_set_clocksource(STK_CSR_CLKSOURCE_EXT);
     STK_CVR = 0;
     systick_set_reload(2000 * xms);
     systick_counter_enable();
     systick_interrupt_enable();
-	
 }
 
 void gpio_setup(void)
@@ -87,8 +85,7 @@ void gpio_setup(void)
 	setAsInput(PORT_DEND4_IN, PIN_DEND4_IN);
 
 
-	//MMIO32(SYSCFG_BASE + 0x08) |= 0b0001 << 12;
-
+	// enable external interrupts
 	nvic_enable_irq(NVIC_EXTI0_1_IRQ);
 	nvic_enable_irq(NVIC_EXTI2_3_IRQ);
 	nvic_enable_irq(NVIC_EXTI4_15_IRQ);
@@ -96,9 +93,6 @@ void gpio_setup(void)
 	nvic_set_priority(NVIC_EXTI0_1_IRQ, 0);
 	nvic_set_priority(NVIC_EXTI2_3_IRQ, 0);
 	nvic_set_priority(NVIC_EXTI4_15_IRQ, 0);
-	//MMIO32(SYSCFG_BASE + 0x0c) = 0b0101 << 12;
-
-	//MMIO32((EXTI_BASE) + 0x14) |= (1<<1);
 }
 
 void setAsInput(uint32_t port, uint32_t pin)
@@ -122,11 +116,9 @@ void setAsOutput(uint32_t port, uint32_t pin)
 	gpio_mode_setup(port, GPIO_MODE_OUTPUT, GPIO_PUPD_PULLDOWN, pin);
 }
 
-// working interrupt pins: 0,1,3,4,6,7
 
 /*
-	Each input's ISR tells the communications program that the input is active (getting a message).
-	For dendrite inputs, the ISR also tells the neuron program if the input is excitatory or inhibitory and then toggles input/output
+	Each input's ISR tells the communications program that the input is active (getting a message) by setting active_output_pins[i].
 */
 
 void exti0_1_isr(void)
@@ -276,7 +268,7 @@ void tim21_isr(void)
 {
 	/*
 		TIM21 is the communication clock. 
-		Each interrupt is one read and write of gpios.
+		Each interrupt is one-bit read and one-bit write of gpios.
 		Interrupts occur every 100 us.
 	*/
 
@@ -287,16 +279,6 @@ void tim21_isr(void)
 
 	readInputs();
 	write();
-
-	/*
-	if (write_count == 0){
-		if (downstream_write_buffer_ready != 0){
-			writeDownstream();
-		} else if (nid_write_buffer_ready != 0){
-			writeNID();
-		}
-	}
-	*/
 	
     MMIO32((TIM21_BASE) + 0x10) &= ~(1<<0); //clear the interrupt register
 }

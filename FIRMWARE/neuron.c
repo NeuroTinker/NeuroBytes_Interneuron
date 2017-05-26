@@ -38,10 +38,10 @@ void neuronInit(neuron_t *n)
 		n->dendrites[i].alive_time = 0;
 	}
 
-	n->dendrites[0].magnitude = 140;
-	n->dendrites[1].magnitude = 120;
-	n->dendrites[2].magnitude = 80;
-	n->dendrites[3].magnitude = 50;
+	n->dendrites[0].magnitude = 1200;
+	n->dendrites[1].magnitude = 800;
+	n->dendrites[2].magnitude = 500;
+	n->dendrites[3].magnitude = 200;
 	
 	n->dendrite_ping_time[0] = 0;
 	n->dendrite_ping_time[1] = 0;
@@ -61,14 +61,14 @@ void checkDendrites(neuron_t * n)
 	
 	for (i=3; i<11; i++){
 		
+		// check if dendrite has received a new ping
 		if (dendrite_ping_flag[i] != 0){
 
 			dendrite_ping_flag[i] = 0;
 
 			n->dendrite_ping_time[i] = DEND_PING_TIME;
-		} else if (n->dendrite_ping_time[i] == 1){
-			//setAsInput(active_input_ports[i], input_pins[i]);
-			
+		} else if (n->dendrite_ping_time[i] == 1){	
+			// dendrite ping has expired; reset to dendrite to inputs		
 			if (i % 2 != 0){
 				setAsInput(active_input_ports[i+1], complimentary_pins[i]);
 				active_output_pins[i+1] = 0;
@@ -83,6 +83,7 @@ void checkDendrites(neuron_t * n)
 			n->dendrite_ping_time[i] -= 1;
 		}
 		
+		// check if dendrite has received a pulse
 		if (dendrite_pulse_flag[i] != 0){
 			dendrite_pulse_flag[i] = 0;
 
@@ -135,7 +136,7 @@ void checkDendrites(neuron_t * n)
 	}
 	
 	for (i=0; i<DENDRITE_COUNT; i++){
-
+		// switch dendrite off when pulse has expired
 		if(n->dendrites[i].state == ON){
 			n->dendrites[i].pulse_time += 1;
 			if (n->dendrites[i].pulse_time >= PULSE_LENGTH){

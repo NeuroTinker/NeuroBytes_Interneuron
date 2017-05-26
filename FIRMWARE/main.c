@@ -14,7 +14,7 @@
 #define DATA_TIME			10
 #define DEND_PING_TIME		200 // 1000 ms
 #define	NID_PING_TIME		200 // 1000 ms
-#define SEND_PING_TIME		80
+#define SEND_PING_TIME		80 // 80
 #define BUTTON_PRESS_TIME	2
 
 int main(void)
@@ -48,15 +48,13 @@ int main(void)
 	systick_setup(100);
 	gpio_setup();
 	tim_setup();
-	//gpio_setup();
-	//exti_select_source(EXTI3, GPIOB);
+
 	setLED(200,0,0); // initial LED color also indicates reset
 	
 	for(;;)
 	{
 		if (main_tick == 1){
 			// main tick every 5 ms
-
 			main_tick = 0;
 			
 			// check to see if nid ping hasn't been received in last NID_PING_TIME ticks
@@ -97,7 +95,7 @@ int main(void)
 
 			// check identify button
 			button_status = gpio_get(PORT_IDENTIFY, PIN_IDENTIFY);
-			button_status |= PIN_IDENTIFY;
+			//button_status |= PIN_IDENTIFY;
 
 			// if identify button is pressed and identify_time < IDENTIFY_TIME (i.e. NID sent 'identify'' message), set new nid_channel
 			if (button_status == 0){
@@ -107,11 +105,11 @@ int main(void)
 					button_press_time = 0;
 				}
 			} else if (button_armed == 1){
-				if (identify_time > 0){
+				if (identify_time < IDENTIFY_TIME){
 					nid_channel = identify_channel;
 				} else{
 					// temporarily use identify button also as an impulse button
-					neuron.fire_potential += 110;
+					neuron.fire_potential += 1100;
 				}
 				button_armed = 0;
 			} else{
@@ -179,14 +177,14 @@ int main(void)
 				}
 				LEDFullWhite();
 			} else if (neuron.state == INTEGRATE){
-				if (neuron.potential > 140){
+				if (neuron.potential > 1000){
 					setLED(200,0,0);
 				} else if (neuron.potential > 0){
-					setLED(neuron.potential * 10 / 7, 200 - (neuron.potential * 10 / 7), 0);
-				} else if (neuron.potential < -140){
+					setLED(neuron.potential / 5, 200 - (neuron.potential / 5), 0);
+				} else if (neuron.potential < -1000){
 					setLED(0,0, 200);
 				} else if (neuron.potential < 0){
-					setLED(0, 200 + (neuron.potential * 10 / 7), -1 * neuron.potential * 10 / 7);
+					setLED(0, 200 + (neuron.potential / 5), -1 * neuron.potential / 5);
 				} else{
 					setLED(0,200,0);
 				}
