@@ -34,7 +34,7 @@ void gpio_setup(void)
 	rcc_periph_clock_enable(RCC_GPIOB);
 	rcc_periph_clock_enable(RCC_GPIOC);
 
-	rcc_peripheral_enable_clock(&RCC_APB2ENR, RCC_APB2ENR_SYSCFGEN); // this line took a long time
+	rcc_peripheral_enable_clock(&RCC_APB2ENR, RCC_APB2ENR_SYSCFGEN); // enable EXTI for PORTB and PORTC
 
 
 	/*	Set up LED pins, NeuroBytes v1.01:

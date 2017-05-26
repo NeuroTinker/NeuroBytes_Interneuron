@@ -10,6 +10,10 @@
 
 #include "comm.h"
 
+/*
+    Define all pins
+*/
+
 #define PORT_R_LED      GPIOB
 #define PORT_G_LED      GPIOA
 #define PORT_B_LED      GPIOB
@@ -52,7 +56,11 @@
 #define PIN_DEND4_EX    GPIO3
 #define PIN_DEND4_IN    GPIO2
 
-
+/*
+    Two clocks:
+    -main_tick  : clocks the main processing routine at 5 ms
+    -tick       : clocks the communication routine at 100 us
+*/
 
 extern volatile uint8_t main_tick;
 extern volatile uint8_t tick;

@@ -1,0 +1,3 @@
+[libopencm3 "Submod"]
+	url = https://github.com/NeuroTinker/libopencm3
+	branch = Dev

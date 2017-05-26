@@ -11,9 +11,6 @@
 #define DENDRITE_ALIVE_TIME     200
 #define FIRE_LED_TIME           5
 
-//typedef enum gpio_pins gpio_pin;
-//typedef enum gpio_ports gpio_port;
-
 typedef enum{
 NC =   0,
 CONNECTED =    1

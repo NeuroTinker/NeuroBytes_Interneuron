@@ -49,8 +49,7 @@ int main(void)
 	gpio_setup();
 	tim_setup();
 
-	setLED(200,0,0); // initial LED color also indicates reset
-	
+	// main processing routine	
 	for(;;)
 	{
 		if (main_tick == 1){

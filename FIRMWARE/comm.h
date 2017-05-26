@@ -52,42 +52,12 @@
     3. Upstream neurons sending pulses to downstream neurons (axon -> dendrite).
 */
 
-/*
-typedef enum{
-    PORT_AXON_IN    =   GPIOA,
-    PORT_AXON_OUT   =   GPIOA,
-    PORT_DEND1_EX   =   GPIOB,
-    PORT_DEND1_IN   =   GPIOB,
-    PORT_DEND2_EX   =   GPIOA,
-    PORT_DEND2_IN   =   GPIOA,
-    PORT_DEND3_EX   =   GPIOA,
-    PORT_DEND3_IN   =   GPIOC,
-    PORT_DEND4_EX   =   GPIOB,
-    PORT_DEND4_IN   =   GPIOB,
-    PORT_DEND5_EX   =   GPIOB,
-    PORT_DEND5_IN   =   GPIOB
-} gpio_port;
-*/
+
 // unique pins: 0,1,3,4,5,6,7,8,9,10,13,14,15
 // working dendrites: 1,2,5
 // pin numbers 0*,1*,2,3*,4,5*,6*,7*,8,9,10,13,14*,15* (asterisk indicates repeated pin)
 // total 14 unique pin numbers and 8 repeated pins
-/*
-typedef enum{
-    PIN_AXON_IN     =   GPIO9,
-    PIN_AXON_OUT    =   GPIO10,
-    PIN_DEND1_EX    =   GPIO1,
-    PIN_DEND1_IN    =   GPIO0, 
-    PIN_DEND2_EX    =   GPIO7,
-    PIN_DEND2_IN    =   GPIO6,
-    PIN_DEND3_EX    =   GPIO1,
-    PIN_DEND3_IN    =   GPIO14,
-    PIN_DEND4_EX    =   GPIO7,
-    PIN_DEND4_IN    =   GPIO6,
-    PIN_DEND5_EX    =   GPIO4,
-    PIN_DEND5_IN    =   GPIO3
-} gpio_pin;
-*/
+
 typedef enum{
     NID         =   0b000,
     DOWNSTREAM  =   0b001,
@@ -123,7 +93,7 @@ typedef enum{
 } parameter_identifiers;
 
 typedef struct{
-    message_buffers_t     current_buffer;
+    message_buffers_t   current_buffer;
     uint8_t             write_count;
     uint32_t            downstream[3];
     uint8_t             downstream_ready_count;
@@ -136,28 +106,12 @@ typedef struct{
 
 
 extern uint16_t complimentary_pins[11];
-
 extern volatile uint16_t active_input_pins[11];
-
 extern uint32_t active_input_ports[11];
-
 extern volatile uint16_t active_output_pins[11];
-
 extern uint32_t active_output_ports[11];
 
-// write outputs from message buffer
-
-extern volatile uint32_t downstream_write_buffer; // buffer just for messages traveling downstream through axon
-extern volatile uint8_t downstream_write_buffer_ready;
-
-extern volatile uint32_t nid_write_buffer; // buffer just for messages being sent to NID
-extern volatile uint8_t nid_write_buffer_ready;
-
-extern volatile uint32_t all_write_buffer;
-extern volatile uint8_t all_write_buffer_ready;
-
-extern uint8_t write_count; // Incremented after each bit is written. Write new message after 32-bits.
-
+// flags for main()
 extern volatile uint8_t dendrite_pulse_flag[11];
 extern volatile uint8_t blink_flag;
 extern volatile uint8_t dendrite_ping_flag[11];
@@ -171,7 +125,7 @@ extern volatile uint16_t nid_pin_out;
 extern volatile uint16_t identify_time;
 extern uint8_t identify_channel;
 
-void readInputs(void); // The readInputs() function reads incoming messages and decides if it the data frame should be sent to a handler based off of sender id and message id.
+void readInputs(void); // The readInputs() function reads the next bit for active inputs
 
 void write(void);
 void writeAll(void);
@@ -184,12 +138,10 @@ void receiveUpstreamKeepAlive(uint32_t message, uint16_t pin);
 void receiveUpstreamPulse(uint32_t message, uint16_t pin);
 void receiveNIDKeepAlive(uint32_t message, uint16_t pin);
 void receiveNIDBlink(void);
+
 void addWrite(message_buffers_t buffer, uint32_t message);
 void commInit(void);
 
-// send message handlers
-//void sendDownstream(uint16_t data);
-//void passMessage(uint32_t message);
 
 
 #endif
