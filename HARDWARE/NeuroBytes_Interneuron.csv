@@ -1,0 +1,36 @@
+Title,NeuroBytes Interneuron
+Revision,C
+Date,2017-05-15
+Generated,Wed 31 May 2017 01:02:00 PM CDT
+Company,NeuroTinker, LLC
+Comment 1,License: GPL v3
+Comment 2,
+Comment 3,
+Comment 4,
+Total Parts,27
+Total Unique Parts,15
+
+
+
+Ref,Qty,Value,Mfr Part #,RoHS,Subs Allowed,
+C3 ,1,0u1,MF-CAP-0402-0.1uF,Yes,No
+C1 C4 ,2,1u0,MF-CAP-0603-1uF,Yes,Yes
+C5 ,1,0u1,MF-CAP-0402-0.1uF,Yes,Yes
+C2 ,1,10u,MF-CAP-1206-10uF,Yes,No
+D1 ,1,LED_RABG, ,Yes,No
+P1 P6 P7 P2 P3 P4 P5 ,7,JST GH 4-POS, ,Yes,No
+P8 ,1,JST GH 7-POS, ,Yes,No
+Q1 Q2 Q3 ,3,MMBT3904,MF-DSC-SOT233-MMBT3904,Yes,No
+R1 ,1,220,MF-RES-0402-220,Yes,Yes
+R2 R3 ,2,100,MF-RES-0402-100,Yes,Yes
+R4 ,1,JMP,MF-RES-0402-0,Yes,Yes
+R7 R6 R5 ,3,1k,MF-RES-0402-1K,Yes,Yes
+SW1 ,1,SW_PUSH_TL3330AF130QG, ,Yes,No
+U1 ,1,STM32L011Gx, ,Yes,No
+U2 ,1,TLV702,MF-REG-SOT235-3.3V-300mA,Yes,No
+
+
+
+
+BOM made with KICAD_BOM_WIZARD (https://github.com/HashDefineElectronics/KiCad_BOM_Wizard.git)
+Generated Wed 31 May 2017 01:02:00 PM CDT
