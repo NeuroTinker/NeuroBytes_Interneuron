@@ -45,7 +45,7 @@ int main(void)
 
 	// setup hardware
 	clock_setup();
-	systick_setup(100);
+	systick_setup(100); // systick in microseconds
 	gpio_setup();
 	tim_setup();
 
@@ -108,7 +108,8 @@ int main(void)
 					nid_channel = identify_channel;
 				} else{
 					// temporarily use identify button also as an impulse button
-					neuron.fire_potential += 1100;
+					//neuron.fire_potential += 11000;
+					neuron.leaky_current += 20;
 				}
 				button_armed = 0;
 			} else{
@@ -139,7 +140,7 @@ int main(void)
 			// current membrane potential comes from dendrites and any left over firing potential
 			neuron.potential = calcNeuronPotential(&neuron);
 			neuron.potential += neuron.fire_potential;
-			neuron.fire_potential += leaky_current;
+			neuron.fire_potential += neuron.leaky_current;
 
 			// if membrane potential is greater than threshold, fire
 			if (neuron.potential > MEMBRANE_THRESHOLD){
@@ -177,18 +178,19 @@ int main(void)
 				}
 				LEDFullWhite();
 			} else if (neuron.state == INTEGRATE){
-				if (neuron.potential > 1000){
+				if (neuron.potential > 10000){
 					setLED(200,0,0);
 				} else if (neuron.potential > 0){
-					setLED(neuron.potential / 5, 200 - (neuron.potential / 5), 0);
-				} else if (neuron.potential < -1000){
+					setLED(neuron.potential / 50, 200 - (neuron.potential / 50), 0);
+				} else if (neuron.potential < -10000){
 					setLED(0,0, 200);
 				} else if (neuron.potential < 0){
-					setLED(0, 200 + (neuron.potential / 5), -1 * neuron.potential / 5);
+					setLED(0, 200 + (neuron.potential / 50), -1 * neuron.potential / 50);
 				} else{
 					setLED(0,200,0);
 				}
 			}
+
 		}
 	}
 }

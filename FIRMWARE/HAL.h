@@ -67,9 +67,6 @@ extern volatile uint8_t tick;
 static const uint16_t gamma_lookup[1024];
 
 
-// uint8_t     read_time = 0;
-
-
 void systick_setup(int xms);
 void clock_setup(void);
 void gpio_setup(void);
@@ -79,9 +76,5 @@ void setLED(uint16_t r, uint16_t g, uint16_t b);
 void setAsInput(uint32_t port, uint32_t pin);
 void setAsOutput(uint32_t port, uint32_t pin);
 
-
-//void tim2_isr(void);
-
-//extern volatile unsigned char ms_tick;
 
 #endif
