@@ -271,7 +271,7 @@ void write()
     */
     uint8_t i;
     if (write_buffer.write_count == 33){
-        // Message is done being written. Move to next message in the buffer.
+        // Message is done being written. Decrement the buffer that was read
         switch (write_buffer.current_buffer){
             case DOWNSTREAM_BUFF:
                 for (i=0; i<2; i++){
@@ -299,6 +299,7 @@ void write()
     }
 
     if (write_buffer.current_buffer == NONE_BUFF){
+        // new message -> assign new buffer to current_buffer
         if (write_buffer.downstream_ready_count != 0){
             write_buffer.current_buffer = DOWNSTREAM_BUFF;
         } else if (write_buffer.nid_ready_count != 0){
@@ -307,6 +308,7 @@ void write()
             write_buffer.current_buffer = ALL_BUFF;
         }
     } else{
+        // write 1-bit
         write_buffer.write_count += 1;
         switch (write_buffer.current_buffer){
             case DOWNSTREAM_BUFF:
@@ -329,6 +331,7 @@ void write()
 void writeDownstream(void)
 {
     uint32_t value;
+    // pop next value off of buffer
     value = write_buffer.downstream[0] & 0x80000000;
     write_buffer.downstream[0] <<= 1;
 
