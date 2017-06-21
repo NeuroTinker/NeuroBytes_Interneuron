@@ -1,0 +1,38 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug",
+            "type": "cppdbg",
+            "request": "launch",
+            "miDebuggerPath": "/usr/bin/arm-none-eabi-gdb",
+            "targetArchitecture": "arm",
+            "program": "${workspaceRoot}/FIRMWARE/bin/main.elf",
+            "setupCommands": [
+                {
+                    "text": "file '${workspaceRoot}/FIRMWARE/bin/main.elf'"
+                },
+                {
+                    "text": "target extended-remote /dev/ttyACM0"
+                },
+                {
+                    "text": "monitor tpwr enable"
+                },
+                {
+                    "text": "monitor swdp_scan"
+                },
+                {
+                    "text": "attach 1"
+                },
+                {
+                    "text": "load ${workspaceRoot}/FIRMWARE/bin/main.elf"
+                }
+            ],
+            "preLaunchTask": "make",
+            "launchCompleteCommand": "None",
+            "externalConsole": false,
+            "cwd": "${workspaceRoot}/FIRMWARE/bin",
+            "logging": { "engineLogging": true }
+        }        
+    ]
+}
