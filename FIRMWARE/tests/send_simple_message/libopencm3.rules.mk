@@ -145,9 +145,9 @@ LDLIBS		+= -Wl,--start-group -lc -lgcc -lnosys -Wl,--end-group
 
 all: elf
 
-elf: $(BINARY).elf
-bin: $(BINARY).bin
-hex: $(BINARY).hex
+elf: $(BIN_DIR)/$(BINARY).elf
+bin: $(BIN_DIR)/$(BINARY).bin
+hex: $(BIN_DIR)/$(BINARY).hex
 srec: $(BINARY).srec
 list: $(BINARY).list
 

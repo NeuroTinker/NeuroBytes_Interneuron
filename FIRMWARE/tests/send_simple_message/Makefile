@@ -21,6 +21,8 @@ BINARY = main
 
 OBJS = HAL.o bit-bang.o
 
+BIN_DIR = ../../bin
+
 OPENCM3_DIR = ../../../libopencm3
 
 LDSCRIPT = $(OPENCM3_DIR)/lib/stm32/l0/stm32l0xx4.ld

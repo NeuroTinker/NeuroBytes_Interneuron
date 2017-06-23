@@ -8,7 +8,12 @@
 #include <libopencm3/cm3/systick.h>
 #include <libopencm3/stm32/exti.h>
 
-//#include "bit-bang.h"
+#define DEBUG
+
+#ifdef DEBUG
+#include "debug.h"
+#endif
+
 /*
     Define all pins
 */
@@ -96,6 +101,9 @@ struct active_input_t{
     input_state_t state;
 };
 extern pin_t * all_pins[NUM_PINS];
+extern pin_t * input_pins[NUM_INPUTS];
+#include "bit-bang.h"
+
 
 /*
     Two clocks:

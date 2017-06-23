@@ -31,8 +31,8 @@
             "preLaunchTask": "make",
             "launchCompleteCommand": "None",
             "externalConsole": false,
-            "cwd": "${workspaceRoot}/FIRMWARE/bin",
-            "logging": { "engineLogging": true }
+            "cwd": "${workspaceRoot}/FIRMWARE/bin"
+            //"logging": { "engineLogging": true }
         }        
     ]
 }

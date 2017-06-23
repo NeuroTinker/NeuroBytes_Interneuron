@@ -4,7 +4,7 @@
     "version": "0.1.0",
     "taskName": "make",
     "command": "make",
-    "args": ["--directory=${fileDirname}", "-w"],
+    "args": ["--directory=${fileDirname}", "-w", "-B"],
     "isShellCommand": true,
     "showOutput": "always",
     "logging": { "engineLogging": true },

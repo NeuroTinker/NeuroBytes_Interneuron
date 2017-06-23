@@ -4,7 +4,7 @@ write_message_t * write_buffer[WRITE_BUFFER_SIZE];
 uint8_t write_buffer_count = 0;
 volatile active_input_t * active_inputs[NUM_INPUTS];
 
-void initBitBang(pin_t * input_pins[NUM_INPUTS])
+void initBitBang(void)
 {
     uint8_t i;
     /*

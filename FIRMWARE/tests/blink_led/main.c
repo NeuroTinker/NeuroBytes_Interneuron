@@ -19,7 +19,7 @@ int main()
 	/* set pins to output mode, push pull */
 	gpio_mode_setup(LED_RED_PORT, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, LED_RED_PIN);
 	gpio_mode_setup(LED_GREEN_PORT, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, LED_GREEN_PIN);
-    uint8_t i;
+    uint32_t i;
 
     for(;;){
 		/* toggle each led in turn */
