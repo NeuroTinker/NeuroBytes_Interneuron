@@ -1,0 +1,9 @@
+
+file main.elf
+tar extended-remote /dev/ttyACM0
+monitor tpwr enable
+monitor swdp_scan
+attach 1
+load
+run
+quit

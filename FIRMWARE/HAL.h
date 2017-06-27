@@ -31,14 +31,14 @@
 #define PORT_AXON3_EX   GPIOC
 #define PORT_AXON3_IN   GPIOA
 
-#define PORT_DEND1_EX   GPIOB
 #define PORT_DEND1_IN   GPIOB
-#define PORT_DEND2_EX   GPIOA
+#define PORT_DEND1_EX   GPIOB
 #define PORT_DEND2_IN   GPIOA
-#define PORT_DEND3_EX   GPIOA
+#define PORT_DEND2_EX   GPIOA
 #define PORT_DEND3_IN   GPIOA
-#define PORT_DEND4_EX   GPIOA
+#define PORT_DEND3_EX   GPIOA
 #define PORT_DEND4_IN   GPIOA
+#define PORT_DEND4_EX   GPIOA
 
 #define PIN_AXON1_EX    GPIO8
 #define PIN_AXON1_IN    GPIO15
@@ -47,14 +47,14 @@
 #define PIN_AXON3_EX    GPIO14
 #define PIN_AXON3_IN    GPIO10
 
-#define PIN_DEND1_EX    GPIO1
-#define PIN_DEND1_IN    GPIO0
-#define PIN_DEND2_EX    GPIO7
-#define PIN_DEND2_IN    GPIO6
-#define PIN_DEND3_EX    GPIO5
-#define PIN_DEND3_IN    GPIO4
-#define PIN_DEND4_EX    GPIO3
-#define PIN_DEND4_IN    GPIO2
+#define PIN_DEND1_IN    GPIO1
+#define PIN_DEND1_EX    GPIO0
+#define PIN_DEND2_IN    GPIO7
+#define PIN_DEND2_EX    GPIO6
+#define PIN_DEND3_IN    GPIO5
+#define PIN_DEND3_EX    GPIO4
+#define PIN_DEND4_IN    GPIO3
+#define PIN_DEND4_EX    GPIO2
 
 /*
     Two clocks:

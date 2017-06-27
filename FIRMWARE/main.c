@@ -108,8 +108,8 @@ int main(void)
 					nid_channel = identify_channel;
 				} else{
 					// temporarily use identify button also as an impulse button
-					//neuron.fire_potential += 11000;
-					neuron.leaky_current += 20;
+					neuron.fire_potential += 11000;
+					//neuron.leaky_current += 20;
 				}
 				button_armed = 0;
 			} else{

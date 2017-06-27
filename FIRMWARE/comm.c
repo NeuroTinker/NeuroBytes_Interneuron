@@ -124,7 +124,7 @@ void readInputs(void)
 
             // when the message buffer has read 32-bits, the message is done being read and is processed
             if (++message_buffer_count[i] == 32){ // done reading message
-
+                //blink_flag = 1;
                 // Process message and set appropriate flags for main() or add messages to message buffer
                 recipient_id = (message_buffer[i] & RECIPIENT_MASK) >> 28; // 3-bit recipient id 28
                 keep_alive = (message_buffer[i] & KEEP_ALIVE_MASK) >> 22; // 6-bit keep alive 22
@@ -136,6 +136,10 @@ void readInputs(void)
                 message_buffer[i] = (((keep_alive - 1) << 22) & KEEP_ALIVE_MASK) | (message_buffer[i] & ~KEEP_ALIVE_MASK);
                 
                 // analyze message header and determine what to do with it
+
+                if (recipient_id == SELECTED4){
+                    dendrite_pulse_flag[i] = 1;
+                }
 
                 if (header == BLINK && recipient_id == ALL){
                     /*
@@ -221,11 +225,6 @@ void readInputs(void)
                         addWrite(ALL_BUFF, message_buffer[i]);
                         write_buffer.source_pin = i;
                     }
-                }
-
-                if (header == PULSE || recipient_id == DOWNSTREAM){
-                    // this is a downstream -> upstream pulse message
-                    dendrite_pulse_flag[i] = 1;
                 }
                 
                 
