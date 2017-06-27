@@ -1,31 +1,23 @@
 #include "bit-bang.h"
 
-write_message_t * write_buffer[WRITE_BUFFER_SIZE];
-uint8_t write_buffer_count = 0;
+static output_message_t * write_buffer[WRITE_BUFFER_SIZE];
+static uint8_t write_buffer_count = 0;
 volatile active_input_t * active_inputs[NUM_INPUTS];
 
-void initBitBang(void)
-{
-    uint8_t i;
-    /*
-        Initialize link between HAL->pins and bit-bang->pins
-    */
-    for (i=0; i<NUM_INPUTS; i++){
-        input_pins[i]->active_input = active_inputs[i];
-        active_inputs[i]->pin = input_pins[i];
-    }
-}
-
-void addMessage(uint64_t new_message, uint8_t num_bits_to_write, pin_t * output_pins[NUM_OUTPUTS], uint8_t num_output_pins)
+void addMessage(uint64_t message_binary, uint8_t num_bits_to_write, pin_group_name_t output_pin_group)
 {
     /*
         Add a new message to the write buffer (FIFO)
     */
     uint8_t i;
-    write_message_t * new_write_message;
+    output_message_t new_message;
+    new_message.message = message_binary;
+    new_message.num_bits_left_to_write = num_bits_to_write;
+    new_message.output_pin_group = output_pin_group;
 
+    // not using dynamic memory for write buffer because memory could be corrupted during interrupt
     if (write_buffer_count < WRITE_BUFFER_SIZE){ // check for buffer overflow
-        new_write_message = write_buffer[write_buffer_count];
+        memcpy(write_buffer[write_buffer_count], new_message, sizeof(output_message_t));
         write_buffer_count += 1; 
     } else{
         #ifdef DEBUG
@@ -33,28 +25,50 @@ void addMessage(uint64_t new_message, uint8_t num_bits_to_write, pin_t * output_
         #endif
         return;
     }
-
-    new_write_message->message = new_message;
-    new_write_message->bits_left_to_write = num_bits_to_write;
-    memcpy(new_write_message->output_pins, output_pins, num_output_pins * sizeof(pin_t));
-    /*
-    for(i=0; i<num_output_pins; i++){
-        new_write_message->output_pins[i] = output_pins[i];
-    }
-    */
-    new_write_message->num_output_pins = num_output_pins;
 }
 
-void writeBit(void)
+void readBit(pin_t * pin)
+{
+    uint8_t i;
+    uint8_t keep_reading;
+    input_buffer_t * input_buffer = pin->input_buffer;
+
+    /*
+        Read one bit
+    */
+    input_buffer->message <<= 1;
+    input_buffer->message |= readPin(pin);
+    input_buffer->num_bits_to_read -= 1;
+
+    /*
+        Process message if there are no more bits to read
+    */
+
+    if (input_buffer->num_bits_to_read == 0){
+        keep_reading = processMessage(pin, input_buffer->message);
+        // if there is a data packet coming, keep reading.
+        if (keep_reading == 0){
+            // no data packet coming, reset the input pin
+            pin->active = False;
+            resetInputPin(pin);
+        } else{
+            // data packet is coming so keep reading
+            input_buffer->num_bits_to_read += keep_reading;
+            input_buffer->state = DATA;
+        }
+    } 
+}
+
+void writeBit(pin_group_t output)
 {
     /*
         Write a bit from the bottom message of write_buffer to the desired output pins
     */
 
     uint8_t i;
-    uint32_t value;
-
-    write_message_t * write_message;
+    bool value;
+    pin_t num_output_pins = output->num_output_pins;
+    output_message_t * write_message = write_buffer[0];
 
     if (write_buffer_count > 0){
 
@@ -81,35 +95,4 @@ void writeBit(void)
     }
 }
 
-void readBit(pin_t * pin)
-{
-    uint8_t i;
-    bool value;
-    uint8_t keep_reading;
-
-    /*
-        Read one bit
-    */
-    active_inputs[i]->message <<= 1;
-    active_inputs[i]->message |= readPin(pin);
-    active_inputs[i]->num_bits_to_read -= 1;
-
-    /*
-        Process message if there are no more bits to read
-    */
-
-    if (active_inputs[i]->num_bits_to_read == 0){
-        keep_reading = processMessage(pin, pin->input_buffer->message);
-        // if there is a data packet coming, keep reading.
-        if (keep_reading == 0){
-            // no data packet coming, reset the input pin
-            pin->active = False;
-            resetInputPin(pin);
-        } else{
-            // data packet is coming so keep reading
-            active_inputs[i]->num_bits_to_read += keep_reading;
-            active_inputs[i]->state = DATA;
-        }
-    } 
-}
 

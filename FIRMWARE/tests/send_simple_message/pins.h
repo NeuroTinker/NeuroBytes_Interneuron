@@ -1,30 +1,4 @@
-#define PORT_R_LED      GPIOB
-#define PORT_G_LED      GPIOA
-#define PORT_B_LED      GPIOB
-#define PIN_R_LED		GPIO7
-#define PIN_G_LED		GPIO1
-#define PIN_B_LED		GPIO6
-
-#define PORT_AXON1_EX   GPIOA
-#define PORT_AXON1_IN   GPIOC
-
-#define PORT_DEND1_EX   GPIOB
-#define PORT_DEND1_IN   GPIOB
-
-#define PIN_AXON1_EX    GPIO8
-#define PIN_AXON1_IN    GPIO15
-
-#define PIN_DEND1_EX    GPIO1
-#define PIN_DEND1_IN    GPIO0
-
-#define DEND1_EX        all_pins[2]
-#define DEND1_IN        all_pins[3]
-#define AXON1_EX        all_pins[0]
-#define AXON1_IN        all_pins[1]
-
-#define NUM_INPUTS      3
-#define NUM_PINS        4
-#define NUM_OUTPUTS     3
+#include "pin-map.h"
 
 typedef struct {
     uint32_t pin;
@@ -58,13 +32,6 @@ struct input_buffer_t{
     input_state_t state;
 };
 
-typedef struct {
-    uint64_t message;
-    uint8_t bits_left_to_write;
-    uint8_t num_output_pins;
-    pin_t * output_pins[NUM_OUTPUTS];
-} output_buffer_t;
-
 struct pin_t{
     pin_address_t * address;
     pin_type_t pin_type;
@@ -84,6 +51,24 @@ typedef enum{
 } pin_group_name_t;
 
 typedef struct {
-    pin_group_name
-}
+    pin_t * pins,
+    uint8_t num_pins
+} pin_group_t;
+
+static pin_t * all_pins[NUM_PINS];
+
+void initPins(void);
+static pin_address_t * initPinAddress(uint32_t port, uint32_t pin);
+static input_buffer_t * initInputBuffer(void);
+
+static void freeInputBuffer(pin_t * pin);
+
+void startRead(pin_t * pin, uint8_t bits_to_read);
+void endRead(pin_t * pin);
+pin_group_t getInputPins(void);
+
+void selectOutputPins(pin_group_name_t output_group_name);
+pin_group_t getOutputPins(void);
+
+
 
