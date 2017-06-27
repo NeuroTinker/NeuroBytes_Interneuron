@@ -81,39 +81,35 @@ void writeBit(void)
     }
 }
 
-void readBit(uint8_t read_tick)
+void readBit(pin_t * pin)
 {
     uint8_t i;
     bool value;
     uint8_t keep_reading;
 
-    for (i=0; i<NUM_INPUTS; i++){
-        if (active_inputs[i]->read_tick == read_tick && active_inputs[i]->num_bits_to_read > 0){
-            /*
-                If the input is active, read one bit
-            */
-            active_inputs[i]->message <<= 1;
-            active_inputs[i]->message |= readPin(active_inputs[i]->pin);
-            active_inputs[i]->num_bits_to_read -= 1;
+    /*
+        Read one bit
+    */
+    active_inputs[i]->message <<= 1;
+    active_inputs[i]->message |= readPin(pin);
+    active_inputs[i]->num_bits_to_read -= 1;
 
-            /*
-                Process message if there are no more bits to read
-            */
+    /*
+        Process message if there are no more bits to read
+    */
 
-            if (active_inputs[i]->num_bits_to_read == 0){
-                //keep_reading = processMessage(active_inputs[i]->message, active_inputs[i]->pin, active_inputs[i]->state);
-                keep_reading = 0;
-                if (keep_reading == 0){
-                    resetPinInterrupt(active_inputs[i]->pin);
-                    active_inputs[i]->message = 0;
-                    active_inputs[i]->state = OFF;
-                } else{
-                    active_inputs[i]->num_bits_to_read += keep_reading;
-                    active_inputs[i]->state = DATA;
-                }
-            }
+    if (active_inputs[i]->num_bits_to_read == 0){
+        keep_reading = processMessage(pin, pin->input_buffer->message);
+        // if there is a data packet coming, keep reading.
+        if (keep_reading == 0){
+            // no data packet coming, reset the input pin
+            pin->active = False;
+            resetInputPin(pin);
+        } else{
+            // data packet is coming so keep reading
+            active_inputs[i]->num_bits_to_read += keep_reading;
+            active_inputs[i]->state = DATA;
         }
-    }
-
+    } 
 }
 
