@@ -9,7 +9,7 @@ uint8_t message_buffer_count[11];
 
 volatile uint16_t active_input_pins[11] = {0,0,0,0,0,0,0,0,0,0,0};
 
-volatile uint16_t active_output_pins[11] = {PIN_AXON1_IN, PIN_AXON2_IN,0,0,0,0,0,0,0,0,0};
+volatile uint16_t active_output_pins[11] = {PIN_AXON1_IN, PIN_AXON2_IN,PIN_AXON3_EX,0,0,0,0,0,0,0,0};
 
 volatile uint32_t dendrite_pulses[4] = {0,0,0,0};
 volatile uint8_t dendrite_pulse_count = 0;
@@ -338,9 +338,11 @@ void writeDownstream(void)
     if (value != 0){
         gpio_set(PORT_AXON1_EX, PIN_AXON1_EX);
         gpio_set(PORT_AXON2_EX, PIN_AXON2_EX);
+        gpio_set(PORT_AXON3_EX, PIN_AXON3_EX);
     }else{
         gpio_clear(PORT_AXON1_EX, PIN_AXON1_EX);
         gpio_clear(PORT_AXON2_EX, PIN_AXON2_EX);
+        gpio_clear(PORT_AXON3_EX, PIN_AXON3_EX);
     }
 }
 

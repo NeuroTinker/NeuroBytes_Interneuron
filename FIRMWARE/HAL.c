@@ -65,6 +65,8 @@ void gpio_setup(void)
 	setAsOutput(PORT_AXON1_EX, PIN_AXON1_EX);
 	setAsInput(PORT_AXON2_IN, PIN_AXON2_IN);
 	setAsOutput(PORT_AXON2_EX, PIN_AXON2_EX);
+	setAsInput(PORT_AXON3_IN, PIN_AXON3_IN);
+	setAsOutput(PORT_AXON3_EX, PIN_AXON3_EX);
 
 	gpio_mode_setup(PORT_IDENTIFY, GPIO_MODE_INPUT, GPIO_PUPD_PULLUP, PIN_IDENTIFY);
 

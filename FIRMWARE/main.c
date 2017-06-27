@@ -25,6 +25,8 @@ int main(void)
 	uint32_t	blink_time = 0; // counter for LED blink due to NID command
 	uint16_t	data_time = 0; // counter for sending data to NID
 	uint16_t	send_ping_time = 0; // counter for sending a downstream ping
+	uint16_t	fire_delay_time = 0;
+	uint8_t		fire_flag = 0;
 
 	// button debounce variables
 	uint16_t	button_press_time = 0; 
@@ -153,6 +155,14 @@ int main(void)
 					neuron.dendrites[i].state = OFF;
 				}
 				// send downstream pulse
+				fire_delay_time = FIRE_DELAY_TIME;
+				fire_flag = 1;
+			}
+
+			if (fire_delay_time > 0){
+				fire_delay_time -= 1;
+			} else if (fire_flag == 1){
+				fire_flag = 0;
 				addWrite(DOWNSTREAM_BUFF, PULSE_MESSAGE);
 			}
 

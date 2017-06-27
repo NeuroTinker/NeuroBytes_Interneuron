@@ -10,6 +10,7 @@
 
 #define DENDRITE_ALIVE_TIME     200
 #define FIRE_LED_TIME           5
+#define FIRE_DELAY_TIME         20
 
 typedef enum{
 NC =   0,

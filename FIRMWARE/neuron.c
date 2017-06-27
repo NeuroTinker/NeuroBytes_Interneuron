@@ -40,10 +40,10 @@ void neuronInit(neuron_t *n)
 		n->dendrites[i].alive_time = 0;
 	}
 
-	n->dendrites[0].magnitude = 12000;
+	n->dendrites[0].magnitude = 15000;
 	n->dendrites[1].magnitude = 8000;
-	n->dendrites[2].magnitude = 5000;
-	n->dendrites[3].magnitude = 2000;
+	n->dendrites[2].magnitude = 8000;
+	n->dendrites[3].magnitude = 15000;
 	
 	n->dendrite_ping_time[0] = 0;
 	n->dendrite_ping_time[1] = 0;
@@ -70,12 +70,14 @@ void checkDendrites(neuron_t * n)
 
 			n->dendrite_ping_time[i] = DEND_PING_TIME;
 		} else if (n->dendrite_ping_time[i] == 1){	
-			// dendrite ping has expired; reset to dendrite to inputs		
+			// dendrite ping has expired; reset the dendrite to inputs		
 			if (i % 2 != 0){
+				// i=3,5,7,9
 				setAsInput(active_input_ports[i+1], complimentary_pins[i]);
 				active_output_pins[i+1] = 0;
 			} else{
-				setAsInput(active_input_ports[i+1], complimentary_pins[i]);
+				// i=4,6,8,10
+				setAsInput(active_input_ports[i-1], complimentary_pins[i]);
 				active_output_pins[i-1] = 0;
 			}
 			
