@@ -5,7 +5,6 @@
 #include <libopencm3/cm3/systick.h>
 #include <libopencm3/stm32/exti.h>
 
-
 #include "comm.h"
 #include "HAL.h"
 #include "neuron.h"
@@ -200,7 +199,6 @@ int main(void)
 					setLED(0,200,0);
 				}
 			}
-
 		}
 	}
 }
