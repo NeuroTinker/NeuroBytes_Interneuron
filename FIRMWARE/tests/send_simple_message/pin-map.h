@@ -1,6 +1,7 @@
 #define NUM_INPUTS      3
 #define NUM_PINS        4
 #define NUM_OUTPUTS     3
+#define NUM_AXONS       1
 
 #define PORT_R_LED      GPIOB
 #define PORT_G_LED      GPIOA

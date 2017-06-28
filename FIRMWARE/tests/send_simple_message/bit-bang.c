@@ -25,6 +25,9 @@ void addMessage(uint64_t message_binary, uint8_t num_bits_to_write, pin_group_na
         #endif
         return;
     }
+
+    if (write_buffer_count == 1)
+        selectOutputPins(output_pin_group);
 }
 
 void readBit(pin_t * pin)
@@ -45,7 +48,8 @@ void readBit(pin_t * pin)
     */
 
     if (input_buffer->num_bits_to_read == 0){
-        keep_reading = processMessage(pin, input_buffer->message);
+        //keep_reading = processMessage(pin, input_buffer->message);
+        keep_reading = 0;
         // if there is a data packet coming, keep reading.
         if (keep_reading == 0){
             // no data packet coming, reset the input pin
@@ -67,20 +71,20 @@ void writeBit(pin_group_t output)
 
     uint8_t i;
     bool value;
-    pin_t num_output_pins = output->num_output_pins;
+    uint8_t num_output_pins = output->num_output_pins;
     output_message_t * write_message = write_buffer[0];
 
     if (write_buffer_count > 0){
 
         write_message = write_buffer[0];
 
-        value = write_message->message | write_message->bits_left_to_write;
+        value = write_message->message | ( 1 << (write_message->bits_left_to_write - 1);
 
-        for(i=0; i<write_message->num_output_pins; i++){            
+        for(i=0; i<num_output_pins; i++){            
             if (value != 0){
-                writePinHigh(write_message->output_pins[i]);
+                writePinHigh(output->pins[i]);
             } else{
-                writePinLow(write_message->output_pins[i]);
+                writePinLow(output->pins[i]);
             }
         }
 
@@ -90,6 +94,7 @@ void writeBit(pin_group_t output)
             for (i=0; i<=write_buffer_count; i++){
                 write_buffer[i] = write_buffer[i+1];
             }
+            selectOutputPins(write_buffer[0]->output_pin_group);
             write_buffer_count -= 1;
         }
     }

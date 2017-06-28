@@ -3,6 +3,7 @@
 
 #include <string.h>
 
+#include "pins.h"
 #include "HAL.h"
 
 #define WRITE_BUFFER_SIZE 10

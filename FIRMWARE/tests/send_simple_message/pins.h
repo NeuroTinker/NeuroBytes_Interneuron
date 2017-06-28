@@ -1,8 +1,10 @@
+#ifndef PINS_H
+#define PINS_H
 #include "pin-map.h"
 
 typedef struct {
-    uint32_t pin;
     uint32_t port;
+    uint32_t pin;
 } pin_address_t;
 
 typedef enum {
@@ -47,7 +49,8 @@ struct pin_t{
 typedef enum{
     ALL,
     NID,
-    AXONS
+    AXONS,
+    NONE
 } pin_group_name_t;
 
 typedef struct {
@@ -56,6 +59,11 @@ typedef struct {
 } pin_group_t;
 
 static pin_t * all_pins[NUM_PINS];
+static pin_group_t * output_pins;
+static pin_group_t * input_pins;
+static pin_t * nid_pin;
+
+static const pin_t * axon_output_pins[NUM_AXONS];
 
 void initPins(void);
 static pin_address_t * initPinAddress(uint32_t port, uint32_t pin);
@@ -63,12 +71,14 @@ static input_buffer_t * initInputBuffer(void);
 
 static void freeInputBuffer(pin_t * pin);
 
-void startRead(pin_t * pin, uint8_t bits_to_read);
+void startRead(pin_t * pin, uint8_t read_tick);
 void endRead(pin_t * pin);
 pin_group_t getInputPins(void);
 
 void selectOutputPins(pin_group_name_t output_group_name);
 pin_group_t getOutputPins(void);
+
+#endif
 
 
 

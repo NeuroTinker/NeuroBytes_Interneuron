@@ -14,17 +14,11 @@
 #include "HAL.h"
 #include "bit-bang.h"
 
-#define DEBUG
-
-#ifdef DEBUG
-#include "debug.h"
-#endif
-
 int main(void)
 {
 	uint64_t new_message = 0b11111111;
 	uint8_t num_bits = 8;
-	pin_t * output_pins[NUM_OUTPUTS];
+	pin_group_name_t output_pins = AXONS;
 	uint8_t num_outputs = 1;
 	// initialize hardware
 	clock_setup();
@@ -39,7 +33,7 @@ int main(void)
 		if (main_tick == 1){
 			// main tick every 5 ms
 			main_tick = 0;
-			//addMessage(new_message, num_bits, output_pins, num_outputs);
+			addMessage(new_message, num_bits, output_pins);
 		}
 	}
 }
