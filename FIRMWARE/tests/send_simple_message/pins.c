@@ -3,6 +3,7 @@
 static pin_t * all_pins[NUM_PINS];
 static pin_group_t * output_pins;
 static pin__group_t * input_pins;
+static pin_t * nid_pin;
 
 void initPins(void)
 {
@@ -95,9 +96,14 @@ void endRead(pin_t * pin)
     realloc(input_pins->pins, sizeof(pin_t *) * input_pins->num_pins);
 }
 
-pin_group_t getInputPins(void)
+pin_group_t * getInputPins(void)
 {
     return input_pins;
+}
+
+pin_group_t * getOutputPins(void)
+{
+    return output_pins;
 }
 
 void selectOutputPins(pin_group_name_t output_group_name)
@@ -135,15 +141,15 @@ void selectOutputPins(pin_group_name_t output_group_name)
 void exti0_1_isr(void)
 {
 	if ((EXTI_PR & EXTI0) != 0){
-		startRead(DEND1_IN, 8);
+		startRead(all_pins[2], read_tick);
 	} else if ((EXTI_PR & EXTI1) != 0){
-		startRead(DEND1_IN, 8);
+		startRead(all_pins[3], read_tick);
 	}
 }
 
 void exti4_15_isr(void)
 {
 	if ((EXTI_PR & PIN_AXON1_IN) != 0){
-		startRead(AXON1_IN, 8);
+		startRead(all_pins[1], read_tick);
 	}
 }

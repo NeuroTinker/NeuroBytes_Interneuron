@@ -11,6 +11,7 @@
 #include "debug.h"
 #endif
 
+#include "pins.h"
 #include "HAL.h"
 #include "bit-bang.h"
 

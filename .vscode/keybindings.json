@@ -1,0 +1,10 @@
+
+        [{
+            "key": "ctrl+shift+h",
+            "command": "flash",
+            "when": "editorTextFocus"
+        },{
+            "key": "ctrl+h",
+            "command": "flash",
+            "when": "editorTextFocus"
+        }]

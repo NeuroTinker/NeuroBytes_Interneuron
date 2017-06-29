@@ -16,10 +16,10 @@ void clock_setup(void)
 
 void sys_tick_handler(void)
 {
-	uint8_t i;
-
 	pin_group_t * active_output_pins = getOutputPins();
-	pin_group_t * active_input_pins = getInputPins();
+
+	//debug
+	setPinAsOutput(active_output_pins->pins[0]);
 
 	tick += 1;
 	if (tick >= 50)
@@ -34,16 +34,6 @@ void sys_tick_handler(void)
 		read_tick = 0;
 		writeBit(active_output_pins);
 	}
-
-	for (i=0; i<active_input_pins->num_pins; i++){
-		// put the read tick check in getInputPins(uint8_t read_tick)
-		if (active_input_pins->pins[i]->input_buffer->read_tick == read_tick){
-			readBit(active_input_pins->pins[i]);
-		}
-	}
-
-	// debug
-	gpio_toggle(PORT_AXON1_IN, PIN_AXON1_IN);
 }
 
 void systick_setup(int xms)
@@ -101,36 +91,6 @@ void writePinHigh(pin_t * pin)
 void writePinLow(pin_t * pin)
 {
 	gpio_clear(pin->address->port, pin->address->pin);
-}
-
-bool readPin(pin_t * pin)
-{
-	uint32_t value;
-	value = gpio_get(pin->address->port, pin->address->pin);
-	value >>= pin->address->pin;
-	return (bool) value;
-}
-
-void resetPinInterrupt(pin_t * pin)
-{
-	EXTI_PR |= pin->exti;
-}
-
-void setPinAsInput(pin_t * pin)
-{
-	uint32_t input_port = pin->address->port;
-	uint32_t input_pin = pin->address->pin;
-
-	pin->io_state = INPUT;
-
-	// setup gpio as an input pin
-	gpio_mode_setup(input_port, GPIO_MODE_INPUT, GPIO_PUPD_PULLDOWN, input_pin);
-
-	// setup interrupt for the pin going high
-	exti_select_source(input_pin, input_port);
-	exti_set_trigger(input_pin, EXTI_TRIGGER_RISING);
-	exti_enable_request(input_pin);
-	exti_reset_request(input_pin);
 }
 
 void setPinAsOutput(pin_t * pin)

@@ -28,38 +28,6 @@ void addMessage(uint64_t message_binary, uint8_t num_bits_to_write, pin_group_na
         selectOutputPins(output_pin_group);
 }
 
-void readBit(pin_t * pin)
-{
-    uint8_t keep_reading;
-    input_buffer_t * input_buffer = pin->input_buffer;
-
-    /*
-        Read one bit
-    */
-    input_buffer->message <<= 1;
-    input_buffer->message |= readPin(pin);
-    input_buffer->num_bits_to_read -= 1;
-
-    /*
-        Process message if there are no more bits to read
-    */
-
-    if (input_buffer->num_bits_to_read == 0){
-        //keep_reading = processMessage(pin, input_buffer->message);
-        keep_reading = 0;
-        // if there is a data packet coming, keep reading.
-        if (keep_reading == 0){
-            // no data packet coming, reset the input pin
-            pin->active = false;
-            endRead(pin);
-        } else{
-            // data packet is coming so keep reading
-            input_buffer->num_bits_to_read += keep_reading;
-            input_buffer->state = DATA;
-        }
-    } 
-}
-
 void writeBit(pin_group_t * output)
 {
     /*

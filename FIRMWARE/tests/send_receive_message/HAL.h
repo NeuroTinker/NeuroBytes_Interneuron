@@ -36,12 +36,8 @@ void gpio_setup(void);
 void tim_setup(void);
 void LEDFullWhite(void);
 void setLED(uint16_t r, uint16_t g, uint16_t b);
-void pinInit(void);
 void writePinHigh(pin_t * pin);
 void writePinLow(pin_t * pin);
-bool readPin(pin_t * pin);
-void resetPinInterrupt(pin_t * pin);
-void setPinAsInput(pin_t * pin);
 void setPinAsOutput(pin_t * pin);
 
 
