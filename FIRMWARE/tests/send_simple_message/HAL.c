@@ -41,9 +41,6 @@ void sys_tick_handler(void)
 			readBit(active_input_pins->pins[i]);
 		}
 	}
-
-	// debug
-	gpio_toggle(PORT_AXON1_IN, PIN_AXON1_IN);
 }
 
 void systick_setup(int xms)

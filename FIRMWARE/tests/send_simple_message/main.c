@@ -26,7 +26,6 @@ int main(void)
 	gpio_setup();
 	tim_setup();
 	setLED(200,200,200);
-	//output_pins[0] = all_pins[1];
 	for(;;)
 	{
 		if (main_tick == 1){

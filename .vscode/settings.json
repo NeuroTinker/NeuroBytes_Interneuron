@@ -1,3 +1,9 @@
 {
-    "python.linting.pylintEnabled": false
+    "python.linting.pylintEnabled": false,
+    "files.associations": {
+        "pins.h": "c",
+        "hal.h": "c",
+        "neuron.h": "c",
+        "bit-bang.h": "c"
+    }
 }
