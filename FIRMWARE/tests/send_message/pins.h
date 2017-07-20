@@ -1,13 +1,12 @@
 #ifndef PINS_H
 #define PINS_H
-#include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/gpio.h>
-#include <libopencm3/stm32/timer.h>
 #include <libopencm3/cm3/nvic.h>
-#include <libopencm3/cm3/systick.h>
 #include <libopencm3/stm32/exti.h>
 #include <stdint.h>
+#include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
 #include "pin-map.h"
 
 typedef struct pin_t pin_t;
@@ -67,9 +66,9 @@ typedef struct {
 } pin_group_t;
 
 void initPins(void);
-static pin_address_t * initPinAddress(uint32_t port, uint32_t pin);
 
 void selectOutputPins(pin_group_name_t output_group_name);
+void setPinAsOutput(pin_t * pin);
 pin_group_t * getOutputPins(void);
 
 #endif

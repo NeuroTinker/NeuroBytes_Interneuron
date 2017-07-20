@@ -14,8 +14,6 @@ void sys_tick_handler(void)
 {
 	static uint8_t tick = 0;
 
-	uint8_t i;
-
 	pin_group_t * active_output_pins = getOutputPins();
 
 	tick += 1;
@@ -76,20 +74,6 @@ void writePinHigh(pin_t * pin)
 void writePinLow(pin_t * pin)
 {
 	gpio_clear(pin->address->port, pin->address->pin);
-}
-
-void setPinAsOutput(pin_t * pin)
-{
-	uint32_t input_port = pin->address->port;
-	uint32_t input_pin = pin->address->pin;
-
-	pin->io_state = OUTPUT;
-	
-	// disable input interrupts
-	exti_disable_request(input_pin);
-
-	// setup gpio as an output pin. pulldown
-	gpio_mode_setup(input_port, GPIO_MODE_OUTPUT, GPIO_PUPD_PULLDOWN, input_pin);
 }
 
 void timSetup(void)

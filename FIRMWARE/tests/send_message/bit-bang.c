@@ -8,15 +8,12 @@ void addMessage(uint64_t message_binary, uint8_t num_bits_to_write, pin_group_na
     /*
         Add a new message to the write buffer (FIFO)
     */
-    output_message_t new_message;
-    new_message.message = message_binary;
-    new_message.num_bits_left_to_write = num_bits_to_write;
-    new_message.output_pin_group = output_pin_group;
 
-    // not using dynamic memory for write buffer because memory could be corrupted during interrupt
     if (write_buffer_count < WRITE_BUFFER_SIZE){ // check for buffer overflow
         write_buffer[write_buffer_count] = malloc(sizeof(output_message_t));
-        memcpy(write_buffer[write_buffer_count], &new_message, sizeof(output_message_t));
+        write_buffer[write_buffer_count]->message = message_binary;
+        write_buffer[write_buffer_count]->num_bits_left_to_write = num_bits_to_write;
+        write_buffer[write_buffer_count]->output_pin_group = output_pin_group;
         write_buffer_count += 1; 
     }
 }

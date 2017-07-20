@@ -2,6 +2,9 @@
 
 static pin_t * all_pins[NUM_PINS];
 static pin_group_t * output_pins;
+static pin_group_t * axon_output_pins;
+
+static pin_address_t * initPinAddress(uint32_t port, uint32_t pin);
 
 void initPins(void)
 {
@@ -13,6 +16,10 @@ void initPins(void)
 	all_pins[0]->port_type = AXON;
 	all_pins[0]->exti = PIN_AXON1_EX;
 	setPinAsOutput(all_pins[0]);
+
+    axon_output_pins->pins = malloc(sizeof(pin_t));
+    axon_output_pins->pins[0] = all_pins[0];
+    axon_output_pins->num_pins = 1;
 }
 
 static pin_address_t * initPinAddress(uint32_t port, uint32_t pin)
@@ -30,15 +37,27 @@ pin_group_t * getOutputPins(void)
 
 void selectOutputPins(pin_group_name_t output_group_name)
 {
-    uint8_t i;
-
     switch(output_group_name){
         case AXONS:
-            ouput_pins->num_pins = NUM_AXONS;
+            output_pins->num_pins = NUM_AXONS;
             realloc(output_pins->pins, sizeof(pin_t *) * output_pins->num_pins);
-            memcpy(output_pins->pins, axon_output_pins);
+            memcpy(output_pins->pins, axon_output_pins,  sizeof(pin_t *) * output_pins->num_pins);
             break;
         default:
             break;
     }
+}
+
+void setPinAsOutput(pin_t * pin)
+{
+	uint32_t input_port = pin->address->port;
+	uint32_t input_pin = pin->address->pin;
+
+	pin->io_state = OUTPUT;
+	
+	// disable input interrupts
+	exti_disable_request(input_pin);
+
+	// setup gpio as an output pin. pulldown
+	gpio_mode_setup(input_port, GPIO_MODE_OUTPUT, GPIO_PUPD_PULLDOWN, input_pin);
 }

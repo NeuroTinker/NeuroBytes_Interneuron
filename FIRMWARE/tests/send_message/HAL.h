@@ -40,7 +40,4 @@ void pinInit(void);
 void writePinHigh(pin_t * pin);
 void writePinLow(pin_t * pin);
 
-void setPinAsOutput(pin_t * pin);
-
-
 #endif

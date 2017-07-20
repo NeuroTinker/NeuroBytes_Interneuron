@@ -21,10 +21,10 @@ int main(void)
 	pin_group_name_t output = AXONS;
 	initPins();
 	// initialize hardware
-	clock_setup();
-	systick_setup(100); // systick in microseconds
-	gpio_setup();
-	tim_setup();
+	clockSetup();
+	systickSetup(100); // systick in microseconds
+	gpioSetup();
+	timSetup();
 	setLED(200,200,200);
 	for(;;)
 	{

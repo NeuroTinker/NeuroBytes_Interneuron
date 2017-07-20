@@ -6,7 +6,7 @@
 #include "pins.h"
 #include "HAL.h"
 
-#define WRITE_BUFFER_SIZE 10
+#define WRITE_BUFFER_SIZE 6
 
 typedef struct {
     uint64_t message;
