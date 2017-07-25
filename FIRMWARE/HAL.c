@@ -6,6 +6,9 @@ volatile uint8_t toggle = 0;
 volatile uint8_t tick = 0;
 volatile uint8_t main_tick = 0;
 
+static const uint16_t device_id[4] = {1,2,3,4};
+
+
 void clock_setup(void)
 {
 	// STM32F0 command:	rcc_clock_setup_in_hsi_out_48mhz();
@@ -16,6 +19,7 @@ void clock_setup(void)
 void sys_tick_handler(void)
 {
     // Switch TIM21 ISR to this
+	getFingerprint();
 }
 
 void systick_setup(int xms)
@@ -329,6 +333,11 @@ void setLED(uint16_t r, uint16_t g, uint16_t b)
 	{
 		timer_set_oc_value(TIM2, TIM_OC3, 9600);
 	}
+}
+
+uint8_t getFingerprint(void)
+{
+	return device_id;
 }
 
 

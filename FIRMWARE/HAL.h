@@ -62,10 +62,16 @@
     -tick       : clocks the communication routine at 100 us
 */
 
+typedef struct{
+    uint8_t device_type;
+    uint32_t unique_id;
+    uint8_t firmware_version;
+} fingerprint_t;
+
 extern volatile uint8_t main_tick;
 extern volatile uint8_t tick;
 static const uint16_t gamma_lookup[1024];
-
+static const uint16_t device_id[4];
 
 void systick_setup(int xms);
 void clock_setup(void);
@@ -75,6 +81,7 @@ void LEDFullWhite(void);
 void setLED(uint16_t r, uint16_t g, uint16_t b);
 void setAsInput(uint32_t port, uint32_t pin);
 void setAsOutput(uint32_t port, uint32_t pin);
+uint8_t getFingerprint(void);
 
 
 #endif

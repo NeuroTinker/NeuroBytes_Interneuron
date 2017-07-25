@@ -16,6 +16,8 @@
 #define SEND_PING_TIME		80 // 80
 #define BUTTON_PRESS_TIME	2
 
+const int willbeinrodata = 42;
+
 int main(void)
 {
 	uint8_t		i;
@@ -126,6 +128,8 @@ int main(void)
 					addWrite(NID_BUFF,message);
 				}
 			}
+
+			getFingerprint();
 			
 			/*
 				Check dendrites for pings and adjut pins accordingly.
