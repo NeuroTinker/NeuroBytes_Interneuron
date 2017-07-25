@@ -23,7 +23,7 @@ OBJS = comm.o HAL.o neuron.o
 
 OPENCM3_DIR = ../../libopencm3
 
-BIN_DIR = ../bin/
+BIN_DIR = ../bin
 
 LDSCRIPT = $(OPENCM3_DIR)/lib/stm32/l0/stm32l0xx4.ld
 

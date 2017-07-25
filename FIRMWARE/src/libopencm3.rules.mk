@@ -145,11 +145,11 @@ LDLIBS		+= -Wl,--start-group -lc -lgcc -lnosys -Wl,--end-group
 
 all: elf
 
-elf: $(BIN_DIR)/$(BINARY).elf
-bin: $(BIN_DIR)/$(BINARY).bin
-hex: $(BIN_DIR)/$(BINARY).hex
-srec: $(BIN_DIR)/$(BINARY).srec
-list: $(BIN_DIR)/$(BINARY).list
+elf: $(BINARY).elf
+bin: $(BINARY).bin
+hex: $(BINARY).hex
+srec: $(BINARY).srec
+list: $(BINARY).list
 
 images: $(BINARY).images
 flash: $(BINARY).flash
@@ -192,6 +192,7 @@ print-%:
 
 %.elf %.map: $(OBJS) $(LDSCRIPT)
 	@#printf "  LD      $(*).elf\n"
+	$(Q)$(LD) $(TGT_LDFLAGS) $(LDFLAGS) $(OBJS) $(LDLIBS) -o $(BIN_DIR)/$(*).elf
 	$(Q)$(LD) $(TGT_LDFLAGS) $(LDFLAGS) $(OBJS) $(LDLIBS) -o $(*).elf
 
 %.o: %.c

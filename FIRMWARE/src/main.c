@@ -16,7 +16,12 @@
 #define SEND_PING_TIME		80 // 80
 #define BUTTON_PRESS_TIME	2
 
-const int willbeinrodata = 42;
+static uint32_t fingerprint[4] __attribute__((section (".fingerprint"))) __attribute__ ((__used__)) = {
+	1,
+	2,
+	3,
+	4
+};
 
 int main(void)
 {
