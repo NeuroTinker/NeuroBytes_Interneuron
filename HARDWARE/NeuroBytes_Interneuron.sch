@@ -83,13 +83,9 @@ $EndComp
 Text GLabel 1650 1950 0    60   Input ~ 0
 RESET
 Text GLabel 5400 2400 2    60   Input ~ 0
-SWCLK/MISO
+SWCLK
 Text GLabel 5400 2550 2    60   Input ~ 0
-SWDIO/SCK
-Text GLabel 5400 1800 2    60   Input ~ 0
-MOSI
-Text GLabel 5400 2250 2    60   Input ~ 0
-NSS
+SWDIO
 Text GLabel 5400 1500 2    60   Input ~ 0
 LED_R
 Text GLabel 2600 2400 0    60   Input ~ 0
@@ -367,19 +363,6 @@ F 3 "" H 6200 1000 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L CONN_01X07 P8
-U 1 1 58B5DF5E
-P 10500 4950
-F 0 "P8" H 10500 5350 50  0000 C CNN
-F 1 "JST GH 7-POS" V 10600 4950 50  0000 C CNN
-F 2 "KiCad_Footprints:ZF_CONN_JST_GH_7POS" H 10500 4550 50  0000 C CNN
-F 3 "" H 10500 4950 50  0000 C CNN
-F 4 "No" H 10500 4950 60  0001 C CNN "Subs Allowed"
-F 5 "Yes" H 10500 4950 60  0001 C CNN "RoHS"
-	1    10500 4950
-	1    0    0    -1  
-$EndComp
-$Comp
 L GND #PWR014
 U 1 1 58B5E0E3
 P 10050 5700
@@ -404,13 +387,9 @@ $EndComp
 Text GLabel 9250 4750 0    60   Input ~ 0
 RESET
 Text GLabel 9250 5150 0    60   Input ~ 0
-SWCLK/MISO
+SWCLK
 Text GLabel 9250 4950 0    60   Input ~ 0
-SWDIO/SCK
-Text GLabel 9250 5350 0    60   Input ~ 0
-NSS
-Text GLabel 9250 5550 0    60   Input ~ 0
-MOSI
+SWDIO
 $Comp
 L SW_PUSH SW1
 U 1 1 58B5A249
@@ -758,23 +737,7 @@ Wire Wire Line
 Wire Wire Line
 	10050 4650 10300 4650
 Wire Wire Line
-	9850 4150 9850 5250
-Wire Wire Line
-	9850 5250 10300 5250
-Wire Wire Line
 	9250 4750 10300 4750
-Wire Wire Line
-	9250 5550 9650 5550
-Wire Wire Line
-	9650 5550 9650 5150
-Wire Wire Line
-	9650 5150 10300 5150
-Wire Wire Line
-	9250 5350 9550 5350
-Wire Wire Line
-	9550 5350 9550 5050
-Wire Wire Line
-	9550 5050 10300 5050
 Wire Wire Line
 	9250 5150 9450 5150
 Wire Wire Line
@@ -875,11 +838,7 @@ Wire Wire Line
 Wire Wire Line
 	7050 3250 7050 3650
 Wire Wire Line
-	5400 2250 5200 2250
-Wire Wire Line
 	5200 2400 5400 2400
-Wire Wire Line
-	5400 1800 5200 1800
 Wire Wire Line
 	5400 2550 5200 2550
 Wire Wire Line
@@ -1020,4 +979,21 @@ Connection ~ 8300 2450
 Connection ~ 8300 3100
 Wire Wire Line
 	9250 3100 8850 3100
+$Comp
+L CONN_01X05 P8
+U 1 1 598B494F
+P 10500 4850
+F 0 "P8" H 10500 5150 50  0000 C CNN
+F 1 "JST_GH_5-pos" V 10600 4850 50  0000 C CNN
+F 2 "KiCad_Footprints:ZF_CONN_JST_GH_5POS" H 10500 4850 50  0001 C CNN
+F 3 "" H 10500 4850 50  0000 C CNN
+F 4 "No" H 10500 4850 60  0001 C CNN "Subs Allowed"
+F 5 "Yes" H 10500 4850 60  0001 C CNN "RoHS"
+	1    10500 4850
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	9850 4150 9850 5050
+Wire Wire Line
+	9850 5050 10300 5050
 $EndSCHEMATC
