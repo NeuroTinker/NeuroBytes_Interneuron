@@ -18,15 +18,23 @@ void clock_setup(void)
 
 void sys_tick_handler(void)
 {
-    // Switch TIM21 ISR to this
-	getFingerprint();
+    if (++tick >= 50){
+		main_tick = 1;
+		tick = 0;
+	}
+
+	readInputs();
+	write();
+	
+    MMIO32((TIM21_BASE) + 0x10) &= ~(1<<0); //clear the interrupt register
 }
 
 void systick_setup(int xms)
 {
     systick_set_clocksource(STK_CSR_CLKSOURCE_EXT);
     STK_CVR = 0;
-    systick_set_reload(2000 * xms);
+    //systick_set_reload(2 * xms);
+	systick_set_reload(180);
     systick_counter_enable();
     systick_interrupt_enable();
 }
@@ -265,7 +273,7 @@ void tim_setup(void)
     /*    Enable TIM21 counter: */
     MMIO32((TIM21_BASE) + 0x00) |= (1<<0);
 
-	nvic_enable_irq(NVIC_TIM21_IRQ);
+	//nvic_enable_irq(NVIC_TIM21_IRQ);
     nvic_set_priority(NVIC_TIM21_IRQ, 1);
 }
 
@@ -277,16 +285,6 @@ void tim21_isr(void)
 		Each interrupt is one-bit read and one-bit write of gpios.
 		Interrupts occur every 100 us.
 	*/
-
-	if (++tick >= 50){
-		main_tick = 1;
-		tick = 0;
-	}
-
-	readInputs();
-	write();
-	
-    MMIO32((TIM21_BASE) + 0x10) &= ~(1<<0); //clear the interrupt register
 }
 
 void tim2_isr(void)
