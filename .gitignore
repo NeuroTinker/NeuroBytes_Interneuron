@@ -33,3 +33,7 @@
 # Debug files
 *.dSYM/
 *.su
+
+
+# Other
+*.json
