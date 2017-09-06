@@ -37,10 +37,10 @@
      inkscape:window-width="1920"
      inkscape:window-height="1053"
      id="namedview4"
-     showgrid="true"
-     inkscape:zoom="2.828427"
-     inkscape:cx="310.97788"
-     inkscape:cy="719.98738"
+     showgrid="false"
+     inkscape:zoom="7.9999996"
+     inkscape:cx="282.99512"
+     inkscape:cy="749.98738"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
@@ -5304,7 +5304,7 @@
          style="fill:#111111;fill-opacity:1;fill-rule:nonzero;stroke:none"
          id="path9789-6"
          inkscape:connector-curvature="0" /></g><g
-       style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:0;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
+       style="fill:#cccccc;fill-opacity:1;stroke:#ffffff;stroke-width:0;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
        id="g17966"
        transform="matrix(0.009,0,0,0.009,204.98675,176.46108)"
        inkscape:export-filename="/home/zach/interneuron.png"
@@ -5313,7 +5313,8 @@
          cx="10472.4"
          cy="13622"
          r="590.55103"
-         id="circle17968" /></g><g
+         id="circle17968"
+         style="fill:#cccccc;fill-opacity:1" /></g><g
        style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:39.37009811;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
        id="g17970"
        transform="matrix(0.009,0,0,0.009,204.98675,176.46108)" /><g
