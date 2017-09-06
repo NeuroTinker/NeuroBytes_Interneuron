@@ -5,6 +5,7 @@
 volatile uint8_t toggle = 0;
 volatile uint8_t tick = 0;
 volatile uint8_t main_tick = 0;
+volatile uint8_t read_tick = 0;
 
 static const uint16_t device_id[4] = {1,2,3,4};
 
@@ -23,7 +24,10 @@ void sys_tick_handler(void)
 		tick = 0;
 	}
 
-	readInputs();
+	//read_tick += 1;
+	//if (read_tick >= 2){
+		readInputs();
+	//}
 	write();
 	
     MMIO32((TIM21_BASE) + 0x10) &= ~(1<<0); //clear the interrupt register
@@ -138,6 +142,7 @@ void setAsOutput(uint32_t port, uint32_t pin)
 void exti0_1_isr(void)
 {
 	// interrupt handler for pins 0,1 (dend1_in, dend1_ex)
+	gpio_set(PORT_AXON1_EX, PIN_AXON1_EX);
 	if ((EXTI_PR & PIN_DEND1_IN) != 0){
 		active_input_pins[4] = PIN_DEND1_IN;
 		EXTI_PR |= PIN_DEND1_IN; // clear interrupt flag
@@ -145,8 +150,10 @@ void exti0_1_isr(void)
 	} else if ((EXTI_PR & PIN_DEND1_EX) != 0){
 		active_input_pins[3] = PIN_DEND1_EX;
 		EXTI_PR |= PIN_DEND1_EX;
+		exti_disable_request(PIN_DEND1_EX);
 		//EXTI_PR &= ~(PIN_DEND1_EX);
 	}
+	gpio_clear(PORT_AXON1_EX, PIN_AXON1_EX);
 }
 
 void exti2_3_isr(void)
@@ -280,11 +287,7 @@ void tim_setup(void)
 
 void tim21_isr(void)
 {
-	/*
-		TIM21 is the communication clock. 
-		Each interrupt is one-bit read and one-bit write of gpios.
-		Interrupts occur every 100 us.
-	*/
+	// TIM21 routine is now in systick interrupt
 }
 
 void tim2_isr(void)

@@ -1,6 +1,14 @@
 {
     "python.linting.pylintEnabled": false,
     "files.associations": {
-        "timer.h": "c"
+        "timer.h": "c",
+        "hal.h": "c",
+        "libusb.h": "c",
+        "nettle-stdint.h": "c",
+        "_stdint.h": "c",
+        "gpio.h": "c",
+        "vector.h": "c",
+        "common.h": "c",
+        "backend.h": "c"
     }
 }

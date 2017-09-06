@@ -62,7 +62,8 @@ int main(void)
 		if (main_tick == 1){
 			// main tick every 5 ms
 			main_tick = 0;
-			
+			//gpio_set(PORT_AXON1_EX, PIN_AXON1_EX);
+
 			// check to see if nid ping hasn't been received in last NID_PING_TIME ticks
 			if (nid_ping_time++ > NID_PING_TIME){
 				// nid no longer connected
@@ -207,6 +208,7 @@ int main(void)
 					setLED(0,200,0);
 				}
 			}
+			//gpio_clear(PORT_AXON1_EX, PIN_AXON1_EX);
 		}
 	}
 }

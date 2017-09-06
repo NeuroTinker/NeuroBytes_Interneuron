@@ -9,6 +9,8 @@ uint8_t message_buffer_count[11];
 
 volatile uint16_t active_input_pins[11] = {0,0,0,0,0,0,0,0,0,0,0};
 
+volatile uint16_t active_input_ticks[11] = {0,0,0,0,0,0,0,0,0,0,0};
+
 volatile uint16_t active_output_pins[11] = {PIN_AXON1_IN, PIN_AXON2_IN,PIN_AXON3_EX,0,0,0,0,0,0,0,0};
 
 volatile uint32_t dendrite_pulses[4] = {0,0,0,0};
@@ -105,7 +107,7 @@ void readInputs(void)
     uint32_t sender_id;
     uint32_t keep_alive;
     uint32_t data_frame;
-
+    //gpio_set(PORT_AXON1_EX, PIN_AXON1_EX);
     for (i=0; i<NUM_INPUTS; i++){
         // read each input that is currently receiving a message
         if (active_input_pins[i] != 0){
@@ -231,6 +233,7 @@ void readInputs(void)
                 
                 // deactivate input so that it doesn't keep getting read
                 EXTI_PR |= active_input_pins[i];
+                exti_enable_request(active_input_pins[i]);
                 active_input_pins[i] = 0;
                 // reset message buffer
                 message_buffer[i] = 0;
@@ -238,6 +241,7 @@ void readInputs(void)
             }
         }
     }
+    //gpio_clear(PORT_AXON1_EX, PIN_AXON1_EX);
 }
 
 void addWrite(message_buffers_t buffer, uint32_t message)
