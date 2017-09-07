@@ -9,7 +9,9 @@ uint8_t message_buffer_count[11];
 
 volatile uint16_t active_input_pins[11] = {0,0,0,0,0,0,0,0,0,0,0};
 
-volatile uint16_t active_output_pins[11] = {PIN_AXON1_IN, PIN_AXON2_IN,0,0,0,0,0,0,0,0,0};
+volatile uint16_t active_input_ticks[11] = {0,0,0,0,0,0,0,0,0,0,0};
+
+volatile uint16_t active_output_pins[11] = {PIN_AXON1_IN, PIN_AXON2_IN,PIN_AXON3_EX,0,0,0,0,0,0,0,0};
 
 volatile uint32_t dendrite_pulses[4] = {0,0,0,0};
 volatile uint8_t dendrite_pulse_count = 0;
@@ -105,7 +107,7 @@ void readInputs(void)
     uint32_t sender_id;
     uint32_t keep_alive;
     uint32_t data_frame;
-
+    //gpio_set(PORT_AXON1_EX, PIN_AXON1_EX);
     for (i=0; i<NUM_INPUTS; i++){
         // read each input that is currently receiving a message
         if (active_input_pins[i] != 0){
@@ -124,7 +126,7 @@ void readInputs(void)
 
             // when the message buffer has read 32-bits, the message is done being read and is processed
             if (++message_buffer_count[i] == 32){ // done reading message
-
+                //blink_flag = 1;
                 // Process message and set appropriate flags for main() or add messages to message buffer
                 recipient_id = (message_buffer[i] & RECIPIENT_MASK) >> 28; // 3-bit recipient id 28
                 keep_alive = (message_buffer[i] & KEEP_ALIVE_MASK) >> 22; // 6-bit keep alive 22
@@ -136,6 +138,10 @@ void readInputs(void)
                 message_buffer[i] = (((keep_alive - 1) << 22) & KEEP_ALIVE_MASK) | (message_buffer[i] & ~KEEP_ALIVE_MASK);
                 
                 // analyze message header and determine what to do with it
+
+                if (recipient_id == SELECTED4){
+                    dendrite_pulse_flag[i] = 1;
+                }
 
                 if (header == BLINK && recipient_id == ALL){
                     /*
@@ -222,16 +228,12 @@ void readInputs(void)
                         write_buffer.source_pin = i;
                     }
                 }
-
-                if (header == PULSE || recipient_id == DOWNSTREAM){
-                    // this is a downstream -> upstream pulse message
-                    dendrite_pulse_flag[i] = 1;
-                }
                 
                 
                 
                 // deactivate input so that it doesn't keep getting read
                 EXTI_PR |= active_input_pins[i];
+                exti_enable_request(active_input_pins[i]);
                 active_input_pins[i] = 0;
                 // reset message buffer
                 message_buffer[i] = 0;
@@ -239,6 +241,7 @@ void readInputs(void)
             }
         }
     }
+    //gpio_clear(PORT_AXON1_EX, PIN_AXON1_EX);
 }
 
 void addWrite(message_buffers_t buffer, uint32_t message)
@@ -339,9 +342,11 @@ void writeDownstream(void)
     if (value != 0){
         gpio_set(PORT_AXON1_EX, PIN_AXON1_EX);
         gpio_set(PORT_AXON2_EX, PIN_AXON2_EX);
+        gpio_set(PORT_AXON3_EX, PIN_AXON3_EX);
     }else{
         gpio_clear(PORT_AXON1_EX, PIN_AXON1_EX);
         gpio_clear(PORT_AXON2_EX, PIN_AXON2_EX);
+        gpio_clear(PORT_AXON3_EX, PIN_AXON3_EX);
     }
 }
 

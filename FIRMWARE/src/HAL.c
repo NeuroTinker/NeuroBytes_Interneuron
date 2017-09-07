@@ -5,6 +5,10 @@
 volatile uint8_t toggle = 0;
 volatile uint8_t tick = 0;
 volatile uint8_t main_tick = 0;
+volatile uint8_t read_tick = 0;
+
+static const uint16_t device_id[4] = {1,2,3,4};
+
 
 void clock_setup(void)
 {
@@ -15,14 +19,26 @@ void clock_setup(void)
 
 void sys_tick_handler(void)
 {
-    // Switch TIM21 ISR to this
+    if (++tick >= 50){
+		main_tick = 1;
+		tick = 0;
+	}
+
+	//read_tick += 1;
+	//if (read_tick >= 2){
+		readInputs();
+	//}
+	write();
+	
+    MMIO32((TIM21_BASE) + 0x10) &= ~(1<<0); //clear the interrupt register
 }
 
 void systick_setup(int xms)
 {
     systick_set_clocksource(STK_CSR_CLKSOURCE_EXT);
     STK_CVR = 0;
-    systick_set_reload(2000 * xms);
+    //systick_set_reload(2 * xms);
+	systick_set_reload(180);
     systick_counter_enable();
     systick_interrupt_enable();
 }
@@ -65,6 +81,8 @@ void gpio_setup(void)
 	setAsOutput(PORT_AXON1_EX, PIN_AXON1_EX);
 	setAsInput(PORT_AXON2_IN, PIN_AXON2_IN);
 	setAsOutput(PORT_AXON2_EX, PIN_AXON2_EX);
+	setAsInput(PORT_AXON3_IN, PIN_AXON3_IN);
+	setAsOutput(PORT_AXON3_EX, PIN_AXON3_EX);
 
 	gpio_mode_setup(PORT_IDENTIFY, GPIO_MODE_INPUT, GPIO_PUPD_PULLUP, PIN_IDENTIFY);
 
@@ -93,75 +111,6 @@ void gpio_setup(void)
 	nvic_set_priority(NVIC_EXTI0_1_IRQ, 0);
 	nvic_set_priority(NVIC_EXTI2_3_IRQ, 0);
 	nvic_set_priority(NVIC_EXTI4_15_IRQ, 0);
-}
-
-void startRead(pin_t pin, uint8_t bits_to_read)
-{
-	/*
-		read message on pin for bits_to_read number of bits
-	*/
-	if (read_tick < 3){
-        pin->active_input->read_tick = read_tick + 1;
-    } else{
-        pin->active_input->read_tick = 1;
-    }
-
-	pin->active_input->bits_to_read = bits_to_read;
-}
-
-void endRead(pin_t pin)
-{
-	pin->active_input->read_tick = 0;
-}
-
-void writePinHigh(pin_t pin)
-{
-	gpio_set(pin->address->port, pin->address->pin);
-}
-
-void writePinLow(pin_t pin)
-{
-	gpio_clear(pin->address->port, pin->address->pin);
-}
-
-bool readPin(pin_t pin)
-{
-	uint32_t value;
-	value = gpio_get(pin->address->port, pin->address->pin);
-	value >>= pin->address->pin;
-	return (bool) value
-}
-
-void resetPinInterrupt(pin_t pin)
-{
-	EXTI_PR |= pin->exti;
-}
-
-void setPinAsInput(pin_t pin)
-{
-	uint32_t port = pin->address->port;
-	uint32_t pin = pin->address->pin;
-
-	// setup gpio as an input pin
-	gpio_mode_setup(port, GPIO_MODE_INPUT, GPIO_PUPD_PULLDOWN, pin);
-
-	// setup interrupt for the pin going high
-	exti_select_source(pin, port);
-	exti_set_trigger(pin, EXTI_TRIGGER_RISING);
-	exti_enable_request(pin);
-	exti_reset_request(pin);
-}
-
-void setPinAsOutput(pin_t pin)
-{
-	uint32_t port = pin->address->port;
-	uint32_t pin = pin->address->pin;
-	
-	// disable input interrupts
-	exti_disable_request(pin);
-
-	// setup gpio as an output pin. pulldown
-	gpio_mode_setup(port, GPIO_MODE_OUTPUT, GPIO_PUPD_PULLDOWN, pin);
 }
 
 void setAsInput(uint32_t port, uint32_t pin)
@@ -193,6 +142,7 @@ void setAsOutput(uint32_t port, uint32_t pin)
 void exti0_1_isr(void)
 {
 	// interrupt handler for pins 0,1 (dend1_in, dend1_ex)
+	gpio_set(PORT_AXON1_EX, PIN_AXON1_EX);
 	if ((EXTI_PR & PIN_DEND1_IN) != 0){
 		active_input_pins[4] = PIN_DEND1_IN;
 		EXTI_PR |= PIN_DEND1_IN; // clear interrupt flag
@@ -200,8 +150,10 @@ void exti0_1_isr(void)
 	} else if ((EXTI_PR & PIN_DEND1_EX) != 0){
 		active_input_pins[3] = PIN_DEND1_EX;
 		EXTI_PR |= PIN_DEND1_EX;
+		exti_disable_request(PIN_DEND1_EX);
 		//EXTI_PR &= ~(PIN_DEND1_EX);
 	}
+	gpio_clear(PORT_AXON1_EX, PIN_AXON1_EX);
 }
 
 void exti2_3_isr(void)
@@ -328,28 +280,14 @@ void tim_setup(void)
     /*    Enable TIM21 counter: */
     MMIO32((TIM21_BASE) + 0x00) |= (1<<0);
 
-	nvic_enable_irq(NVIC_TIM21_IRQ);
+	//nvic_enable_irq(NVIC_TIM21_IRQ);
     nvic_set_priority(NVIC_TIM21_IRQ, 1);
 }
 
 
 void tim21_isr(void)
 {
-	/*
-		TIM21 is the communication clock. 
-		Each interrupt is one-bit read and one-bit write of gpios.
-		Interrupts occur every 100 us.
-	*/
-
-	if (++tick >= 50){
-		main_tick = 1;
-		tick = 0;
-	}
-
-	readInputs();
-	write();
-	
-    MMIO32((TIM21_BASE) + 0x10) &= ~(1<<0); //clear the interrupt register
+	// TIM21 routine is now in systick interrupt
 }
 
 void tim2_isr(void)
@@ -396,6 +334,11 @@ void setLED(uint16_t r, uint16_t g, uint16_t b)
 	{
 		timer_set_oc_value(TIM2, TIM_OC3, 9600);
 	}
+}
+
+uint8_t getFingerprint(void)
+{
+	return device_id;
 }
 
 
