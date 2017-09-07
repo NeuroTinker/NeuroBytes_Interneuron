@@ -12,6 +12,11 @@
 #define FIRE_LED_TIME           5
 #define FIRE_DELAY_TIME         20
 
+#define LEARNING_WINDOW         50
+#define LEARNING_CHANGE         500
+#define MAX_WEIGHTING           15000
+
+
 typedef enum{
 NC =   0,
 CONNECTED =    1
@@ -81,5 +86,7 @@ void dendriteDecayStep(neuron_t * n);
 void membraneDecayStep(neuron_t * n);
 void dendriteSwitchOff(dendrite_t * dendrite);
 void incrementHebbTime(neuron_t *n);
+void calcDendriteWeightings(neuron_t *n);
+
 
 #endif
