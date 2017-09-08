@@ -80,7 +80,6 @@ int main(void)
 				send_ping_time = 0;
 			}
 
-
 			/*
 				nid_channel is the current channel, if any, that the NeuroByte is using to communicate
 				with the NID. nid_channel should be cleared when NID tries to set a new NeuroByte to 
