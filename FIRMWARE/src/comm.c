@@ -27,7 +27,7 @@ uint32_t nid_port_out = 0;
 uint8_t nid_i      =    4;
 volatile uint32_t  nid_keep_alive = NID_PING_KEEP_ALIVE;
 
-uint8_t value_bit_stack = 0;
+uint32_t value_bit_stack = 0;
 
 
 /* 
@@ -340,23 +340,28 @@ void writeDownstream(void)
     Temporarily delay each axon output to fix simultaneous excitation issue.
     */
 
-    value = (value != 0) ? 1 : 0;  
+    //value = (value != 0) ? 1 : 0; 
+    if (value !=0){
+        value = 1;
+    } else {
+        value = 0;
+    }
     value_bit_stack <<= 1;
     value_bit_stack |= value;
 
-    if (value_bit_stack | 0b1 != 0){
+    if (value_bit_stack & 0b1 != 0){
         gpio_set(PORT_AXON1_EX, PIN_AXON1_EX);
     } else {
         gpio_clear(PORT_AXON1_EX, PIN_AXON1_EX);
     }
 
-    if (value_bit_stack | 0b10 != 0){
+    if (value_bit_stack & (1<<15) != 0){
         gpio_set(PORT_AXON2_EX, PIN_AXON2_EX);
     } else {
         gpio_clear(PORT_AXON2_EX, PIN_AXON2_EX);
     }
 
-    if (value_bit_stack | 0b100 != 0){
+    if (value_bit_stack & (1<<30) != 0){
         gpio_set(PORT_AXON3_EX, PIN_AXON3_EX);
     } else {
         gpio_clear(PORT_AXON3_EX, PIN_AXON3_EX);
