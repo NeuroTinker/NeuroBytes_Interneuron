@@ -5,6 +5,7 @@
 volatile uint8_t toggle = 0;
 volatile uint8_t tick = 0;
 volatile uint8_t main_tick = 0;
+volatile uint8_t read_tick = 0;
 
 static const uint16_t device_id[4] = {1,2,3,4};
 
@@ -18,15 +19,26 @@ void clock_setup(void)
 
 void sys_tick_handler(void)
 {
-    // Switch TIM21 ISR to this
-	getFingerprint();
+    if (++tick >= 50){
+		main_tick = 1;
+		tick = 0;
+	}
+
+	//read_tick += 1;
+	//if (read_tick >= 2){
+		readInputs();
+	//}
+	write();
+	
+    MMIO32((TIM21_BASE) + 0x10) &= ~(1<<0); //clear the interrupt register
 }
 
 void systick_setup(int xms)
 {
     systick_set_clocksource(STK_CSR_CLKSOURCE_EXT);
     STK_CVR = 0;
-    systick_set_reload(2000 * xms);
+    //systick_set_reload(2 * xms);
+	systick_set_reload(180);
     systick_counter_enable();
     systick_interrupt_enable();
 }
@@ -130,6 +142,7 @@ void setAsOutput(uint32_t port, uint32_t pin)
 void exti0_1_isr(void)
 {
 	// interrupt handler for pins 0,1 (dend1_in, dend1_ex)
+	gpio_set(PORT_AXON1_EX, PIN_AXON1_EX);
 	if ((EXTI_PR & PIN_DEND1_IN) != 0){
 		active_input_pins[4] = PIN_DEND1_IN;
 		EXTI_PR |= PIN_DEND1_IN; // clear interrupt flag
@@ -137,8 +150,10 @@ void exti0_1_isr(void)
 	} else if ((EXTI_PR & PIN_DEND1_EX) != 0){
 		active_input_pins[3] = PIN_DEND1_EX;
 		EXTI_PR |= PIN_DEND1_EX;
+		exti_disable_request(PIN_DEND1_EX);
 		//EXTI_PR &= ~(PIN_DEND1_EX);
 	}
+	gpio_clear(PORT_AXON1_EX, PIN_AXON1_EX);
 }
 
 void exti2_3_isr(void)
@@ -265,28 +280,14 @@ void tim_setup(void)
     /*    Enable TIM21 counter: */
     MMIO32((TIM21_BASE) + 0x00) |= (1<<0);
 
-	nvic_enable_irq(NVIC_TIM21_IRQ);
+	//nvic_enable_irq(NVIC_TIM21_IRQ);
     nvic_set_priority(NVIC_TIM21_IRQ, 1);
 }
 
 
 void tim21_isr(void)
 {
-	/*
-		TIM21 is the communication clock. 
-		Each interrupt is one-bit read and one-bit write of gpios.
-		Interrupts occur every 100 us.
-	*/
-
-	if (++tick >= 50){
-		main_tick = 1;
-		tick = 0;
-	}
-
-	readInputs();
-	write();
-	
-    MMIO32((TIM21_BASE) + 0x10) &= ~(1<<0); //clear the interrupt register
+	// TIM21 routine is now in systick interrupt
 }
 
 void tim2_isr(void)

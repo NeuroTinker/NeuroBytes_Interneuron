@@ -15,6 +15,7 @@
 #define	NID_PING_TIME		200 // 1000 ms
 #define SEND_PING_TIME		80 // 80
 #define BUTTON_PRESS_TIME	2
+#define BUTTON_HOLD_TIME    100
 
 static uint32_t fingerprint[3] __attribute__((section (".fingerprint"))) __attribute__ ((__used__)) = {
 	1, // device id
@@ -62,7 +63,8 @@ int main(void)
 		if (main_tick == 1){
 			// main tick every 5 ms
 			main_tick = 0;
-			
+			//gpio_set(PORT_AXON1_EX, PIN_AXON1_EX);
+
 			// check to see if nid ping hasn't been received in last NID_PING_TIME ticks
 			if (nid_ping_time++ > NID_PING_TIME){
 				// nid no longer connected
@@ -77,7 +79,6 @@ int main(void)
 				addWrite(DOWNSTREAM_BUFF, DEND_PING);
 				send_ping_time = 0;
 			}
-
 
 			/*
 				nid_channel is the current channel, if any, that the NeuroByte is using to communicate
@@ -106,20 +107,34 @@ int main(void)
 			// if identify button is pressed and identify_time < IDENTIFY_TIME (i.e. NID sent 'identify'' message), set new nid_channel
 			if (button_status == 0){
 				// debounce
-				if (button_press_time++ >= BUTTON_PRESS_TIME){
+				button_press_time += 1;
+				if (button_press_time >= BUTTON_HOLD_TIME){
+					button_armed = 2;
+					blink_flag = 1;
+				} else if (button_press_time >= BUTTON_PRESS_TIME){
 					button_armed = 1;
-					button_press_time = 0;
 				}
-			} else if (button_armed == 1){
-				if (identify_time < IDENTIFY_TIME){
-					nid_channel = identify_channel;
-				} else{
-					// temporarily use identify button also as an impulse button
-					neuron.fire_potential += 11000;
-					//neuron.leaky_current += 20;
-				}
-				button_armed = 0;
 			} else{
+				// button not pressed
+				if (button_armed == 0){
+					button_press_time = 0;
+				} else if (button_armed == 1){
+					if (identify_time < IDENTIFY_TIME){
+						nid_channel = identify_channel;
+					} else{
+						// temporarily use identify button also as an impulse button
+						neuron.fire_potential += 11000;
+						//neuron.leaky_current += 20;
+					}
+					button_armed = 0;
+				} else if (button_armed == 2){
+					if (neuron.learning_state == NONE){
+						neuron.learning_state = HEBB;
+					} else if (neuron.learning_state == HEBB){
+						neuron.learning_state = NONE;
+					}
+					button_armed = 0;
+				}
 				button_press_time = 0;
 			}
 			
@@ -160,6 +175,9 @@ int main(void)
 				for (i=0; i<DENDRITE_COUNT; i++){
 					neuron.dendrites[i].current_value = 0;
 					neuron.dendrites[i].state = OFF;
+					if (neuron.learning_state == HEBB){
+						calcDendriteWeightings(&neuron);
+					}
 				}
 				// send downstream pulse
 				fire_delay_time = FIRE_DELAY_TIME;
@@ -185,7 +203,7 @@ int main(void)
 				blink_flag = 0;
 			} else if (blink_time > 0){
 				if (++blink_time == BLINK_TIME){
-					setLED(200,0,0);
+					setLED(200,0,200);
 					blink_time = 0;
 				}
 			} else if (neuron.state == FIRE){
@@ -207,6 +225,7 @@ int main(void)
 					setLED(0,200,0);
 				}
 			}
+			//gpio_clear(PORT_AXON1_EX, PIN_AXON1_EX);
 		}
 	}
 }
