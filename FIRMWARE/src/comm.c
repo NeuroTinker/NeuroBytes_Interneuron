@@ -9,9 +9,9 @@ uint8_t message_buffer_count[11];
 
 volatile uint16_t active_input_pins[11] = {0,0,0,0,0,0,0,0,0,0,0};
 
-volatile uint16_t active_input_ticks[11] = {0,0,0,0,0,0,0,0,0,0,0};
-
 volatile uint16_t active_output_pins[11] = {PIN_AXON1_IN, PIN_AXON2_IN,PIN_AXON3_EX,0,0,0,0,0,0,0,0};
+
+volatile uint8_t active_input_ticks[11] = {0,0,0,0,0,0,0,0,0,0,0};
 
 volatile uint32_t dendrite_pulses[4] = {0,0,0,0};
 volatile uint8_t dendrite_pulse_count = 0;
@@ -112,7 +112,7 @@ void readInputs(void)
     //gpio_set(PORT_AXON1_EX, PIN_AXON1_EX);
     for (i=0; i<NUM_INPUTS; i++){
         // read each input that is currently receiving a message
-        if (active_input_pins[i] != 0){
+        if (active_input_pins[i] != 0 && active_input_ticks[i] == read_tick){
 
             // get new input value
             value = gpio_get(active_input_ports[i], active_input_pins[i]); // returns uint16 where bit position corresponds to pin number

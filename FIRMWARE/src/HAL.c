@@ -19,16 +19,17 @@ void clock_setup(void)
 
 void sys_tick_handler(void)
 {
-    if (++tick >= 50){
+    if (++tick >= 150){
 		main_tick = 1;
 		tick = 0;
 	}
 
-	//read_tick += 1;
-	//if (read_tick >= 2){
-		readInputs();
-	//}
-	write();
+	readInputs();
+
+	if (++read_tick >= 3){
+		write();
+		read_tick = 0;
+	}
 	
     MMIO32((TIM21_BASE) + 0x10) &= ~(1<<0); //clear the interrupt register
 }
@@ -38,7 +39,7 @@ void systick_setup(int xms)
     systick_set_clocksource(STK_CSR_CLKSOURCE_EXT);
     STK_CVR = 0;
     //systick_set_reload(2 * xms);
-	systick_set_reload(180);
+	systick_set_reload(60); //180 write
     systick_counter_enable();
     systick_interrupt_enable();
 }
@@ -145,10 +146,12 @@ void exti0_1_isr(void)
 	gpio_set(PORT_AXON1_EX, PIN_AXON1_EX);
 	if ((EXTI_PR & PIN_DEND1_IN) != 0){
 		active_input_pins[4] = PIN_DEND1_IN;
+		active_input_ticks[4] = (read_tick + 1) % 3;
 		EXTI_PR |= PIN_DEND1_IN; // clear interrupt flag
 		//EXTI_PR &= ~(PIN_DEND1_IN);
 	} else if ((EXTI_PR & PIN_DEND1_EX) != 0){
 		active_input_pins[3] = PIN_DEND1_EX;
+		active_input_ticks[3] = (read_tick + 1) % 3;
 		EXTI_PR |= PIN_DEND1_EX;
 		exti_disable_request(PIN_DEND1_EX);
 		//EXTI_PR &= ~(PIN_DEND1_EX);
