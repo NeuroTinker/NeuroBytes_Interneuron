@@ -56,39 +56,6 @@
 #define PIN_DEND4_IN    GPIO3
 #define PIN_DEND4_EX    GPIO2
 
-typedef struct {
-    uint32_t pin,
-    uint32_t port
-} pin_address_t;
-
-typedef enum {
-    INHIB,
-    EXCIT
-} pin_type_t;
-
-typedef enum {
-    DEND,
-    AXON
-} port_type_t;
-
-typedef enum {
-    INPUT,
-    OUTPUT
-} pin_state_t;
-
-typedef struct pin_t pin_t;
-
-struct pin_t{
-    pin_address_t address,
-    pin_type_t pin_type,
-    port_type_t port_type,
-    pin_t * complimentary_pin_ptr,
-    pin_state_t state,
-    uint32_t exti,
-    dendrite_t * dendrite_ptr,
-    uint8_t index
-};
-
 /*
     Two clocks:
     -main_tick  : clocks the main processing routine at 5 ms
@@ -102,15 +69,9 @@ typedef struct{
 } fingerprint_t;
 
 extern volatile uint8_t main_tick;
-<<<<<<< HEAD:FIRMWARE/src/HAL.h
-static const uint16_t gamma_lookup[1024];
-
-=======
 extern volatile uint8_t tick;
-extern volatile uint8_t read_tick;
 static const uint16_t gamma_lookup[1024];
 static const uint16_t device_id[4];
->>>>>>> development:FIRMWARE/src/HAL.h
 
 void systick_setup(int xms);
 void clock_setup(void);

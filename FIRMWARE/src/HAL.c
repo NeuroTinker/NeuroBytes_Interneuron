@@ -19,17 +19,16 @@ void clock_setup(void)
 
 void sys_tick_handler(void)
 {
-    if (++tick >= 150){
+    if (++tick >= 50){
 		main_tick = 1;
 		tick = 0;
 	}
 
-	readInputs();
-
-	if (++read_tick >= 3){
-		write();
-		read_tick = 0;
-	}
+	//read_tick += 1;
+	//if (read_tick >= 2){
+		readInputs();
+	//}
+	write();
 	
     MMIO32((TIM21_BASE) + 0x10) &= ~(1<<0); //clear the interrupt register
 }
@@ -39,7 +38,7 @@ void systick_setup(int xms)
     systick_set_clocksource(STK_CSR_CLKSOURCE_EXT);
     STK_CVR = 0;
     //systick_set_reload(2 * xms);
-	systick_set_reload(60); //180 write
+	systick_set_reload(180);
     systick_counter_enable();
     systick_interrupt_enable();
 }
@@ -114,75 +113,6 @@ void gpio_setup(void)
 	nvic_set_priority(NVIC_EXTI4_15_IRQ, 0);
 }
 
-void startRead(pin_t pin, uint8_t bits_to_read)
-{
-	/*
-		read message on pin for bits_to_read number of bits
-	*/
-	if (read_tick < 3){
-        pin->active_input->read_tick = read_tick + 1;
-    } else{
-        pin->active_input->read_tick = 1;
-    }
-
-	pin->active_input->bits_to_read = bits_to_read;
-}
-
-void endRead(pin_t pin)
-{
-	pin->active_input->read_tick = 0;
-}
-
-void writePinHigh(pin_t pin)
-{
-	gpio_set(pin->address->port, pin->address->pin);
-}
-
-void writePinLow(pin_t pin)
-{
-	gpio_clear(pin->address->port, pin->address->pin);
-}
-
-bool readPin(pin_t pin)
-{
-	uint32_t value;
-	value = gpio_get(pin->address->port, pin->address->pin);
-	value >>= pin->address->pin;
-	return (bool) value
-}
-
-void resetPinInterrupt(pin_t pin)
-{
-	EXTI_PR |= pin->exti;
-}
-
-void setPinAsInput(pin_t pin)
-{
-	uint32_t port = pin->address->port;
-	uint32_t pin = pin->address->pin;
-
-	// setup gpio as an input pin
-	gpio_mode_setup(port, GPIO_MODE_INPUT, GPIO_PUPD_PULLDOWN, pin);
-
-	// setup interrupt for the pin going high
-	exti_select_source(pin, port);
-	exti_set_trigger(pin, EXTI_TRIGGER_RISING);
-	exti_enable_request(pin);
-	exti_reset_request(pin);
-}
-
-void setPinAsOutput(pin_t pin)
-{
-	uint32_t port = pin->address->port;
-	uint32_t pin = pin->address->pin;
-	
-	// disable input interrupts
-	exti_disable_request(pin);
-
-	// setup gpio as an output pin. pulldown
-	gpio_mode_setup(port, GPIO_MODE_OUTPUT, GPIO_PUPD_PULLDOWN, pin);
-}
-
 void setAsInput(uint32_t port, uint32_t pin)
 {
 	// setup gpio as an input pin
@@ -215,12 +145,10 @@ void exti0_1_isr(void)
 	gpio_set(PORT_AXON1_EX, PIN_AXON1_EX);
 	if ((EXTI_PR & PIN_DEND1_IN) != 0){
 		active_input_pins[4] = PIN_DEND1_IN;
-		active_input_ticks[4] = (read_tick + 1) % 3;
 		EXTI_PR |= PIN_DEND1_IN; // clear interrupt flag
 		//EXTI_PR &= ~(PIN_DEND1_IN);
 	} else if ((EXTI_PR & PIN_DEND1_EX) != 0){
 		active_input_pins[3] = PIN_DEND1_EX;
-		active_input_ticks[3] = (read_tick + 1) % 3;
 		EXTI_PR |= PIN_DEND1_EX;
 		exti_disable_request(PIN_DEND1_EX);
 		//EXTI_PR &= ~(PIN_DEND1_EX);

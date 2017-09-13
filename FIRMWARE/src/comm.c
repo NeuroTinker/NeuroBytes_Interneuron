@@ -9,9 +9,9 @@ uint8_t message_buffer_count[11];
 
 volatile uint16_t active_input_pins[11] = {0,0,0,0,0,0,0,0,0,0,0};
 
-volatile uint16_t active_output_pins[11] = {PIN_AXON1_IN, PIN_AXON2_IN,PIN_AXON3_EX,0,0,0,0,0,0,0,0};
+volatile uint16_t active_input_ticks[11] = {0,0,0,0,0,0,0,0,0,0,0};
 
-volatile uint8_t active_input_ticks[11] = {0,0,0,0,0,0,0,0,0,0,0};
+volatile uint16_t active_output_pins[11] = {PIN_AXON1_IN, PIN_AXON2_IN,PIN_AXON3_EX,0,0,0,0,0,0,0,0};
 
 volatile uint32_t dendrite_pulses[4] = {0,0,0,0};
 volatile uint8_t dendrite_pulse_count = 0;
@@ -26,8 +26,6 @@ volatile uint16_t nid_pin_out = 0;
 uint32_t nid_port_out = 0;
 uint8_t nid_i      =    4;
 volatile uint32_t  nid_keep_alive = NID_PING_KEEP_ALIVE;
-
-uint32_t value_bit_stack = 0;
 
 
 /* 
@@ -112,7 +110,7 @@ void readInputs(void)
     //gpio_set(PORT_AXON1_EX, PIN_AXON1_EX);
     for (i=0; i<NUM_INPUTS; i++){
         // read each input that is currently receiving a message
-        if (active_input_pins[i] != 0 && active_input_ticks[i] == read_tick){
+        if (active_input_pins[i] != 0){
 
             // get new input value
             value = gpio_get(active_input_ports[i], active_input_pins[i]); // returns uint16 where bit position corresponds to pin number
@@ -231,6 +229,8 @@ void readInputs(void)
                     }
                 }
                 
+                
+                
                 // deactivate input so that it doesn't keep getting read
                 EXTI_PR |= active_input_pins[i];
                 exti_enable_request(active_input_pins[i]);
@@ -327,73 +327,27 @@ void write()
                 break;
         }
     }
+
+
 }
 
 void writeDownstream(void)
 {
     uint32_t value;
-<<<<<<< HEAD:FIRMWARE/src/comm.c
-=======
-    uint32_t i;
->>>>>>> development:FIRMWARE/src/comm.c
     // pop next value off of buffer
     value = write_buffer.downstream[0] & 0x80000000;
     write_buffer.downstream[0] <<= 1;
 
-    /*
-    Temporarily delay each axon output to fix simultaneous excitation issue.
-    */
-
-    //value = (value != 0) ? 1 : 0; 
-    if (value !=0){
-        value = 1;
-    } else {
-        value = 0;
-    }
-    value_bit_stack <<= 1;
-    value_bit_stack |= value;
-
-    if (value_bit_stack & 0b1 != 0){
-        gpio_set(PORT_AXON1_EX, PIN_AXON1_EX);
-    } else {
-        gpio_clear(PORT_AXON1_EX, PIN_AXON1_EX);
-    }
-
-    if (value_bit_stack & (1<<15) != 0){
-        gpio_set(PORT_AXON2_EX, PIN_AXON2_EX);
-    } else {
-        gpio_clear(PORT_AXON2_EX, PIN_AXON2_EX);
-    }
-
-    if (value_bit_stack & (1<<30) != 0){
-        gpio_set(PORT_AXON3_EX, PIN_AXON3_EX);
-    } else {
-        gpio_clear(PORT_AXON3_EX, PIN_AXON3_EX);
-    }
-
-    /*
+    // we should have both axon out pins be on the same port that way they can be written together
     if (value != 0){
         gpio_set(PORT_AXON1_EX, PIN_AXON1_EX);
-        for (i=0; i<100; i++){
-            __asm__("NOP");
-        }
         gpio_set(PORT_AXON2_EX, PIN_AXON2_EX);
-        for (i=0; i<100; i++){
-            __asm__("NOP");
-        }
         gpio_set(PORT_AXON3_EX, PIN_AXON3_EX);
     }else{
         gpio_clear(PORT_AXON1_EX, PIN_AXON1_EX);
-        for (i=0; i<100; i++){
-            __asm__("NOP");
-        }
         gpio_clear(PORT_AXON2_EX, PIN_AXON2_EX);
-        for (i=0; i<100; i++){
-            __asm__("NOP");
-        }
         gpio_clear(PORT_AXON3_EX, PIN_AXON3_EX);
     }
-    */
 }
 
 void writeAll(void)

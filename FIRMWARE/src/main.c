@@ -32,7 +32,7 @@ int main(void)
 	uint16_t	data_time = 0; // counter for sending data to NID
 	uint16_t	send_ping_time = 0; // counter for sending a downstream ping
 	uint16_t	fire_delay_time = 0;
-	uint16_t 	depression_time = 0;
+	int16_t 	depression_time = 0;
 	uint8_t		fire_flag = 0;
 
 	// button debounce variables
@@ -178,11 +178,12 @@ int main(void)
 				for (i=0; i<DENDRITE_COUNT; i++){
 					neuron.dendrites[i].current_value = 0;
 					neuron.dendrites[i].state = OFF;
-					if (neuron.learning_state == HEBB){
-						calcDendriteWeightings(&neuron);
-					}
+				}
+				if (neuron.learning_state == HEBB){
+					calcDendriteWeightings(&neuron);
 				}
 				depression_time = 0;
+
 				// send downstream pulse
 				fire_delay_time = FIRE_DELAY_TIME;
 				fire_flag = 1;
@@ -194,15 +195,23 @@ int main(void)
 				fire_flag = 0;
 				addWrite(DOWNSTREAM_BUFF, PULSE_MESSAGE);
 			}
+			
+			if (neuron.learning_state == HEBB){
 
-			if (++depression_time >= DEPRESSION_TIME){
-				depresion_time = 0;
-				for (i=0; i<DENDRITE_COUNT; i++){
-					neuron.dendrites[i].magnitude -= neuron.dendrites[i].base_magnitude;
-					neuron.dendrites[i].magnitude *= 63 / 64;
-					neuron.dendrites[i].magnitude += neuron.dendrites[i].base_magnitude;
-				}
+				if (++depression_time >= DEPRESSION_TIME){
+					for (i=0; i<DENDRITE_COUNT; i++){
+						neuron.dendrites[i].magnitude -= neuron.dendrites[i].base_magnitude;
+						neuron.dendrites[i].magnitude *= 511;
+						neuron.dendrites[i].magnitude /= 512;
+						neuron.dendrites[i].magnitude += neuron.dendrites[i].base_magnitude;
+					}
+				}		
+			}	
+			joegenta = 0;
+			for (i=0; i<DENDRITE_COUNT; i++){
+				joegenta += neuron.dendrites[i].magnitude - neuron.dendrites[i].base_magnitude;
 			}
+			
 
 			/*
 				LED is either:
@@ -225,23 +234,23 @@ int main(void)
 					neuron.state = INTEGRATE;
 				}
 				if (neuron.learning_state == HEBB){
-					setLED(220,0,220);
+					setLED(200,100,200);
 				} else{
 					LEDFullWhite();
 				}
 			} else if (neuron.state == INTEGRATE){
 				if (neuron.learning_state == HEBB){
-					if (joegenta > 10000){
-						setLED(200,0,200);
-						joegenta = 10000;
+					joegenta /= 8;
+					if (joegenta / 80 > 240){
+						setLED(180,0,180);
 					} else if (joegenta > 0){
-						setLED(joegenta, 0, joegenta);
+						setLED(40 + joegenta, 0, 40 + joegenta);
 					} else if (joegenta < -10000){
-						setLED(20,0, 20);
+						setLED(40,0, 40);
 					} else if (joegenta < 0){
-						setLED(20, 0, 20);
+						setLED(40, 0, 40);
 					} else{
-						setLED(20,0,20);
+						setLED(40,0,40);
 					}
 				} else{
 					if (neuron.potential > 10000){
