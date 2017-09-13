@@ -14,13 +14,9 @@
 
 #define LEARNING_WINDOW         50
 #define LEARNING_CHANGE         500
-<<<<<<< HEAD
 #define MAX_WEIGHTING           18000
 
 #define DEPRESSION_TIME         50
-=======
-#define MAX_WEIGHTING           15000
->>>>>>> fe133080e39f9f82021022ad9979ccb68bbb4a62
 
 
 typedef enum{

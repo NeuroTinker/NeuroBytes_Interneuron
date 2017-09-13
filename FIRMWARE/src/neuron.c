@@ -44,14 +44,11 @@ void neuronInit(neuron_t *n)
 	n->dendrites[1].magnitude = 8000;
 	n->dendrites[2].magnitude = 8000;
 	n->dendrites[3].magnitude = 15000;
-<<<<<<< HEAD
 
 	n->dendrites[0].base_magnitude = 15000;
 	n->dendrites[1].base_magnitude = 8000;
 	n->dendrites[2].base_magnitude = 8000;
 	n->dendrites[3].base_magnitude = 15000;
-=======
->>>>>>> fe133080e39f9f82021022ad9979ccb68bbb4a62
 	
 	n->dendrite_ping_time[0] = 0;
 	n->dendrite_ping_time[1] = 0;
