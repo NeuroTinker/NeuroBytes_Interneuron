@@ -40,17 +40,15 @@ void neuronInit(neuron_t *n)
 		n->dendrites[i].alive_time = LEARNING_WINDOW;
 	}
 
-<<<<<<< HEAD:FIRMWARE/src/neuron.c
-	n->dendrites[0].magnitude = 12000;
-	n->dendrites[1].magnitude = 8000;
-	n->dendrites[2].magnitude = 5000;
-	n->dendrites[3].magnitude = 2000;
-=======
 	n->dendrites[0].magnitude = 15000;
 	n->dendrites[1].magnitude = 8000;
 	n->dendrites[2].magnitude = 8000;
 	n->dendrites[3].magnitude = 15000;
->>>>>>> development:FIRMWARE/src/neuron.c
+
+	n->dendrites[0].base_magnitude = 15000;
+	n->dendrites[1].base_magnitude = 8000;
+	n->dendrites[2].base_magnitude = 8000;
+	n->dendrites[3].base_magnitude = 15000;
 	
 	n->dendrite_ping_time[0] = 0;
 	n->dendrite_ping_time[1] = 0;
