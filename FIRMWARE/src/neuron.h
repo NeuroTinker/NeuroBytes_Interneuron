@@ -16,6 +16,8 @@
 #define LEARNING_CHANGE         500
 #define MAX_WEIGHTING           15000
 
+#define DEPRESSION_TIME         100
+
 
 typedef enum{
 NC =   0,
@@ -39,7 +41,8 @@ dendrite_states     state; // is pulse being received or not
 dendrite_status     status; // not connected / connected
 dendrite_types      type; // excitatory or inhibitory
 uint16_t            alive_time;
-int16_t             magnitude; // weighting
+int32_t             magnitude; // weighting
+int32_t             base_magnitude;
 int16_t             current_value; // current contribution to the membrane potential
 uint8_t             nid_flag; // is this dendrite the closest to the NID
 uint8_t             read_flag; // dendrite is currently getting a message

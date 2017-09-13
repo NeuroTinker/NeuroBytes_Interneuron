@@ -32,6 +32,7 @@ int main(void)
 	uint16_t	data_time = 0; // counter for sending data to NID
 	uint16_t	send_ping_time = 0; // counter for sending a downstream ping
 	uint16_t	fire_delay_time = 0;
+	uint16_t 	depression_time = 0;
 	uint8_t		fire_flag = 0;
 
 	// button debounce variables
@@ -43,6 +44,8 @@ int main(void)
 	uint32_t	nid_channel = 0b000;
 
 	uint32_t	message = 0; // staging variable for constructing messages to send to the communications routine
+
+	int32_t joegenta = 0;
 
 	// initialize neuron
 	neuron_t 	neuron;
@@ -113,18 +116,6 @@ int main(void)
 					blink_flag = 1;
 				} else if (button_press_time >= BUTTON_PRESS_TIME){
 					button_armed = 1;
-<<<<<<< HEAD:FIRMWARE/src/main.c
-					button_press_time = 0;
-				}
-			} else if (button_armed == 1){
-				if (identify_time < IDENTIFY_TIME){
-					nid_channel = identify_channel;
-				} else{
-					// temporarily use identify button also as an impulse button
-					//neuron.fire_potential += 11000;
-					neuron.leaky_current += 20;
-=======
->>>>>>> development:FIRMWARE/src/main.c
 				}
 			} else{
 				// button not pressed
@@ -191,6 +182,7 @@ int main(void)
 						calcDendriteWeightings(&neuron);
 					}
 				}
+				depression_time = 0;
 				// send downstream pulse
 				fire_delay_time = FIRE_DELAY_TIME;
 				fire_flag = 1;
@@ -201,6 +193,15 @@ int main(void)
 			} else if (fire_flag == 1){
 				fire_flag = 0;
 				addWrite(DOWNSTREAM_BUFF, PULSE_MESSAGE);
+			}
+
+			if (++depression_time >= DEPRESSION_TIME){
+				depresion_time = 0;
+				for (i=0; i<DENDRITE_COUNT; i++){
+					neuron.dendrites[i].magnitude -= neuron.dendrites[i].base_magnitude;
+					neuron.dendrites[i].magnitude *= 63 / 64;
+					neuron.dendrites[i].magnitude += neuron.dendrites[i].base_magnitude;
+				}
 			}
 
 			/*
@@ -223,25 +224,39 @@ int main(void)
 				if (neuron.fire_time == 0){
 					neuron.state = INTEGRATE;
 				}
-				LEDFullWhite();
-			} else if (neuron.state == INTEGRATE){
-				if (neuron.potential > 10000){
-					setLED(200,0,0);
-				} else if (neuron.potential > 0){
-					setLED(neuron.potential / 50, 200 - (neuron.potential / 50), 0);
-				} else if (neuron.potential < -10000){
-					setLED(0,0, 200);
-				} else if (neuron.potential < 0){
-					setLED(0, 200 + (neuron.potential / 50), -1 * neuron.potential / 50);
+				if (neuron.learning_state == HEBB){
+					setLED(220,0,220);
 				} else{
-					setLED(0,200,0);
+					LEDFullWhite();
+				}
+			} else if (neuron.state == INTEGRATE){
+				if (neuron.learning_state == HEBB){
+					if (joegenta > 10000){
+						setLED(200,0,200);
+						joegenta = 10000;
+					} else if (joegenta > 0){
+						setLED(joegenta, 0, joegenta);
+					} else if (joegenta < -10000){
+						setLED(20,0, 20);
+					} else if (joegenta < 0){
+						setLED(20, 0, 20);
+					} else{
+						setLED(20,0,20);
+					}
+				} else{
+					if (neuron.potential > 10000){
+						setLED(200,0,0);
+					} else if (neuron.potential > 0){
+						setLED(neuron.potential / 50, 200 - (neuron.potential / 50), 0);
+					} else if (neuron.potential < -10000){
+						setLED(0,0, 200);
+					} else if (neuron.potential < 0){
+						setLED(0, 200 + (neuron.potential / 50), -1 * neuron.potential / 50);
+					} else{
+						setLED(0,200,0);
+					}
 				}
 			}
-<<<<<<< HEAD:FIRMWARE/src/main.c
-
-=======
-			//gpio_clear(PORT_AXON1_EX, PIN_AXON1_EX);
->>>>>>> development:FIRMWARE/src/main.c
 		}
 	}
 }
