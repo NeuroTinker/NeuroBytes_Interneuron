@@ -16,8 +16,8 @@
 #define NID_PING_KEEP_ALIVE     32
 
 
-#define BLINK_MESSAGE           0b10110001110001110000000000000000 // (ALL) (KEEP ALIVE=7) (NID) (BLINK) (no data)
-#define PULSE_MESSAGE           0b10010000010100110000000000000000 // (DOWNSTREAM) (KEEP ALIVE=1) (UPSTREAM) (PULSE) (no data)
+#define BLINK_MESSAGE           0b11111001110001110000000000000000 // (ALL) (KEEP ALIVE=7) (NID) (BLINK) (no data)
+#define PULSE_MESSAGE           0b11111000010100110000000000000000 // (DOWNSTREAM) (KEEP ALIVE=1) (UPSTREAM) (PULSE) (no data)
 #define DATA_MESSAGE            0b10000000000001000000000000000000 // (NID) (KEEP ALIVE=0) (CHANNEL= NONE) (DATA) (no data)
 #define DEND_PING               0b10010000010100010000000000000000 // (DOWNSTREAM) (KEEP ALIVE=1) (UPSTREAM) (PING) (no data)
 #define NID_PING                0b10110001110000010000000000000000 // (ALL) (KEEP ALIVE=7) (NID) (PING) (no data)
@@ -107,6 +107,7 @@ typedef struct{
 
 extern uint16_t complimentary_pins[11];
 extern volatile uint16_t active_input_pins[11];
+extern volatile uint8_t active_input_ticks[11];
 extern uint32_t active_input_ports[11];
 extern volatile uint16_t active_output_pins[11];
 extern uint32_t active_output_ports[11];

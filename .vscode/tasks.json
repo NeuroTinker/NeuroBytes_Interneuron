@@ -2,6 +2,7 @@
     // See https://go.microsoft.com/fwlink/?LinkId=733558
     // for the documentation about the tasks.json format
     "version": "0.1.0",
+<<<<<<< HEAD
     "taskName": "make",
     "command": "make",
     "args": ["--directory=${fileDirname}", "-w", "-B"],
@@ -9,4 +10,10 @@
     "showOutput": "always",
     "logging": { "engineLogging": true },
     "isBuildCommand": true
+=======
+    "command": "echo",
+    "isShellCommand": true,
+    "args": ["Hello World"],
+    "showOutput": "always"
+>>>>>>> development
 }
