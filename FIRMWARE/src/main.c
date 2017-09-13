@@ -32,7 +32,10 @@ int main(void)
 	uint16_t	data_time = 0; // counter for sending data to NID
 	uint16_t	send_ping_time = 0; // counter for sending a downstream ping
 	uint16_t	fire_delay_time = 0;
+<<<<<<< HEAD
 	int16_t 	depression_time = 0;
+=======
+>>>>>>> fe133080e39f9f82021022ad9979ccb68bbb4a62
 	uint8_t		fire_flag = 0;
 
 	// button debounce variables
@@ -178,6 +181,9 @@ int main(void)
 				for (i=0; i<DENDRITE_COUNT; i++){
 					neuron.dendrites[i].current_value = 0;
 					neuron.dendrites[i].state = OFF;
+					if (neuron.learning_state == HEBB){
+						calcDendriteWeightings(&neuron);
+					}
 				}
 				if (neuron.learning_state == HEBB){
 					calcDendriteWeightings(&neuron);
@@ -266,6 +272,10 @@ int main(void)
 					}
 				}
 			}
+<<<<<<< HEAD
+=======
+			//gpio_clear(PORT_AXON1_EX, PIN_AXON1_EX);
+>>>>>>> fe133080e39f9f82021022ad9979ccb68bbb4a62
 		}
 	}
 }
