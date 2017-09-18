@@ -243,17 +243,21 @@ int main(void)
 				}
 			} else if (neuron.state == INTEGRATE){
 				if (neuron.learning_state == HEBB){
-					joegenta /= 8;
-					if (joegenta / 80 > 240){
-						setLED(180,0,180);
-					} else if (joegenta > 0){
-						setLED(40 + joegenta, 0, 40 + joegenta);
-					} else if (joegenta < -10000){
-						setLED(40,0, 40);
-					} else if (joegenta < 0){
-						setLED(40, 0, 40);
+					if (neuron.potential > 5000){
+						setLED((neuron.potential / 50), (200 - neuron.potential / 50) / 2, 0);
 					} else{
-						setLED(40,0,40);
+						joegenta /= 8;
+						if (joegenta / 80 > 240){
+							setLED(180,0,180);
+						} else if (joegenta > 0){
+							setLED(40 + joegenta, 0, 40 + joegenta);
+						} else if (joegenta < -10000){
+							setLED(40,0, 40);
+						} else if (joegenta < 0){
+							setLED(40, 0, 40);
+						} else{
+							setLED(40,0,40);
+						}
 					}
 				} else{
 					if (neuron.potential > 10000){
