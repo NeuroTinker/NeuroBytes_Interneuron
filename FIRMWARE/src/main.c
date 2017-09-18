@@ -1,9 +1,17 @@
+#define BUFSIZ 32
+
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/timer.h>
 #include <libopencm3/cm3/nvic.h>
 #include <libopencm3/cm3/systick.h>
 #include <libopencm3/stm32/exti.h>
+
+#include <stdio.h>
+//#include <unistd.h>
+//#include <errno.h>
+//#include <printf.h>
+//#include <debug.h>
 
 #include "comm.h"
 #include "HAL.h"
@@ -23,8 +31,11 @@ static uint32_t fingerprint[3] __attribute__((section (".fingerprint"))) __attri
 	0  // unique id
 };
 
+extern void initialise_monitor_handles(void);
+
 int main(void)
 {
+	initialise_monitor_handles();
 	uint8_t		i;
 
 	// counters
@@ -47,6 +58,8 @@ int main(void)
 
 	int32_t joegenta = 0;
 
+	//char output[10] = "test";
+
 	// initialize neuron
 	neuron_t 	neuron;
 	neuronInit(&neuron);
@@ -60,10 +73,13 @@ int main(void)
 	gpio_setup();
 	tim_setup();
 
+	//printf("test");
+
 	// main processing routine	
 	for(;;)
 	{
 		if (main_tick == 1){
+			printf("test");
 			// main tick every 5 ms
 			main_tick = 0;
 			//gpio_set(PORT_AXON1_EX, PIN_AXON1_EX);
