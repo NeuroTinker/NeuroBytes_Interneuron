@@ -7,12 +7,6 @@
 #include <libopencm3/cm3/systick.h>
 #include <libopencm3/stm32/exti.h>
 
-#include <stdio.h>
-//#include <unistd.h>
-//#include <errno.h>
-//#include <printf.h>
-//#include <debug.h>
-
 #include "comm.h"
 #include "HAL.h"
 #include "neuron.h"
@@ -31,11 +25,9 @@ static uint32_t fingerprint[3] __attribute__((section (".fingerprint"))) __attri
 	0  // unique id
 };
 
-extern void initialise_monitor_handles(void);
 
 int main(void)
 {
-	initialise_monitor_handles();
 	uint8_t		i;
 
 	// counters
@@ -79,7 +71,6 @@ int main(void)
 	for(;;)
 	{
 		if (main_tick == 1){
-			printf("test");
 			// main tick every 5 ms
 			main_tick = 0;
 			//gpio_set(PORT_AXON1_EX, PIN_AXON1_EX);

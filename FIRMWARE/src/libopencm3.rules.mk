@@ -99,8 +99,6 @@ SCRIPT_DIR	= $(OPENCM3_DIR)/scripts
 
 TGT_CFLAGS	+= $(OPT) $(CSTD) -g
 TGT_CFLAGS	+= $(ARCH_FLAGS)
-#TGT_CFLAGS	+= -fno-asynchronous-unwind-tables #DEBUG
-#TGT_CFLAGS	+= -fno-unwind-tables #DEBUG
 TGT_CFLAGS	+= -Wextra -Wshadow -Wimplicit-function-declaration
 TGT_CFLAGS	+= -Wredundant-decls -Wmissing-prototypes -Wstrict-prototypes
 TGT_CFLAGS	+= -fno-common -ffunction-sections -fdata-sections
@@ -123,13 +121,11 @@ TGT_CPPFLAGS	+= $(DEFS)
 ###############################################################################
 # Linker flags
 
-TGT_LDFLAGS		+= --static #-nostartfiles
+TGT_LDFLAGS		+= --static -nostartfiles
 TGT_LDFLAGS		+= -T$(LDSCRIPT)
 TGT_LDFLAGS		+= $(ARCH_FLAGS)
 TGT_LDFLAGS		+= -Wl,-Map=$(*).map
 TGT_LDFLAGS		+= -Wl,--gc-sections
-TGT_LDFLAGS		+= --specs=rdimon.specs -lc -lrdimon # trying for semihosting
-TGT_LDFLAGS		+= --specs=nano.specs #DEBUG trying to get newlib nano
 ifeq ($(V),99)
 TGT_LDFLAGS		+= -Wl,--print-gc-sections
 endif
