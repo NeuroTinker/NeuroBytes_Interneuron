@@ -2,7 +2,7 @@
 <export version="D">
   <design>
     <source>/home/zach/Documents/NeuroTinker/Products/NeuroBytes_Interneuron/HARDWARE/NeuroBytes_Interneuron.sch</source>
-    <date>Thu 21 Sep 2017 03:32:12 PM CDT</date>
+    <date>Thu 21 Sep 2017 04:38:36 PM CDT</date>
     <tool>Eeschema 4.0.7-e1-6374~58~ubuntu14.04.1</tool>
     <sheet number="1" name="/" tstamps="/">
       <title_block>
@@ -25,7 +25,7 @@
       <fields>
         <field name="Mfr">Taiyo Yuden</field>
         <field name="Mfr Part #">LMK105BJ104KV-F</field>
-        <field name="Package">0402</field>
+        <field name="Package">C0402</field>
         <field name="Link">https://www.digikey.com/product-detail/en/taiyo-yuden/LMK105BJ104KV-F/587-1227-2-ND/930579</field>
         <field name="Subs Allowed">Yes</field>
         <field name="RoHS">Yes</field>
@@ -100,7 +100,7 @@
       <fields>
         <field name="Mfr">Taiyo Yuden</field>
         <field name="Mfr Part #">LMK107B7105KA-T</field>
-        <field name="Package">0603</field>
+        <field name="Package">C0603</field>
         <field name="Link">https://www.digikey.com/product-detail/en/taiyo-yuden/LMK107B7105KA-T/587-1242-2-ND/930594</field>
         <field name="Subs Allowed">Yes</field>
         <field name="RoHS">Yes</field>
@@ -129,8 +129,8 @@
       <footprint>KiCad_Footprints:ZF_SMD_NonPol_0402</footprint>
       <fields>
         <field name="Mfr">Yageo</field>
-        <field name="Mfr Part #">MF-RES-0402-220</field>
-        <field name="Package">0402</field>
+        <field name="Mfr Part #">RC0402FR-07150RL</field>
+        <field name="Package">R0402</field>
         <field name="Link">https://www.digikey.com/product-detail/en/yageo/RC0402FR-07150RL/311-150LRCT-ND/729490</field>
         <field name="Subs Allowed">Yes</field>
         <field name="RoHS">Yes</field>
@@ -145,7 +145,7 @@
       <fields>
         <field name="Mfr">Yageo</field>
         <field name="Mfr Part #">RC0402FR-07100RL</field>
-        <field name="Package">0402</field>
+        <field name="Package">R0402</field>
         <field name="Link">https://www.digikey.com/product-detail/en/yageo/RC0402FR-07100RL/311-100LRTR-ND/726527</field>
         <field name="Subs Allowed">Yes</field>
         <field name="RoHS">Yes</field>
@@ -160,7 +160,7 @@
       <fields>
         <field name="Mfr">Taiyo Yuden</field>
         <field name="Mfr Part #">LMK105BJ104KV-F</field>
-        <field name="Package">0402</field>
+        <field name="Package">C0402</field>
         <field name="Link">https://www.digikey.com/product-detail/en/taiyo-yuden/LMK105BJ104KV-F/587-1227-2-ND/930579</field>
         <field name="Subs Allowed">Yes</field>
         <field name="RoHS">Yes</field>
@@ -175,7 +175,7 @@
       <fields>
         <field name="Mfr">Yageo</field>
         <field name="Mfr Part #">RC0402JR-070RL</field>
-        <field name="Package">0402</field>
+        <field name="Package">R0402</field>
         <field name="Link">https://www.digikey.com/product-detail/en/yageo/RC0402JR-070RL/311-0.0JRTR-ND/726406</field>
         <field name="Subs Allowed">Yes</field>
         <field name="RoHS">Yes</field>
@@ -190,7 +190,7 @@
       <fields>
         <field name="Mfr">Yageo</field>
         <field name="Mfr Part #">RC0402FR-071KL</field>
-        <field name="Package">0402</field>
+        <field name="Package">R0402</field>
         <field name="Link">https://www.digikey.com/product-detail/en/yageo/RC0402FR-071KL/311-1.00KLRTR-ND/726513</field>
         <field name="Subs Allowed">Yes</field>
         <field name="RoHS">Yes</field>
@@ -205,7 +205,7 @@
       <fields>
         <field name="Mfr">Taiyo Yuden</field>
         <field name="Mfr Part #">EMK316B7106KL-TD </field>
-        <field name="Package">1206</field>
+        <field name="Package">C1206</field>
         <field name="Link">https://www.digikey.com/product-detail/en/taiyo-yuden/EMK316B7106KL-TD/587-2395-2-ND/2178914</field>
         <field name="Subs Allowed">Yes</field>
         <field name="RoHS">Yes</field>
@@ -250,7 +250,7 @@
       <fields>
         <field name="Mfr">Yageo</field>
         <field name="Mfr Part #">RC0402FR-07100RL</field>
-        <field name="Package">0402</field>
+        <field name="Package">R0402</field>
         <field name="Link">https://www.digikey.com/product-detail/en/yageo/RC0402FR-07100RL/311-100LRTR-ND/726527</field>
         <field name="Subs Allowed">Yes</field>
         <field name="RoHS">Yes</field>
@@ -265,7 +265,7 @@
       <fields>
         <field name="Mfr">Yageo</field>
         <field name="Mfr Part #">RC0402FR-071KL</field>
-        <field name="Package">0402</field>
+        <field name="Package">R0402</field>
         <field name="Link">https://www.digikey.com/product-detail/en/yageo/RC0402FR-071KL/311-1.00KLRTR-ND/726513</field>
         <field name="Subs Allowed">Yes</field>
         <field name="RoHS">Yes</field>
@@ -280,7 +280,7 @@
       <fields>
         <field name="Mfr">Yageo</field>
         <field name="Mfr Part #">RC0402FR-071KL</field>
-        <field name="Package">0402</field>
+        <field name="Package">R0402</field>
         <field name="Link">https://www.digikey.com/product-detail/en/yageo/RC0402FR-071KL/311-1.00KLRTR-ND/726513</field>
         <field name="Subs Allowed">Yes</field>
         <field name="RoHS">Yes</field>
@@ -415,7 +415,7 @@
       <fields>
         <field name="Mfr">Taiyo Yuden</field>
         <field name="Mfr Part #">LMK107B7105KA-T</field>
-        <field name="Package">0603</field>
+        <field name="Package">C0603</field>
         <field name="Link">https://www.digikey.com/product-detail/en/taiyo-yuden/LMK107B7105KA-T/587-1242-2-ND/930594</field>
         <field name="Subs Allowed">Yes</field>
         <field name="RoHS">Yes</field>
@@ -601,20 +601,20 @@
     </libpart>
   </libparts>
   <libraries>
+    <library logical="NeuroTinker_schematic_symbols">
+      <uri>/home/zach/Documents/NeuroTinker/Products/NeuroBytes_Interneuron/HARDWARE/NeuroBytes_Schematic_Lib/NeuroTinker_schematic_symbols.lib</uri>
+    </library>
     <library logical="conn">
       <uri>/usr/share/kicad/library/conn.lib</uri>
     </library>
-    <library logical="transistors">
-      <uri>/usr/share/kicad/library/transistors.lib</uri>
-    </library>
-    <library logical="NeuroTinker_schematic_symbols">
-      <uri>NeuroBytes_Schematic_Lib/NeuroTinker_schematic_symbols.lib</uri>
+    <library logical="regul">
+      <uri>/usr/share/kicad/library/regul.lib</uri>
     </library>
     <library logical="device">
       <uri>/usr/share/kicad/library/device.lib</uri>
     </library>
-    <library logical="regul">
-      <uri>/usr/share/kicad/library/regul.lib</uri>
+    <library logical="transistors">
+      <uri>/usr/share/kicad/library/transistors.lib</uri>
     </library>
   </libraries>
   <nets>

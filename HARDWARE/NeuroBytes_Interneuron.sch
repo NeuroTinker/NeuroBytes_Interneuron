@@ -65,7 +65,7 @@ F 2 "KiCad_Footprints:ZF_SMD_NonPol_0402_cap" H 8000 3800 50  0001 C CNN
 F 3 "" H 7050 3800 50  0000 C CNN
 F 4 "Taiyo Yuden" H 7050 3800 60  0001 C CNN "Mfr"
 F 5 "LMK105BJ104KV-F" H 7050 3800 60  0001 C CNN "Mfr Part #"
-F 6 "0402" H 7050 3800 60  0001 C CNN "Package"
+F 6 "C0402" H 7050 3800 60  0001 C CNN "Package"
 F 7 "https://www.digikey.com/product-detail/en/taiyo-yuden/LMK105BJ104KV-F/587-1227-2-ND/930579" H 7050 3800 60  0001 C CNN "Link"
 F 8 "Yes" H 7050 3800 60  0001 C CNN "Subs Allowed"
 F 9 "Yes" H 7050 3800 60  0001 C CNN "RoHS"
@@ -248,7 +248,7 @@ F 2 "KiCad_Footprints:ZF_SMD_NonPol_0603" H 6388 5000 50  0001 C CNN
 F 3 "" H 6350 5150 50  0000 C CNN
 F 4 "Taiyo Yuden" H 6350 5150 60  0001 C CNN "Mfr"
 F 5 "LMK107B7105KA-T" H 6350 5150 60  0001 C CNN "Mfr Part #"
-F 6 "0603" H 6350 5150 60  0001 C CNN "Package"
+F 6 "C0603" H 6350 5150 60  0001 C CNN "Package"
 F 7 "https://www.digikey.com/product-detail/en/taiyo-yuden/LMK107B7105KA-T/587-1242-2-ND/930594" H 6350 5150 60  0001 C CNN "Link"
 F 8 "Yes" H 6350 5150 60  0001 C CNN "Subs Allowed"
 F 9 "Yes" H 6350 5150 60  0001 C CNN "RoHS"
@@ -397,8 +397,8 @@ F 1 "150" V 9800 2250 50  0000 C CNN
 F 2 "KiCad_Footprints:ZF_SMD_NonPol_0402" V 10000 1650 50  0001 C CNN
 F 3 "" H 9800 2250 50  0000 C CNN
 F 4 "Yageo" H 9800 2250 60  0001 C CNN "Mfr"
-F 5 "MF-RES-0402-220" H 9800 2250 60  0001 C CNN "Mfr Part #"
-F 6 "0402" H 9800 2250 60  0001 C CNN "Package"
+F 5 "RC0402FR-07150RL" H 9800 2250 60  0001 C CNN "Mfr Part #"
+F 6 "R0402" H 9800 2250 60  0001 C CNN "Package"
 F 7 "https://www.digikey.com/product-detail/en/yageo/RC0402FR-07150RL/311-150LRCT-ND/729490" H 9800 2250 60  0001 C CNN "Link"
 F 8 "Yes" H 9800 2250 60  0001 C CNN "Subs Allowed"
 F 9 "Yes" H 9800 2250 60  0001 C CNN "RoHS"
@@ -415,7 +415,7 @@ F 2 "KiCad_Footprints:ZF_SMD_NonPol_0402" V 10000 1850 50  0001 C CNN
 F 3 "" H 9800 2450 50  0000 C CNN
 F 4 "Yageo" H 9800 2450 60  0001 C CNN "Mfr"
 F 5 "RC0402FR-07100RL" H 9800 2450 60  0001 C CNN "Mfr Part #"
-F 6 "0402" H 9800 2450 60  0001 C CNN "Package"
+F 6 "R0402" H 9800 2450 60  0001 C CNN "Package"
 F 7 "https://www.digikey.com/product-detail/en/yageo/RC0402FR-07100RL/311-100LRTR-ND/726527" H 9800 2450 60  0001 C CNN "Link"
 F 8 "Yes" H 9800 2450 60  0001 C CNN "Subs Allowed"
 F 9 "Yes" H 9800 2450 60  0001 C CNN "RoHS"
@@ -447,7 +447,7 @@ F 2 "KiCad_Footprints:ZF_SMD_NonPol_0402_cap" H 1838 2150 50  0001 C CNN
 F 3 "" H 1800 2300 50  0000 C CNN
 F 4 "Taiyo Yuden" H 1800 2300 60  0001 C CNN "Mfr"
 F 5 "LMK105BJ104KV-F" H 1800 2300 60  0001 C CNN "Mfr Part #"
-F 6 "0402" H 1800 2300 60  0001 C CNN "Package"
+F 6 "C0402" H 1800 2300 60  0001 C CNN "Package"
 F 7 "https://www.digikey.com/product-detail/en/taiyo-yuden/LMK105BJ104KV-F/587-1227-2-ND/930579" H 1800 2300 60  0001 C CNN "Link"
 F 8 "Yes" H 1800 2300 60  0001 C CNN "Subs Allowed"
 F 9 "Yes" H 1800 2300 60  0001 C CNN "RoHS"
@@ -475,7 +475,7 @@ F 2 "KiCad_Footprints:ZF_SMD_NonPol_0402" V 1180 1500 50  0001 C CNN
 F 3 "" H 1250 1500 50  0000 C CNN
 F 4 "Yageo" H 1250 1500 60  0001 C CNN "Mfr"
 F 5 "RC0402JR-070RL" H 1250 1500 60  0001 C CNN "Mfr Part #"
-F 6 "0402" H 1250 1500 60  0001 C CNN "Package"
+F 6 "R0402" H 1250 1500 60  0001 C CNN "Package"
 F 7 "https://www.digikey.com/product-detail/en/yageo/RC0402JR-070RL/311-0.0JRTR-ND/726406" H 1250 1500 60  0001 C CNN "Link"
 F 8 "Yes" H 1250 1500 60  0001 C CNN "Subs Allowed"
 F 9 "Yes" H 1250 1500 60  0001 C CNN "RoHS"
@@ -794,7 +794,7 @@ F 2 "KiCad_Footprints:ZF_SMD_NonPol_0402" V 8150 800 50  0001 C CNN
 F 3 "" H 7950 1400 50  0000 C CNN
 F 4 "Yageo" H 7950 1400 60  0001 C CNN "Mfr"
 F 5 "RC0402FR-071KL" H 7950 1400 60  0001 C CNN "Mfr Part #"
-F 6 "0402" H 7950 1400 60  0001 C CNN "Package"
+F 6 "R0402" H 7950 1400 60  0001 C CNN "Package"
 F 7 "https://www.digikey.com/product-detail/en/yageo/RC0402FR-071KL/311-1.00KLRTR-ND/726513" H 7950 1400 60  0001 C CNN "Link"
 F 8 "Yes" H 7950 1400 60  0001 C CNN "Subs Allowed"
 F 9 "Yes" H 7950 1400 60  0001 C CNN "RoHS"
@@ -811,7 +811,7 @@ F 2 "KiCad_Footprints:ZF_SMD_nonpol_1206" H 6788 3650 50  0001 C CNN
 F 3 "" H 6750 3800 50  0000 C CNN
 F 4 "Taiyo Yuden" H 6750 3800 60  0001 C CNN "Mfr"
 F 5 "EMK316B7106KL-TD " H 6750 3800 60  0001 C CNN "Mfr Part #"
-F 6 "1206" H 6750 3800 60  0001 C CNN "Package"
+F 6 "C1206" H 6750 3800 60  0001 C CNN "Package"
 F 7 "https://www.digikey.com/product-detail/en/taiyo-yuden/EMK316B7106KL-TD/587-2395-2-ND/2178914" H 6750 3800 60  0001 C CNN "Link"
 F 8 "Yes" H 6750 3800 60  0001 C CNN "Subs Allowed"
 F 9 "Yes" H 6750 3800 60  0001 C CNN "RoHS"
@@ -894,7 +894,7 @@ F 2 "KiCad_Footprints:ZF_SMD_NonPol_0402" V 10000 2050 50  0001 C CNN
 F 3 "" H 9800 2650 50  0000 C CNN
 F 4 "Yageo" H 9800 2650 60  0001 C CNN "Mfr"
 F 5 "RC0402FR-07100RL" H 9800 2650 60  0001 C CNN "Mfr Part #"
-F 6 "0402" H 9800 2650 60  0001 C CNN "Package"
+F 6 "R0402" H 9800 2650 60  0001 C CNN "Package"
 F 7 "https://www.digikey.com/product-detail/en/yageo/RC0402FR-07100RL/311-100LRTR-ND/726527" H 9800 2650 60  0001 C CNN "Link"
 F 8 "Yes" H 9800 2650 60  0001 C CNN "Subs Allowed"
 F 9 "Yes" H 9800 2650 60  0001 C CNN "RoHS"
@@ -911,7 +911,7 @@ F 2 "KiCad_Footprints:ZF_SMD_NonPol_0402" V 8150 1450 50  0001 C CNN
 F 3 "" H 7950 2050 50  0000 C CNN
 F 4 "Yageo" H 7950 2050 60  0001 C CNN "Mfr"
 F 5 "RC0402FR-071KL" H 7950 2050 60  0001 C CNN "Mfr Part #"
-F 6 "0402" H 7950 2050 60  0001 C CNN "Package"
+F 6 "R0402" H 7950 2050 60  0001 C CNN "Package"
 F 7 "https://www.digikey.com/product-detail/en/yageo/RC0402FR-071KL/311-1.00KLRTR-ND/726513" H 7950 2050 60  0001 C CNN "Link"
 F 8 "Yes" H 7950 2050 60  0001 C CNN "Subs Allowed"
 F 9 "Yes" H 7950 2050 60  0001 C CNN "RoHS"
@@ -928,7 +928,7 @@ F 2 "KiCad_Footprints:ZF_SMD_NonPol_0402" V 8150 2100 50  0001 C CNN
 F 3 "" H 7950 2700 50  0000 C CNN
 F 4 "Yageo" H 7950 2700 60  0001 C CNN "Mfr"
 F 5 "RC0402FR-071KL" H 7950 2700 60  0001 C CNN "Mfr Part #"
-F 6 "0402" H 7950 2700 60  0001 C CNN "Package"
+F 6 "R0402" H 7950 2700 60  0001 C CNN "Package"
 F 7 "https://www.digikey.com/product-detail/en/yageo/RC0402FR-071KL/311-1.00KLRTR-ND/726513" H 7950 2700 60  0001 C CNN "Link"
 F 8 "Yes" H 7950 2700 60  0001 C CNN "Subs Allowed"
 F 9 "Yes" H 7950 2700 60  0001 C CNN "RoHS"
@@ -1081,7 +1081,7 @@ F 2 "KiCad_Footprints:ZF_SMD_NonPol_0603" H 8038 5000 50  0001 C CNN
 F 3 "" H 8000 5150 50  0000 C CNN
 F 4 "Taiyo Yuden" H 8000 5150 60  0001 C CNN "Mfr"
 F 5 "LMK107B7105KA-T" H 8000 5150 60  0001 C CNN "Mfr Part #"
-F 6 "0603" H 8000 5150 60  0001 C CNN "Package"
+F 6 "C0603" H 8000 5150 60  0001 C CNN "Package"
 F 7 "https://www.digikey.com/product-detail/en/taiyo-yuden/LMK107B7105KA-T/587-1242-2-ND/930594" H 8000 5150 60  0001 C CNN "Link"
 F 8 "Yes" H 8000 5150 60  0001 C CNN "Subs Allowed"
 F 9 "Yes" H 8000 5150 60  0001 C CNN "RoHS"
