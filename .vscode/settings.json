@@ -1,6 +1,0 @@
-{
-    "python.linting.pylintEnabled": false,
-    "files.associations": {
-        "timer.h": "c"
-    }
-}

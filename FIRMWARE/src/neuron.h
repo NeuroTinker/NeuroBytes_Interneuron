@@ -12,6 +12,13 @@
 #define FIRE_LED_TIME           5
 #define FIRE_DELAY_TIME         20
 
+#define LEARNING_WINDOW         50
+#define LEARNING_CHANGE         500
+#define MAX_WEIGHTING           18000
+
+#define DEPRESSION_TIME         50
+
+
 typedef enum{
 NC =   0,
 CONNECTED =    1
@@ -34,7 +41,8 @@ dendrite_states     state; // is pulse being received or not
 dendrite_status     status; // not connected / connected
 dendrite_types      type; // excitatory or inhibitory
 uint16_t            alive_time;
-int16_t             magnitude; // weighting
+int32_t             magnitude; // weighting
+int32_t             base_magnitude;
 int16_t             current_value; // current contribution to the membrane potential
 uint8_t             nid_flag; // is this dendrite the closest to the NID
 uint8_t             read_flag; // dendrite is currently getting a message
@@ -81,5 +89,7 @@ void dendriteDecayStep(neuron_t * n);
 void membraneDecayStep(neuron_t * n);
 void dendriteSwitchOff(dendrite_t * dendrite);
 void incrementHebbTime(neuron_t *n);
+void calcDendriteWeightings(neuron_t *n);
+
 
 #endif
