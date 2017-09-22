@@ -75,7 +75,7 @@
     (grid_origin 131.03 102.5)
     (visible_elements FFFFFF7F)
     (pcbplotparams
-      (layerselection 0x010fc_80000001)
+      (layerselection 0x210fc_80000001)
       (usegerberextensions false)
       (excludeedgelayer true)
       (linewidth 0.100000)
@@ -98,7 +98,7 @@
       (mirror false)
       (drillshape 0)
       (scaleselection 1)
-      (outputdirectory NeuroTinker_NeuroBytes_Interneuron_RFQ_05312017_Macrofab/))
+      (outputdirectory ../../../NeuroTinker_RFQ_Sept2017/NeuroBytes_Interneuron/))
   )
 
   (net 0 "")
@@ -1304,6 +1304,7 @@
 
   (module KiCad_Footprints:ZF_LOGO_Interneuron (layer F.Cu) (tedit 0) (tstamp 598B7B8F)
     (at 150 90)
+    (attr smd)
     (fp_text reference G*** (at 0 0) (layer F.SilkS) hide
       (effects (font (thickness 0.3)))
     )
