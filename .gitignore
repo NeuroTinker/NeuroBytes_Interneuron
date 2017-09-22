@@ -34,16 +34,5 @@
 *.dSYM/
 *.su
 
-<<<<<<< HEAD
 # Other
 *.json
-=======
-<<<<<<< HEAD
-
-# Other
-*.json
-=======
-# Other
-.json
->>>>>>> 6d897e3cb1b4885768343620ae1063d938492d0c
->>>>>>> development

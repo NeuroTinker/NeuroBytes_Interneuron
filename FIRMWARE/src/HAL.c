@@ -23,10 +23,6 @@ void sys_tick_handler(void)
 		main_tick = 1;
 		tick = 0;
 	}
-<<<<<<< HEAD
-	readInputs();
-	write();
-=======
 
 	//read_tick += 1;
 	//if (read_tick >= 2){
@@ -35,7 +31,6 @@ void sys_tick_handler(void)
 	write();
 	
     MMIO32((TIM21_BASE) + 0x10) &= ~(1<<0); //clear the interrupt register
->>>>>>> development
 }
 
 void systick_setup(int xms)
@@ -292,11 +287,7 @@ void tim_setup(void)
 
 void tim21_isr(void)
 {
-<<<<<<< HEAD
-	
-=======
 	// TIM21 routine is now in systick interrupt
->>>>>>> development
 }
 
 void tim2_isr(void)
