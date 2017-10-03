@@ -1,9 +1,9 @@
 (kicad_pcb (version 4) (host pcbnew 4.0.7-e1-6374~58~ubuntu14.04.1)
 
   (general
-    (links 83)
+    (links 101)
     (no_connects 0)
-    (area 130.957187 77.474012 189.496654 102.653506)
+    (area 123.4 55.4 221.257146 138.425)
     (thickness 1.6)
     (drawings 255)
     (tracks 413)
@@ -12,11 +12,11 @@
     (nets 39)
   )
 
-  (page A4)
+  (page B)
   (title_block
     (title "NeuroBytes Interneuron")
-    (date 2017-05-15)
-    (rev C)
+    (date 2017-10-03)
+    (rev D)
     (company "NeuroTinker, LLC")
     (comment 1 "License: GPL v3")
   )
@@ -2327,7 +2327,7 @@
   (gr_line (start 131.007188 90.070874) (end 131.007188 77.6036) (layer Edge.Cuts) (width 0.1))
   (gr_line (start 189.446653 90.070874) (end 189.446653 96.357049) (layer Edge.Cuts) (width 0.1))
   (gr_line (start 131.03 77.51) (end 131.03 105.94) (layer Cmts.User) (width 0.2))
-  (gr_text "NOTES:\n1. FOOTPRINTS ORIENTED PER IPC-7351FC LEVEL B (PIN 1 IN LOWER LEFT)\n2. COMPONENT ROTATION IN DEGREES COUNTER-CLOCKWISE\n3. ALL COMPONENTS MOUNTED ON B.CU LAYER (LED IS BOTTOM-MOUNT)\n4. PCB IS 1.6mm FR4 RATED FOR ROHS REFLOW, 1OZ COPPER, ENIG FINISH\n5. MATTE BLACK SOLDER MASK WITH WHITE SILKSCREEN\n6. SOLDER PASTE MUST BE ROHS COMPLIANT (LEAD-FREE)\n7. NO MARKS (E-TEST, QA, SERIAL NUMBER, ETC) ON FRONT (LOGO SIDE) OF BOARD\n8. BOARDS TO BE SHIPPED IN CUSTOMER-SUPPLIED FOAM TRAYS\n9. 3MM LED HOLE IS PLATED" (at 124.4 125.6) (layer F.Fab)
+  (gr_text "NOTES:\n1. FOOTPRINTS ORIENTED PER IPC-7351FC LEVEL B (PIN 1 IN LOWER LEFT)\n2. COMPONENT ROTATION IN DEGREES COUNTER-CLOCKWISE\n3. ALL COMPONENTS MOUNTED ON B.CU LAYER (LED IS BOTTOM-MOUNT)\n4. PCB IS 1.6mm FR4 RATED FOR ROHS REFLOW, 1OZ COPPER, ENIG FINISH\n5. MATTE BLACK SOLDER MASK WITH WHITE SILKSCREEN\n6. SOLDER PASTE MUST BE ROHS COMPLIANT (LEAD-FREE)\n7. NO MARKS (E-TEST, QA, SERIAL NUMBER, ETC) ON FRONT (LOGO SIDE) OF BOARD\n8. BOARDS TO BE SHIPPED IN CUSTOMER-SUPPLIED FOAM TRAYS\n9. 3MM LED HOLE IS PLATED" (at 122.03 139) (layer F.Fab)
     (effects (font (size 1.5 1.5) (thickness 0.3)) (justify left))
   )
   (gr_line (start 132.4 104.6) (end 134.4 104.6) (layer F.Fab) (width 0.2))
