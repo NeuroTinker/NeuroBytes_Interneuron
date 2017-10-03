@@ -14,7 +14,7 @@ volatile uint16_t active_input_pins[11] = {[0 ... 10] = 0};
 
 volatile uint8_t active_input_tick[11] = {[0 ... 10] = 0};
 
-volatile uint16_t active_output_pins[11] = {PIN_AXON1_IN, PIN_AXON2_IN,PIN_AXON3_EX, [3 ... 10] = 0};
+volatile uint16_t active_output_pins[11] = {PIN_AXON1_EX, PIN_AXON2_EX,PIN_AXON3_EX, [3 ... 10] = 0};
 
 volatile uint32_t dendrite_pulses[4] = {0,0,0,0};
 volatile uint8_t dendrite_pulse_count = 0;
@@ -215,7 +215,7 @@ bool processNIDPing(read_buffer_t * read_buffer_ptr)
     }
 
     nid_ping_time = 0; // main() will reset nid pin when this reaches NID_PING_TIME
-    addWrite(ALL_BUFF, NID_PING_MESSAGE & distance); // forward message to the rest of the network
+    addWrite(ALL_BUFF, NID_PING_MESSAGE & (distance+1)); // forward message to the rest of the network
     write_buffer.source_pin = i;
     return false;
 }

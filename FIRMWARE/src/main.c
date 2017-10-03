@@ -84,7 +84,6 @@ int main(void)
 				addWrite(DOWNSTREAM_BUFF, DOWNSTREAM_PING_MESSAGE);
 				send_ping_time = 0;
 				
-				//addWrite(DOWNSTREAM_BUFF, BLINK_MESSAGE);
 				//addWrite(DOWNSTREAM_BUFF, NID_PING_MESSAGE);
 			}
 
@@ -133,6 +132,7 @@ int main(void)
 						// temporarily use identify button also as an impulse button
 						neuron.fire_potential += 11000;
 						//neuron.leaky_current += 20;
+						//addWrite(DOWNSTREAM_BUFF, BLINK_MESSAGE);
 					}
 					button_armed = 0;
 				} else if (button_armed == 2){
