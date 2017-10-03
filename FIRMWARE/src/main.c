@@ -1,5 +1,3 @@
-#define BUFSIZ 32
-
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/timer.h>
@@ -11,7 +9,7 @@
 #include "HAL.h"
 #include "neuron.h"
 
-#define BLINK_TIME			100
+#define BLINK_TIME			40
 #define DATA_TIME			10
 #define DEND_PING_TIME		200 // 1000 ms
 #define	NID_PING_TIME		200 // 1000 ms
@@ -65,15 +63,12 @@ int main(void)
 	gpio_setup();
 	tim_setup();
 
-	//printf("test");
-
 	// main processing routine	
 	for(;;)
 	{
 		if (main_tick == 1){
 			// main tick every 5 ms
 			main_tick = 0;
-			//gpio_set(PORT_AXON1_EX, PIN_AXON1_EX);
 
 			// check to see if nid ping hasn't been received in last NID_PING_TIME ticks
 			if (nid_ping_time++ > NID_PING_TIME){
@@ -86,7 +81,7 @@ int main(void)
 			// send a downstream ping every SEND_PING_TIME ticks
 			if (send_ping_time++ > SEND_PING_TIME){
 				// send downstream ping through axon
-				addWrite(DOWNSTREAM_BUFF, DEND_PING);
+				addWrite(DOWNSTREAM_BUFF, DOWNSTREAM_PING_MESSAGE);
 				send_ping_time = 0;
 			}
 

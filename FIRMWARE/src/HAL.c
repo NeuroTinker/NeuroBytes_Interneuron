@@ -24,11 +24,12 @@ void sys_tick_handler(void)
 		tick = 0;
 	}
 
-	//read_tick += 1;
-	//if (read_tick >= 2){
-		readInputs();
-	//}
-	write();
+	if (read_tick++ >= 2){
+		writeBit();
+		read_tick = 0;
+	}
+
+	readBit(read_tick);
 	
     MMIO32((TIM21_BASE) + 0x10) &= ~(1<<0); //clear the interrupt register
 }
@@ -134,7 +135,6 @@ void setAsOutput(uint32_t port, uint32_t pin)
 	gpio_mode_setup(port, GPIO_MODE_OUTPUT, GPIO_PUPD_PULLDOWN, pin);
 }
 
-
 /*
 	Each input's ISR tells the communications program that the input is active (getting a message) by setting active_output_pins[i].
 */
@@ -142,32 +142,23 @@ void setAsOutput(uint32_t port, uint32_t pin)
 void exti0_1_isr(void)
 {
 	// interrupt handler for pins 0,1 (dend1_in, dend1_ex)
-	gpio_set(PORT_AXON1_EX, PIN_AXON1_EX);
 	if ((EXTI_PR & PIN_DEND1_IN) != 0){
-		active_input_pins[4] = PIN_DEND1_IN;
+		ACTIVATE_INPUT(4, PIN_DEND1_IN);
 		EXTI_PR |= PIN_DEND1_IN; // clear interrupt flag
-		//EXTI_PR &= ~(PIN_DEND1_IN);
 	} else if ((EXTI_PR & PIN_DEND1_EX) != 0){
-		active_input_pins[3] = PIN_DEND1_EX;
+		ACTIVATE_INPUT(3, PIN_DEND1_EX);
 		EXTI_PR |= PIN_DEND1_EX;
-		exti_disable_request(PIN_DEND1_EX);
-		//EXTI_PR &= ~(PIN_DEND1_EX);
 	}
-	gpio_clear(PORT_AXON1_EX, PIN_AXON1_EX);
 }
 
 void exti2_3_isr(void)
 {
 	// interrupt handler for pins 2,3
-	//setLED(200,0,0);
-	//gpio_toggle(PORT_AXON_OUT, PIN_AXON_OUT);
 	if ((EXTI_PR & PIN_DEND4_IN) != 0){
-		//setLED(200,0,200);
-		//gpio_toggle(PORT_AXON_OUT, PIN_AXON_OUT);
-		active_input_pins[10] = PIN_DEND4_IN;
-		EXTI_PR |= EXTI3;
+		ACTIVATE_INPUT(10, PIN_DEND4_IN);
+		EXTI_PR |= PIN_DEND4_IN;
 	} else if ((EXTI_PR & PIN_DEND4_EX) != 0){
-		active_input_pins[9] = PIN_DEND4_EX;
+		ACTIVATE_INPUT(9, PIN_DEND4_EX);
 		EXTI_PR |= PIN_DEND4_EX;
 	}
 }
@@ -175,10 +166,7 @@ void exti2_3_isr(void)
 void exti4_15_isr(void)
 {
 	// interrupt handler for pins 4-15
-	//setLED(0,0,200);
-	//gpio_toggle(PORT_AXON_OUT, PIN_AXON_OUT);
 	if ((EXTI_PR & PIN_DEND3_IN) != 0){
-		//gpio_toggle(PORT_AXON_OUT, PIN_AXON_OUT);
 		active_input_pins[8] = PIN_DEND3_IN;
 		EXTI_PR |= PIN_DEND3_IN;
 	} else if ((EXTI_PR & PIN_DEND3_EX) != 0){

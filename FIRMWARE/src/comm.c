@@ -3,13 +3,16 @@
 #include "HAL.h"
 
 write_buffer_t write_buffer;
-
-uint32_t message_buffer[11] = {0,0,0,0,0,0,0,0,0,0,0};
-uint8_t message_buffer_count[11];
+read_buffer_t read_buffer[11] = {
+    [0 ... 10] = { .message=0, .bits_left_to_read=5, .callback=processMessageHeader}
+};
+//uint32_t read_buffer[11] = {0,0,0,0,0,0,0,0,0,0,0};
+//uint8_t read_buffer_bits_left[11] = 0,0,0,0,0,0,0,0,0,0,0};
+//void (*read_buffer_callback[11]) (uint32_t);
 
 volatile uint16_t active_input_pins[11] = {0,0,0,0,0,0,0,0,0,0,0};
 
-volatile uint16_t active_input_ticks[11] = {0,0,0,0,0,0,0,0,0,0,0};
+volatile uint8_t active_input_tick[11] = {0,0,0,0,0,0,0,0,0,0,0};
 
 volatile uint16_t active_output_pins[11] = {PIN_AXON1_IN, PIN_AXON2_IN,PIN_AXON3_EX,0,0,0,0,0,0,0,0};
 
@@ -94,11 +97,13 @@ uint8_t identify_channel = 0;
 
 void commInit(void)
 {
+    uint8_t i;
+    for (i=0;i<11;i++) read_buffer[i].i = i;
     write_buffer.current_buffer = NONE_BUFF;
     write_buffer.write_count = 0;
 }
 
-void readInputs(void)
+void readBit(uint8_t read_tick)
 {
     uint8_t i;
     uint16_t value;
@@ -107,10 +112,16 @@ void readInputs(void)
     uint32_t sender_id;
     uint32_t keep_alive;
     uint32_t data_frame;
-    //gpio_set(PORT_AXON1_EX, PIN_AXON1_EX);
+
     for (i=0; i<NUM_INPUTS; i++){
         // read each input that is currently receiving a message
-        if (active_input_pins[i] != 0){
+        if ((active_input_pins[i] != 0) && (active_input_tick[i] == read_tick)){
+
+            if (read_buffer[i].bits_left_to_read == 0){
+                // The message is just starting to be read so read the message header first.
+                read_buffer[i].bits_left_to_read = 5;
+                read_buffer[i].callback = processMessageHeader;
+            }
 
             // get new input value
             value = gpio_get(active_input_ports[i], active_input_pins[i]); // returns uint16 where bit position corresponds to pin number
@@ -121,59 +132,41 @@ void readInputs(void)
             }
 
             // save new input value to buffer
-            message_buffer[i] <<= 1;
-            message_buffer[i] |= value;
+            read_buffer[i].message <<= 1;
+            read_buffer[i].message |= value;
+
+            // if enough bits have been read from the message to process, then trigger callback
 
             // when the message buffer has read 32-bits, the message is done being read and is processed
-            if (++message_buffer_count[i] == 32){ // done reading message
-                //blink_flag = 1;
+            if (--read_buffer[i].bits_left_to_read == 0){ // done reading message
+                read_buffer[i].callback(&read_buffer[i]);
                 // Process message and set appropriate flags for main() or add messages to message buffer
-                recipient_id = (message_buffer[i] & RECIPIENT_MASK) >> 28; // 3-bit recipient id 28
-                keep_alive = (message_buffer[i] & KEEP_ALIVE_MASK) >> 22; // 6-bit keep alive 22
-                sender_id = (message_buffer[i] & SENDER_MASK) >> 19; // 3-bit sender id 19
-                header = (message_buffer[i] & HEADER_MASK) >> 16; // 3-bit message id 16
-                data_frame = message_buffer[i] & DATA_MASK; // 16-bit data frame
+                /*
+                recipient_id = (read_buffer[i] & RECIPIENT_MASK) >> 28; // 3-bit recipient id 28
+                keep_alive = (read_buffer[i] & KEEP_ALIVE_MASK) >> 22; // 6-bit keep alive 22
+                sender_id = (read_buffer[i] & SENDER_MASK) >> 19; // 3-bit sender id 19
+                header = (read_buffer[i] & HEADER_MASK) >> 16; // 3-bit message id 16
+                data_frame = read_buffer[i] & DATA_MASK; // 16-bit data frame
+                */
 
-                // decrement keep alive
-                message_buffer[i] = (((keep_alive - 1) << 22) & KEEP_ALIVE_MASK) | (message_buffer[i] & ~KEEP_ALIVE_MASK);
-                
-                // analyze message header and determine what to do with it
-
-                if (recipient_id == SELECTED4){
+                /*
+                if (header == PULSE){
                     dendrite_pulse_flag[i] = 1;
-                }
+                } else if 
 
                 if (header == BLINK && recipient_id == ALL){
-                    /*
-                        This is a NID->network blink message.
-                        Set the blink_flag and the main routine will handle it.
-                        Forward this message through the network.
-                    */
                     if (blink_flag == 0){
                         // set blink_flag => main() will blink led
                         blink_flag = 1;
                         // forward message through network
-                        addWrite(ALL_BUFF, message_buffer[i]);
+                        addWrite(ALL_BUFF, read_buffer[i]);
                         write_buffer.source_pin = i;
                     }
                     
                 } else if (recipient_id == NID){
-                    /*
-                        This is a neuron->NID message. 
-                        
-                        There is no need to process it so just forward to NID.
-                    */
-                    addWrite(NID_BUFF, message_buffer[i]);
+                    addWrite(NID_BUFF, read_buffer[i]);
                 } else if (header == PING){
                     if (recipient_id == DOWNSTREAM){
-                        /*
-                            This is a upstream neuron -> downstream neuron ping message.
-
-                            This message is used to figure out if the neuron->neuron connection is inhib or excit.
-                            The pin that received the ping should be an input and its complimentary pin an output.
-
-                            checkDendrites() resets dendrites to inputs if ping expires. Set dendrite_ping_flag so keep the current input/output configuration
-                        */
 
                         dendrite_ping_flag[i] = 1;
                         if (i % 2 != 0){
@@ -186,17 +179,11 @@ void readInputs(void)
                             active_output_pins[i-1] = complimentary_pins[i];
                         }
                     } else if (recipient_id == ALL){
-                        /*
-                            This is a NID -> network ping message.
-
-                            It is used for neurons to figure which input/output is closest to the NID.
-                            The NID message with the largest keep_alive left is closest to NID.
-                        */
                         if (active_input_pins[i] == nid_pin){
                             // NID ping was received on the existing nid_pin
                             nid_ping_time = 0; // main() will reset nid pin when this reaches NID_PING_TIME
                             if (keep_alive > 0){
-                                addWrite(ALL_BUFF, message_buffer[i]); // forward message to the rest of the network
+                                addWrite(ALL_BUFF, read_buffer[i]); // forward message to the rest of the network
                                 write_buffer.source_pin = i;
                             }
                         } else if ((NID_PING_KEEP_ALIVE - keep_alive) < nid_keep_alive){
@@ -211,12 +198,6 @@ void readInputs(void)
                         }
                     }
                 } else if (header == IDENTIFY){
-                    /*
-                        This is a NID -> network identify message.
-
-                        This message is used to assign neurons to a channel.
-                        If the user presses the 'identify' button when this message is received then the neuron is assigned to a channel.
-                    */
                     if (identify_time >= IDENTIFY_TIME){
                         // set the identify_time window to 0. main() will handle the rest
                         identify_time = 0;
@@ -224,11 +205,11 @@ void readInputs(void)
                     }
                     if (keep_alive > 0){
                         // pass the message
-                        addWrite(ALL_BUFF, message_buffer[i]);
+                        addWrite(ALL_BUFF, read_buffer[i]);
                         write_buffer.source_pin = i;
                     }
                 }
-                
+                */
                 
                 
                 // deactivate input so that it doesn't keep getting read
@@ -236,12 +217,48 @@ void readInputs(void)
                 exti_enable_request(active_input_pins[i]);
                 active_input_pins[i] = 0;
                 // reset message buffer
-                message_buffer[i] = 0;
-                message_buffer_count[i] = 0;
+                read_buffer[i].message = 0;
+                read_buffer[i].bits_left_to_read = 5;
+                read_buffer[i].callback = processMessageHeader;
             }
         }
     }
     //gpio_clear(PORT_AXON1_EX, PIN_AXON1_EX);
+}
+
+void processMessageHeader(read_buffer_t * read_buffer_ptr)
+{
+    uint8_t i = read_buffer_ptr->i;
+    uint8_t header = (read_buffer_ptr->message & 0b01110) >> 1;
+
+    switch (header){
+        case PULSE_HEADER:
+            dendrite_pulse_flag[i] = 1;
+            break;
+        case DOWNSTREAM_PING_HEADER:
+            dendrite_ping_flag[i] = 1;
+            if (i % 2 != 0){
+                // excitatory
+                setAsOutput(active_input_ports[i+1], complimentary_pins[i]);
+                active_output_pins[i+1] = complimentary_pins[i];
+            } else{
+                // inhibitory
+                setAsOutput(active_input_ports[i-1], complimentary_pins[i]);
+                active_output_pins[i-1] = complimentary_pins[i];
+            }
+            break;
+        case BLINK_HEADER:
+            if (blink_flag == 0){
+                // set blink_flag => main() will blink led
+                blink_flag = 1;
+                // forward message through network
+                addWrite(ALL_BUFF, read_buffer_ptr->message);
+                write_buffer.source_pin = i;
+            }
+            break;
+        default:
+            break;
+        }
 }
 
 void addWrite(message_buffers_t buffer, uint32_t message)
@@ -267,7 +284,7 @@ void addWrite(message_buffers_t buffer, uint32_t message)
     }
 }
 
-void write()
+void writeBit()
 {
     /*
         Pop 1-bit off the write_buffer and write it to corresponding output pins

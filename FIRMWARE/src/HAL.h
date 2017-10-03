@@ -56,6 +56,8 @@
 #define PIN_DEND4_IN    GPIO3
 #define PIN_DEND4_EX    GPIO2
 
+#define ACTIVATE_INPUT(I, PIN)   active_input_pins[(I)] = PIN; active_input_tick[(I)] = (read_tick + 1) % 3
+
 /*
     Two clocks:
     -main_tick  : clocks the main processing routine at 5 ms

@@ -15,11 +15,10 @@
 #define	NID_PING_TIME		200 // 1000 ms
 #define NID_PING_KEEP_ALIVE     32
 
-
-#define BLINK_MESSAGE           0b11111001110001110000000000000000 // (ALL) (KEEP ALIVE=7) (NID) (BLINK) (no data)
-#define PULSE_MESSAGE           0b11111000010100110000000000000000 // (DOWNSTREAM) (KEEP ALIVE=1) (UPSTREAM) (PULSE) (no data)
+//#define BLINK_MESSAGE           0b11111001110001110000000000000000 // (ALL) (KEEP ALIVE=7) (NID) (BLINK) (no data)
+//#define PULSE_MESSAGE           0b11111000010100110000000000000000 // (DOWNSTREAM) (KEEP ALIVE=1) (UPSTREAM) (PULSE) (no data)
 #define DATA_MESSAGE            0b10000000000001000000000000000000 // (NID) (KEEP ALIVE=0) (CHANNEL= NONE) (DATA) (no data)
-#define DEND_PING               0b10010000010100010000000000000000 // (DOWNSTREAM) (KEEP ALIVE=1) (UPSTREAM) (PING) (no data)
+//#define DEND_PING               0b10010000010100010000000000000000 // (DOWNSTREAM) (KEEP ALIVE=1) (UPSTREAM) (PING) (no data)
 #define NID_PING                0b10110001110000010000000000000000 // (ALL) (KEEP ALIVE=7) (NID) (PING) (no data)
 #define NID_IDENTIFY_REQUEST    0b10110001110001010000000000000101 // (ALL) (KEEP ALIVE=7) (NID) (IDENTIFY) (data=0b101 : channel 2)
 
@@ -30,27 +29,82 @@
 #define HEADER_MASK             0b00000000000001110000000000000000
 #define DATA_MASK               0b00000000000000001111111111111111
 
+#define PULSE_HEADER                0b111 // (DOWNSTREAM) (PULSE)
+#define DOWNSTREAM_PING_HEADER      0b011
+#define BLINK_HEADER                0b001
+
+#define PULSE_MESSAGE               0b11111
+#define DOWNSTREAM_PING_MESSAGE     0b10110
+#define BLINK_MESSAGE               0b10011
+
 #define IDENTIFY_TIME       50 // 250 ms
 
 /*
     This and comm.c define all communication protocol
 
-    Messages are 32-bit packets:
+    Messages begin with a 6-bit messsage header
     1-bit   -   lead high
-    3-bit   -   recipient id
-    6-bit   -   keep-alive 
-    3-bit   -   sender id
-    3-bit   -   header
+    2-bit   -   recipient id
+    2-bit   -   message header
+    1-bit   -   header parity check
+    Some messages include an (optional) data frame:
+    7-bit   -   data header (optional)
     16-bit  -   data frame
+    3-bit   -   data parity check
+
+    message headers:
+    0b000  -   Unused
+    0b001  -   Blink (Debug)
+    0b010  -   Data to NID (6-bit data header + 16-bit data packet + 3-bit parity check)
+    0b011  -   Downstream Ping
+    0b100  -   NID Selected Command (6-bit command header + 16-bit data-packet + 3-bit parity check)
+    0b101  -   NID Global Command (6-bit command header + 1-bit parity check)
+    0b110  -   NID Ping (6-bit data + 1-bit parity check)
+    0b111  -   Downstream Pulse
 
     In general, there are three types of communication that are defined in this protocol:
     
     1. Network Interface Device (NID) broadcasting to all neurons in the network. 
+    
+        Messages include nid pings and identify device request. The NID commands class of messsages
+        
+        List of message classes:
+        -{MESSAGE CLASS}
+            -{MESSAGE 1}
+            -{MESSAGE 2}
+                -{DATA FRAME}
+            -...
+
+        -NID_PING_CLASS
+            -NID_PING
+                -8-bit pass count
+
+            6-bit   -   number of devices passed
+            1-bit   -   parity check
+
+        -NID_GLOBAL_COMMAND_CLASS
+            -IDENTIFY_DEVICE
+            -ALL_START_LEARNING_MODE
+            -ALL_STOP_LEARNING_MODE
+            -ALL_PAUSE
+
+            6-bit   -   command header
+            16-bit  -   data packet
+            3-bit   -   parity check
+
+        
 
     2. Selected neurons sending data to the NID.
 
     3. Upstream neurons sending pulses to downstream neurons (axon -> dendrite).
 */
+
+typedef struct{
+    uint8_t header; // 0b1XXYY -- XX = recipient ID ; YY = message ID
+    uint8_t data_header_length;
+    uint8_t data_frame_length;
+    uint8_t data_parity_count;
+} message_class_t;
 
 
 // unique pins: 0,1,3,4,5,6,7,8,9,10,13,14,15
@@ -59,22 +113,18 @@
 // total 14 unique pin numbers and 8 repeated pins
 
 typedef enum{
-    NID         =   0b000,
-    DOWNSTREAM  =   0b001,
-    UPSTREAM    =   0b010,
-    ALL         =   0b011,
-    SELECTED1   =   0b100,
-    SELECTED2   =   0b101,
-    SELECTED3   =   0b110,
-    SELECTED4   =   0b111
+    NID         =   0b00,
+    DOWNSTREAM  =   0b11,
+    ALL         =   0b01,
+    SELECTED    =   0b10
 } device_identifiers;
 
 typedef enum{
-    PING        =   0b001,
-    PULSE       =   0b011,
-    BLINK       =   0b111,
-    DATA        =   0b100,
-    IDENTIFY    =   0b101
+    PING        =   0b00,
+    PULSE       =   0b111,
+    BLINK       =   0b01,
+    DATA        =   0b11,
+    IDENTIFY    =   0b10
 } message_identifiers;
 
 typedef enum{
@@ -104,12 +154,21 @@ typedef struct{
     uint8_t             source_pin;
 } write_buffer_t;
 
+typedef struct read_buffer_t read_buffer_t;
+typedef struct read_buffer_t{
+    uint8_t i;
+    uint32_t message;
+    uint8_t bits_left_to_read;
+    void (*callback) (read_buffer_t * read_buffer_ptr);
+}read_buffer_t;
+
 
 extern uint16_t complimentary_pins[11];
 extern volatile uint16_t active_input_pins[11];
 extern uint32_t active_input_ports[11];
 extern volatile uint16_t active_output_pins[11];
 extern uint32_t active_output_ports[11];
+extern volatile uint8_t active_input_tick[11];
 
 // flags for main()
 extern volatile uint8_t dendrite_pulse_flag[11];
@@ -125,12 +184,15 @@ extern volatile uint16_t nid_pin_out;
 extern volatile uint16_t identify_time;
 extern uint8_t identify_channel;
 
-void readInputs(void); // The readInputs() function reads the next bit for active inputs
+void readBit(uint8_t read_tick); // The readInputs() function reads the next bit for active inputs
 
-void write(void);
+void writeBit(void);
+
 void writeAll(void);
 void writeDownstream(void);
 void writeNID(void);
+
+void processMessageHeader(read_buffer_t * read_buffer_ptr);
 
 // received message handlers
 void receivePulse(uint32_t message);
