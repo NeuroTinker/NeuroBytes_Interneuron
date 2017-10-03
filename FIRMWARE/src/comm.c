@@ -10,11 +10,11 @@ read_buffer_t read_buffer[11] = {
 //uint8_t read_buffer_bits_left[11] = 0,0,0,0,0,0,0,0,0,0,0};
 //void (*read_buffer_callback[11]) (uint32_t);
 
-volatile uint16_t active_input_pins[11] = {0,0,0,0,0,0,0,0,0,0,0};
+volatile uint16_t active_input_pins[11] = {[0 ... 10] = 0};
 
-volatile uint8_t active_input_tick[11] = {0,0,0,0,0,0,0,0,0,0,0};
+volatile uint8_t active_input_tick[11] = {[0 ... 10] = 0};
 
-volatile uint16_t active_output_pins[11] = {PIN_AXON1_IN, PIN_AXON2_IN,PIN_AXON3_EX,0,0,0,0,0,0,0,0};
+volatile uint16_t active_output_pins[11] = {PIN_AXON1_IN, PIN_AXON2_IN,PIN_AXON3_EX, [3 ... 10] = 0};
 
 volatile uint32_t dendrite_pulses[4] = {0,0,0,0};
 volatile uint8_t dendrite_pulse_count = 0;
@@ -28,7 +28,7 @@ uint32_t nid_port = 0;
 volatile uint16_t nid_pin_out = 0;
 uint32_t nid_port_out = 0;
 uint8_t nid_i      =    4;
-volatile uint32_t  nid_keep_alive = NID_PING_KEEP_ALIVE;
+volatile uint8_t  nid_distance = 100; // max uint8_t
 
 
 /* 
@@ -89,8 +89,8 @@ uint16_t complimentary_pins[11] = {
     PIN_DEND4_EX
 };
 
-volatile uint8_t dendrite_pulse_flag[11] = {0,0,0,0,0,0,0,0,0,0,0};
-volatile uint8_t dendrite_ping_flag[11] = {0,0,0,0,0,0,0,0,0,0,0};
+volatile uint8_t dendrite_pulse_flag[11] = {[0 ... 10] = 0};
+volatile uint8_t dendrite_ping_flag[11] = {[0 ... 10] = 0};
 uint8_t write_count = 0;
 volatile uint16_t identify_time = IDENTIFY_TIME;
 uint8_t identify_channel = 0;
@@ -117,12 +117,6 @@ void readBit(uint8_t read_tick)
         // read each input that is currently receiving a message
         if ((active_input_pins[i] != 0) && (active_input_tick[i] == read_tick)){
 
-            if (read_buffer[i].bits_left_to_read == 0){
-                // The message is just starting to be read so read the message header first.
-                read_buffer[i].bits_left_to_read = 5;
-                read_buffer[i].callback = processMessageHeader;
-            }
-
             // get new input value
             value = gpio_get(active_input_ports[i], active_input_pins[i]); // returns uint16 where bit position corresponds to pin number
             if (value != 0){
@@ -139,94 +133,23 @@ void readBit(uint8_t read_tick)
 
             // when the message buffer has read 32-bits, the message is done being read and is processed
             if (--read_buffer[i].bits_left_to_read == 0){ // done reading message
-                read_buffer[i].callback(&read_buffer[i]);
-                // Process message and set appropriate flags for main() or add messages to message buffer
-                /*
-                recipient_id = (read_buffer[i] & RECIPIENT_MASK) >> 28; // 3-bit recipient id 28
-                keep_alive = (read_buffer[i] & KEEP_ALIVE_MASK) >> 22; // 6-bit keep alive 22
-                sender_id = (read_buffer[i] & SENDER_MASK) >> 19; // 3-bit sender id 19
-                header = (read_buffer[i] & HEADER_MASK) >> 16; // 3-bit message id 16
-                data_frame = read_buffer[i] & DATA_MASK; // 16-bit data frame
-                */
-
-                /*
-                if (header == PULSE){
-                    dendrite_pulse_flag[i] = 1;
-                } else if 
-
-                if (header == BLINK && recipient_id == ALL){
-                    if (blink_flag == 0){
-                        // set blink_flag => main() will blink led
-                        blink_flag = 1;
-                        // forward message through network
-                        addWrite(ALL_BUFF, read_buffer[i]);
-                        write_buffer.source_pin = i;
-                    }
-                    
-                } else if (recipient_id == NID){
-                    addWrite(NID_BUFF, read_buffer[i]);
-                } else if (header == PING){
-                    if (recipient_id == DOWNSTREAM){
-
-                        dendrite_ping_flag[i] = 1;
-                        if (i % 2 != 0){
-                            // excitatory
-                            setAsOutput(active_input_ports[i+1], complimentary_pins[i]);
-                            active_output_pins[i+1] = complimentary_pins[i];
-                        } else{
-                            // inhibitory
-                            setAsOutput(active_input_ports[i-1], complimentary_pins[i]);
-                            active_output_pins[i-1] = complimentary_pins[i];
-                        }
-                    } else if (recipient_id == ALL){
-                        if (active_input_pins[i] == nid_pin){
-                            // NID ping was received on the existing nid_pin
-                            nid_ping_time = 0; // main() will reset nid pin when this reaches NID_PING_TIME
-                            if (keep_alive > 0){
-                                addWrite(ALL_BUFF, read_buffer[i]); // forward message to the rest of the network
-                                write_buffer.source_pin = i;
-                            }
-                        } else if ((NID_PING_KEEP_ALIVE - keep_alive) < nid_keep_alive){
-                            // the received NID ping is closer to the NID so set new NID pin
-                            nid_pin = active_input_pins[i]; // nid input
-                            nid_pin_out = complimentary_pins[i]; // nid output
-                            nid_port = active_input_ports[i];
-                            nid_port_out = active_input_ports[i];
-                            nid_ping_time = 0;
-                            nid_keep_alive = NID_PING_KEEP_ALIVE - keep_alive; // new keep_alive for a  NID messages
-                            setAsOutput(nid_port_out, nid_pin_out);
-                        }
-                    }
-                } else if (header == IDENTIFY){
-                    if (identify_time >= IDENTIFY_TIME){
-                        // set the identify_time window to 0. main() will handle the rest
-                        identify_time = 0;
-                        identify_channel = data_frame; // the channel to be assigned is in the data frame
-                    }
-                    if (keep_alive > 0){
-                        // pass the message
-                        addWrite(ALL_BUFF, read_buffer[i]);
-                        write_buffer.source_pin = i;
-                    }
+                // execute message callback. returns true if there is more to be read
+                if (!read_buffer[i].callback(&read_buffer[i])){
+                     // deactivate input so that it doesn't keep getting read
+                    EXTI_PR |= active_input_pins[i];
+                    exti_enable_request(active_input_pins[i]);
+                    active_input_pins[i] = 0;
+                    // reset message buffer
+                    read_buffer[i].message = 0;
+                    read_buffer[i].bits_left_to_read = 5;
+                    read_buffer[i].callback = processMessageHeader;
                 }
-                */
-                
-                
-                // deactivate input so that it doesn't keep getting read
-                EXTI_PR |= active_input_pins[i];
-                exti_enable_request(active_input_pins[i]);
-                active_input_pins[i] = 0;
-                // reset message buffer
-                read_buffer[i].message = 0;
-                read_buffer[i].bits_left_to_read = 5;
-                read_buffer[i].callback = processMessageHeader;
             }
         }
     }
-    //gpio_clear(PORT_AXON1_EX, PIN_AXON1_EX);
 }
 
-void processMessageHeader(read_buffer_t * read_buffer_ptr)
+bool processMessageHeader(read_buffer_t * read_buffer_ptr)
 {
     uint8_t i = read_buffer_ptr->i;
     uint8_t header = (read_buffer_ptr->message & 0b01110) >> 1;
@@ -248,7 +171,7 @@ void processMessageHeader(read_buffer_t * read_buffer_ptr)
             }
             break;
         case BLINK_HEADER:
-            if (blink_flag == 0){
+            if (blink_flag == 0 && i == nid_i){
                 // set blink_flag => main() will blink led
                 blink_flag = 1;
                 // forward message through network
@@ -256,9 +179,45 @@ void processMessageHeader(read_buffer_t * read_buffer_ptr)
                 write_buffer.source_pin = i;
             }
             break;
+        case NID_PING_HEADER:
+            // NID ping received. Read the distance packet and then process it.
+            read_buffer_ptr->bits_left_to_read = 8;
+            read_buffer_ptr->callback = processNIDPing;
+            return true;
+            break;
         default:
             break;
         }
+        return false;
+}
+
+bool processNIDPing(read_buffer_t * read_buffer_ptr)
+{
+    uint8_t i = read_buffer_ptr->i;
+
+    uint8_t distance = read_buffer_ptr->message & 0b11111110;
+
+    if (active_input_pins[i] != nid_pin){
+        // NID ping was  not received on the existing nid_pin
+        if (distance < nid_distance){
+            // the received NID ping is closer to the NID so set new NID pin
+            nid_pin = active_input_pins[i]; // nid input
+            nid_pin_out = complimentary_pins[i]; // nid output
+            nid_port = active_input_ports[i];
+            nid_port_out = active_input_ports[i];
+            nid_ping_time = 0;
+            nid_distance = distance;
+            nid_i = i;
+            setAsOutput(nid_port_out, nid_pin_out);
+        } else {
+            return false;
+        }
+    }
+
+    nid_ping_time = 0; // main() will reset nid pin when this reaches NID_PING_TIME
+    addWrite(ALL_BUFF, NID_PING_MESSAGE & distance); // forward message to the rest of the network
+    write_buffer.source_pin = i;
+    return false;
 }
 
 void addWrite(message_buffers_t buffer, uint32_t message)

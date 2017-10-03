@@ -32,10 +32,12 @@
 #define PULSE_HEADER                0b111 // (DOWNSTREAM) (PULSE)
 #define DOWNSTREAM_PING_HEADER      0b011
 #define BLINK_HEADER                0b001
+#define NID_PING_HEADER             0b110
 
 #define PULSE_MESSAGE               0b11111
 #define DOWNSTREAM_PING_MESSAGE     0b10110
 #define BLINK_MESSAGE               0b10011
+#define NID_PING_MESSAGE            0b1110100000000
 
 #define IDENTIFY_TIME       50 // 250 ms
 
@@ -155,11 +157,12 @@ typedef struct{
 } write_buffer_t;
 
 typedef struct read_buffer_t read_buffer_t;
+typedef bool (*read_handler_t) (read_buffer_t *);
 typedef struct read_buffer_t{
     uint8_t i;
     uint32_t message;
     uint8_t bits_left_to_read;
-    void (*callback) (read_buffer_t * read_buffer_ptr);
+    read_handler_t callback;
 }read_buffer_t;
 
 
@@ -176,7 +179,7 @@ extern volatile uint8_t blink_flag;
 extern volatile uint8_t dendrite_ping_flag[11];
 
 extern volatile uint32_t nid_ping_time;
-extern volatile uint32_t nid_keep_alive;
+extern volatile uint8_t nid_distance;
 
 extern volatile uint16_t nid_pin;
 extern volatile uint16_t nid_pin_out;
@@ -192,7 +195,8 @@ void writeAll(void);
 void writeDownstream(void);
 void writeNID(void);
 
-void processMessageHeader(read_buffer_t * read_buffer_ptr);
+bool processMessageHeader(read_buffer_t * read_buffer_ptr);
+bool processNIDPing(read_buffer_t * read_buffer_ptr);
 
 // received message handlers
 void receivePulse(uint32_t message);

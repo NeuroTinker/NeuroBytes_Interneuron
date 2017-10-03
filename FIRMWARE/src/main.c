@@ -73,7 +73,7 @@ int main(void)
 			// check to see if nid ping hasn't been received in last NID_PING_TIME ticks
 			if (nid_ping_time++ > NID_PING_TIME){
 				// nid no longer connected
-				nid_keep_alive = NID_PING_KEEP_ALIVE; // reset nid_keep_alive
+				nid_distance = 100; // reset nid_keep_alive
 				nid_pin = 0; // clear the nid pin
 				nid_pin_out = 0;
 			}
@@ -83,6 +83,9 @@ int main(void)
 				// send downstream ping through axon
 				addWrite(DOWNSTREAM_BUFF, DOWNSTREAM_PING_MESSAGE);
 				send_ping_time = 0;
+				
+				//addWrite(DOWNSTREAM_BUFF, BLINK_MESSAGE);
+				//addWrite(DOWNSTREAM_BUFF, NID_PING_MESSAGE);
 			}
 
 			/*
@@ -148,7 +151,7 @@ int main(void)
 				// send data every DATA_TIME ticks
 				if (data_time++ > DATA_TIME){
 					data_time = 0;
-					message = DATA_MESSAGE | (uint16_t) neuron.potential | (nid_channel << 19) | (nid_keep_alive << 22);
+					message = DATA_MESSAGE | (uint16_t) neuron.potential | (nid_channel << 19) | (nid_distance << 22);
 					addWrite(NID_BUFF,message);
 				}
 			}
