@@ -127,18 +127,18 @@ void lpuart_setup(void)
 	gpio_set_af(PORT_LPUART1_RX, GPIO_AF6, PIN_LPUART1_RX);
 	gpio_set_af(PORT_LPUART1_TX, GPIO_AF6, PIN_LPUART1_TX);
 
-	usart_set_baudrate(LPUART1, 9600);
-	usart_set_databits(LPUART1, 8);
-	usart_set_stopbits(LPUART1, USART_STOPBITS_1);
-	usart_set_mode(LPUART1, USART_MODE_TX_RX);
-	usart_set_parity(LPUART1, USART_PARITY_NONE);
-	usart_set_flow_control(LPUART1, USART_FLOWCONTROL_NONE);
+	usart_set_baudrate(LPUART1, 9600); // USART_BRR
+	usart_set_databits(LPUART1, 8);  // USART_CR1_M
+	usart_set_stopbits(LPUART1, USART_STOPBITS_1); //USART_CR2_STOP
+	usart_set_mode(LPUART1, USART_MODE_TX_RX); //USART_CR1_RE USART_CR1_TE
+	usart_set_parity(LPUART1, USART_PARITY_NONE);// USART_CR1_PS USART_CR1_PCE
+	usart_set_flow_control(LPUART1, USART_FLOWCONTROL_NONE); // USART_CR3_RTSE USART_CR3_CTSE
 
-	usart_enable(LPUART1);
+	usart_enable(LPUART1); // USART_CR1_UE
 
 	// enable interrupts
 	//nvic_enable_irq(LPUART1_IRQ);
-	usart_enable_rx_interrupt(LPUART1);
+	usart_enable_rx_interrupt(LPUART1); // USART_CR1_RXNEIE
 }
 
 void lpuart1_isr(void)
