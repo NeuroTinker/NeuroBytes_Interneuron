@@ -1,6 +1,7 @@
 
 #include "HAL.h"
 #include "comm.h"
+#include <libopencm3/stm32/usart.h>
 
 volatile uint8_t toggle = 0;
 volatile uint8_t tick = 0;
@@ -118,7 +119,7 @@ void lpuart_setup(void)
 {
 	// seutp lpuart interface (for communicating with NID)
 	// NOTE: this ocnverts the swd interface to lpuart so debugging with swd will be disables
-
+	/*
 	rcc_periph_clock_enable(RCC_LPUART1);
 
 	gpio_mode_setup(PORT_LPUART1_RX, GPIO_MODE_AF, GPIO_PUPD_NONE, PIN_LPUART1_RX);
@@ -135,18 +136,34 @@ void lpuart_setup(void)
 	usart_set_flow_control(LPUART1, USART_FLOWCONTROL_NONE); // USART_CR3_RTSE USART_CR3_CTSE
 
 	usart_enable(LPUART1); // USART_CR1_UE
+	*/
+	rcc_periph_clock_enable(RCC_USART2);
+	gpio_mode_setup(PORT_DEND4_EX, GPIO_MODE_AF, GPIO_PUPD_NONE, PIN_DEND4_EX);
+	gpio_mode_setup(PORT_DEND4_IN, GPIO_MODE_AF, GPIO_PUPD_NONE, PIN_DEND4_IN);
+
+	gpio_set_af(PORT_DEND4_EX, GPIO_AF4, PIN_DEND4_EX);
+	gpio_set_af(PORT_DEND4_IN, GPIO_AF4, PIN_DEND4_IN);
+
+	usart_set_baudrate(USART2, 9600); // USART_BRR
+	usart_set_databits(USART2, 8);  // USART_CR1_M
+	usart_set_stopbits(USART2, USART_STOPBITS_1); //USART_CR2_STOP
+	usart_set_mode(USART2, USART_MODE_TX_RX); //USART_CR1_RE USART_CR1_TE
+	usart_set_parity(USART2, USART_PARITY_NONE);// USART_CR1_PS USART_CR1_PCE
+	usart_set_flow_control(USART2, USART_FLOWCONTROL_NONE); // USART_CR3_RTSE USART_CR3_CTSE
+
+	usart_enable(USART2); // USART_CR1_UE
 
 	// enable interrupts
 	//nvic_enable_irq(LPUART1_IRQ);
-	usart_enable_rx_interrupt(LPUART1); // USART_CR1_RXNEIE
+	//usart_enable_rx_interrupt(LPUART1); // USART_CR1_RXNEIE
 }
-
+/*
 void lpuart1_isr(void)
 {
 	
 }
 
-
+*/
 void setAsInput(uint32_t port, uint32_t pin)
 {
 	// setup gpio as an input pin

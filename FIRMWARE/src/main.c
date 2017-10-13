@@ -69,7 +69,9 @@ int main(void)
 		if (main_tick == 1){
 			// main tick every 5 ms
 			main_tick = 0;
-			usart_send_blocking(LPUART1, 'a'); // USART_ISR_TXE USART_TDR
+			//usart_send_blocking(LPUART1, 0b111); // USART_ISR_TXE USART_TDR
+			//usart_recv_blocking(LPUART1);
+			usart_send_blocking(USART2, 0b11111);
 			// check to see if nid ping hasn't been received in last NID_PING_TIME ticks
 			if (nid_ping_time++ > NID_PING_TIME){
 				// nid no longer connected
