@@ -5,7 +5,8 @@
 write_buffer_t write_buffer;
 read_buffer_t read_buffer[11] = {
     [0 ... 10] = { .message=0, .bits_left_to_read=5, .callback=processMessageHeader}
-};
+}; // fast 'gcc' way to initialize the whole array of read_buffer_t struct
+
 //uint32_t read_buffer[11] = {0,0,0,0,0,0,0,0,0,0,0};
 //uint8_t read_buffer_bits_left[11] = 0,0,0,0,0,0,0,0,0,0,0};
 //void (*read_buffer_callback[11]) (uint32_t);

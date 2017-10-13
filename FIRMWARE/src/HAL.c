@@ -114,6 +114,39 @@ void gpio_setup(void)
 	nvic_set_priority(NVIC_EXTI4_15_IRQ, 0);
 }
 
+void lpuart_setup(void)
+{
+	// seutp lpuart interface (for communicating with NID)
+	// NOTE: this ocnverts the swd interface to lpuart so debugging with swd will be disables
+
+	rcc_periph_clock_enable(RCC_LPUART1);
+
+	gpio_mode_setup(PORT_LPUART1_RX, GPIO_MODE_AF, GPIO_PUPD_NONE, PIN_LPUART1_RX);
+	gpio_mode_setup(PORT_LPUART1_TX, GPIO_MODE_AF, GPIO_PUPD_NONE, PIN_LPUART1_TX);
+
+	gpio_set_af(PORT_LPUART1_RX, GPIO_AF6, PIN_LPUART1_RX);
+	gpio_set_af(PORT_LPUART1_TX, GPIO_AF6, PIN_LPUART1_TX);
+
+	usart_set_baudrate(LPUART1, 9600);
+	usart_set_databits(LPUART1, 8);
+	usart_set_stopbits(LPUART1, USART_STOPBITS_1);
+	usart_set_mode(LPUART1, USART_MODE_TX_RX);
+	usart_set_parity(LPUART1, USART_PARITY_NONE);
+	usart_set_flow_control(LPUART1, USART_FLOWCONTROL_NONE);
+
+	usart_enable(LPUART1);
+
+	// enable interrupts
+	//nvic_enable_irq(LPUART1_IRQ);
+	usart_enable_rx_interrupt(LPUART1);
+}
+
+void lpuart1_isr(void)
+{
+	
+}
+
+
 void setAsInput(uint32_t port, uint32_t pin)
 {
 	// setup gpio as an input pin

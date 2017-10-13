@@ -7,12 +7,21 @@
 #include <libopencm3/cm3/nvic.h>
 #include <libopencm3/cm3/systick.h>
 #include <libopencm3/stm32/exti.h>
+#include <libopencm3/stm32/usart.h>
 
 #include "comm.h"
 
 /*
     Define all pins
 */
+
+#define LPUART1         LPUART1_BASE
+
+#define PORT_LPUART1_TX GPIOA
+#define PORT_LPUART1_RX GPIOA
+
+#define PIN_LPUART1_RX  GPIO15
+#define PIN_LPUART1_TX  GPIO14
 
 #define PORT_R_LED      GPIOB
 #define PORT_G_LED      GPIOA
@@ -79,6 +88,7 @@ void systick_setup(int xms);
 void clock_setup(void);
 void gpio_setup(void);
 void tim_setup(void);
+void lpuart_setup(void);
 void LEDFullWhite(void);
 void setLED(uint16_t r, uint16_t g, uint16_t b);
 void setAsInput(uint32_t port, uint32_t pin);

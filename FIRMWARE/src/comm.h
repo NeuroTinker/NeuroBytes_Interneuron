@@ -208,6 +208,7 @@ void receiveNIDBlink(void);
 void addWrite(message_buffers_t buffer, uint32_t message);
 void commInit(void);
 
+//void lpuartSendNID()
 
 
 #endif

@@ -4,6 +4,7 @@
 #include <libopencm3/cm3/nvic.h>
 #include <libopencm3/cm3/systick.h>
 #include <libopencm3/stm32/exti.h>
+#include <libopencm3/stm32/usart.h>
 
 #include "comm.h"
 #include "HAL.h"
@@ -48,8 +49,6 @@ int main(void)
 
 	int32_t joegenta = 0;
 
-	//char output[10] = "test";
-
 	// initialize neuron
 	neuron_t 	neuron;
 	neuronInit(&neuron);
@@ -62,6 +61,7 @@ int main(void)
 	systick_setup(100); // systick in microseconds
 	gpio_setup();
 	tim_setup();
+	lpuart_setup();
 
 	// main processing routine	
 	for(;;)
@@ -69,7 +69,7 @@ int main(void)
 		if (main_tick == 1){
 			// main tick every 5 ms
 			main_tick = 0;
-
+			usart_send_blocking(LPUART1, 'a');
 			// check to see if nid ping hasn't been received in last NID_PING_TIME ticks
 			if (nid_ping_time++ > NID_PING_TIME){
 				// nid no longer connected
