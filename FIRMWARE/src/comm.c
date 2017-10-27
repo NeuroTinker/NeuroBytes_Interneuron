@@ -31,6 +31,9 @@ uint32_t nid_port_out = 0;
 uint8_t nid_i      =    4;
 volatile uint8_t  nid_distance = 100; // max uint8_t
 
+uint32_t lpuart_message;
+uint8_t lpuart_count;
+
 
 /* 
 All available input pins are
@@ -90,6 +93,20 @@ uint16_t complimentary_pins[11] = {
     PIN_DEND4_EX
 };
 
+uint32_t complimentary_ports[11] = {
+    PORT_AXON1_EX,
+    PORT_AXON2_EX,
+    PORT_AXON3_EX,
+    PORT_DEND1_IN,
+    PORT_DEND1_EX,
+    PORT_DEND2_IN,
+    PORT_DEND2_EX,
+    PORT_DEND3_IN,
+    PORT_DEND3_EX,
+    PORT_DEND4_IN,
+    PORT_DEND4_EX
+};
+
 volatile uint8_t dendrite_pulse_flag[11] = {[0 ... 10] = 0};
 volatile uint8_t dendrite_ping_flag[11] = {[0 ... 10] = 0};
 uint8_t write_count = 0;
@@ -108,11 +125,6 @@ void readBit(uint8_t read_tick)
 {
     uint8_t i;
     uint16_t value;
-    uint32_t recipient_id;
-    uint32_t header;
-    uint32_t sender_id;
-    uint32_t keep_alive;
-    uint32_t data_frame;
 
     for (i=0; i<NUM_INPUTS; i++){
         // read each input that is currently receiving a message
@@ -132,7 +144,6 @@ void readBit(uint8_t read_tick)
 
             // if enough bits have been read from the message to process, then trigger callback
 
-            // when the message buffer has read 32-bits, the message is done being read and is processed
             if (--read_buffer[i].bits_left_to_read == 0){ // done reading message
                 // execute message callback. returns true if there is more to be read
                 if (!read_buffer[i].callback(&read_buffer[i])){
@@ -160,63 +171,114 @@ bool processMessageHeader(read_buffer_t * read_buffer_ptr)
             dendrite_pulse_flag[i] = 1;
             break;
         case DOWNSTREAM_PING_HEADER:
-            dendrite_ping_flag[i] = 1;
-            if (i % 2 != 0){
-                // excitatory
-                setAsOutput(active_input_ports[i+1], complimentary_pins[i]);
-                active_output_pins[i+1] = complimentary_pins[i];
-            } else{
-                // inhibitory
-                setAsOutput(active_input_ports[i-1], complimentary_pins[i]);
-                active_output_pins[i-1] = complimentary_pins[i];
+            /* Check to make sure it's a dendrite */
+            if (i > 2){
+                dendrite_ping_flag[i] = 1;
+                if (i % 2 != 0){
+                    // excitatory
+                    setAsOutput(active_input_ports[i+1], complimentary_pins[i]);
+                    active_output_pins[i+1] = complimentary_pins[i];
+                } else{
+                    // inhibitory
+                    setAsOutput(active_input_ports[i-1], complimentary_pins[i]);
+                    active_output_pins[i-1] = complimentary_pins[i];
+                }
+                active_output_pins[i] = 0; // might not be neccesary
             }
             break;
         case BLINK_HEADER:
-            if (blink_flag == 0 && i == nid_i){
+            if ((blink_flag == 0) && (i == nid_i)){
                 // set blink_flag => main() will blink led
                 blink_flag = 1;
                 // forward message through network
-                addWrite(ALL_BUFF, read_buffer_ptr->message);
+                addWrite(ALL_BUFF, BLINK_MESSAGE);
                 write_buffer.source_pin = i;
             }
             break;
         case NID_PING_HEADER:
             // NID ping received. Read the distance packet and then process it.
-            read_buffer_ptr->bits_left_to_read = 8;
+            read_buffer_ptr->bits_left_to_read = 7;
             read_buffer_ptr->callback = processNIDPing;
+            return true;
+            break;
+        case NID_GLOBAL_HEADER:
+            if (i == nid_i){
+                read_buffer_ptr->bits_left_to_read = 7;
+                read_buffer_ptr->callback = processGlobalCommand;
+            }
+            return true;
+            break;
+        case DATA_HEADER:
+            read_buffer_ptr->bits_left_to_read = 27;
+            read_buffer_ptr->callback = processDataMessage;
             return true;
             break;
         default:
             break;
-        }
-        return false;
+    }
+    return false;
+}
+
+bool processDataMessage(read_buffer_t * read_buffer_ptr)
+{
+    addWrite(NID_BUFF, read_buffer_ptr->message);
+    blink_flag = 1;
+    return false;
+}
+
+bool processGlobalCommand(read_buffer_t * read_buffer_ptr)
+{
+    uint8_t i = read_buffer_ptr->i;
+    uint32_t message;
+
+    uint8_t command = (read_buffer_ptr->message & 0b1111110) >> 1;
+
+    switch (command){
+        case IDENTIFY_COMMAND:
+            identify_time = 0;
+            identify_channel = 1;
+            break;
+        default:
+            break;
+    }
+    message = read_buffer_ptr->message << 20;
+    addWrite(ALL_BUFF, message);
+    write_buffer.source_pin = i;
+    return false;
 }
 
 bool processNIDPing(read_buffer_t * read_buffer_ptr)
 {
+    uint32_t message;
     uint8_t i = read_buffer_ptr->i;
 
-    uint8_t distance = read_buffer_ptr->message & 0b11111110;
+    uint8_t distance = (read_buffer_ptr->message & 0b1111110) >> 1;
 
-    if (active_input_pins[i] != nid_pin){
+    if (i != nid_i){
         // NID ping was  not received on the existing nid_pin
         if (distance < nid_distance){
             // the received NID ping is closer to the NID so set new NID pin
-            nid_pin = active_input_pins[i]; // nid input
-            nid_pin_out = complimentary_pins[i]; // nid output
-            nid_port = active_input_ports[i];
-            nid_port_out = active_input_ports[i];
-            nid_ping_time = 0;
+            nid_i = i; 
+            if (nid_i != LPUART1_I){
+                nid_pin = active_input_pins[i]; // nid input
+                nid_pin_out = complimentary_pins[i]; // nid output
+                nid_port = active_input_ports[i];
+                nid_port_out = complimentary_ports[i];
+                nid_ping_time = 0;
+                setAsOutput(nid_port_out, nid_pin_out);
+            }else{
+                nid_port_out = LPUART1;
+            }
             nid_distance = distance;
-            nid_i = i;
-            setAsOutput(nid_port_out, nid_pin_out);
+
         } else {
             return false;
         }
     }
 
     nid_ping_time = 0; // main() will reset nid pin when this reaches NID_PING_TIME
-    addWrite(ALL_BUFF, NID_PING_MESSAGE & (distance+1)); // forward message to the rest of the network
+    message = NID_PING_MESSAGE | ((distance+1)<<(32-5-NID_PING_DATA_LENGTH));
+    addWrite(ALL_BUFF, message); // forward message to the rest of the network
     write_buffer.source_pin = i;
     return false;
 }
@@ -232,8 +294,16 @@ void addWrite(message_buffers_t buffer, uint32_t message)
             write_buffer.downstream_ready_count += 1;
             break;
         case NID_BUFF:
-            write_buffer.nid[write_buffer.nid_ready_count] = message;
-            write_buffer.nid_ready_count += 1;
+            if (nid_i == LPUART1_I){
+                lpuart_message = message;
+                lpuart_count = 0;
+                /* usart_enable_tx_interrupt(LPUART1); */
+                /* USART_CR1(LPUART1) &= ~(USART_CR1_TE); */
+                writeNID(); // write first byte to NID and TXE interrupt will write the rest of the message
+            }else{
+                write_buffer.nid[write_buffer.nid_ready_count] = message;
+                write_buffer.nid_ready_count += 1;
+            }
             break;
         case ALL_BUFF:
             write_buffer.all[write_buffer.all_ready_count] = message;
@@ -244,7 +314,7 @@ void addWrite(message_buffers_t buffer, uint32_t message)
     }
 }
 
-void writeBit()
+void writeBit(void)
 {
     /*
         Pop 1-bit off the write_buffer and write it to corresponding output pins
@@ -282,7 +352,7 @@ void writeBit()
         // new message -> assign new buffer to current_buffer
         if (write_buffer.downstream_ready_count != 0){
             write_buffer.current_buffer = DOWNSTREAM_BUFF;
-        } else if (write_buffer.nid_ready_count != 0){
+        } else if (write_buffer.nid_ready_count != 0){ 
             write_buffer.current_buffer = NID_BUFF;
         } else if (write_buffer.all_ready_count != 0){
             write_buffer.current_buffer = ALL_BUFF;
@@ -304,8 +374,9 @@ void writeBit()
                 break;
         }
     }
-
-
+    if (lpuart_count < 4 && nid_i == LPUART1_I){
+        writeNID();//debug
+    }
 }
 
 void writeDownstream(void)
@@ -342,7 +413,7 @@ void writeAll(void)
 
     // write to all output pins except for the pin the message was received on
     for (i=0;i<11;i++){
-        if (active_output_pins[i] != 0 && active_output_pins[i] != complimentary_pins[write_buffer.source_pin]){
+        if ((active_output_pins[i] != 0) && (active_output_pins[i] != complimentary_pins[write_buffer.source_pin])){
             if (value != 0){
                 gpio_set(active_output_ports[i], active_output_pins[i]);
             } else {
@@ -355,14 +426,61 @@ void writeAll(void)
 void writeNID(void)
 {
     uint32_t value;
-    value = write_buffer.nid[0] & 0x80000000;
-    write_buffer.nid[0] <<= 1;
-
-    if (value != 0){
-        gpio_set(nid_port_out, nid_pin_out);
+    if (nid_port_out == LPUART1){
+        if (lpuart_count++ <= 4){
+            value = lpuart_message & (0xFF << 0x18);
+            value >>= 0x18;
+            lpuart_message <<= 0x8;
+            writeNIDByte(value);
+        }
+        /* else{ */
+            /* USART_CR1(LPUART1) &= ~(USART_CR1_TE); */
+            /* usart_disable_tx_interrupt(LPUART1); */
+        /* } */
     } else{
-        gpio_clear(nid_port_out, nid_pin_out);
+        value = write_buffer.nid[0] & 0x80000000;
+        write_buffer.nid[0] <<= 1;
+
+        if (value != 0){
+            gpio_set(nid_port_out, nid_pin_out);
+        } else{
+            gpio_clear(nid_port_out, nid_pin_out);
+        }
     }
 }
 
+void writeNIDByte(uint8_t byte)
+{
+    usart_send(LPUART1, byte);
+}
+
+uint16_t readNIDByte(void)
+{
+    return usart_recv(LPUART1);
+}
+
+void readNID(void)
+{
+    static uint8_t i = 0;
+    static uint32_t message = 0;
+    read_buffer_t nid_read_buffer = { .message=0, .bits_left_to_read=5, .callback=processMessageHeader, .i=LPUART1_I};
+    message <<= 8;
+    message |= readNIDByte();
+    if (++i == 4){
+        /* Process message */
+        do{
+            while (nid_read_buffer.bits_left_to_read > 0){
+                nid_read_buffer.bits_left_to_read -= 1;
+                nid_read_buffer.message <<= 1;
+                nid_read_buffer.message |= (message & 0x80000000) >> 31;
+                message <<= 1;
+            }
+        } while(nid_read_buffer.callback(&nid_read_buffer));
+
+        nid_read_buffer.message = 0;
+        nid_read_buffer.bits_left_to_read = 5;
+        nid_read_buffer.callback = processMessageHeader;
+        i = 0;
+    }
+}
 

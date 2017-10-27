@@ -101,8 +101,8 @@ void gpio_setup(void)
 	
 	setAsInput(PORT_DEND3_EX, PIN_DEND3_EX);
 	setAsInput(PORT_DEND3_IN, PIN_DEND3_IN);
-	setAsInput(PORT_DEND4_EX, PIN_DEND4_EX);
-	setAsInput(PORT_DEND4_IN, PIN_DEND4_IN);
+	/* setAsInput(PORT_DEND4_EX, PIN_DEND4_EX); */
+	/* setAsInput(PORT_DEND4_IN, PIN_DEND4_IN); */
 
 
 	// enable external interrupts
@@ -137,6 +137,7 @@ void lpuart_setup(void)
 
 	usart_enable(LPUART1); // USART_CR1_UE
 	*/
+	/*
 	rcc_periph_clock_enable(RCC_USART2);
 	gpio_mode_setup(PORT_DEND4_EX, GPIO_MODE_AF, GPIO_PUPD_NONE, PIN_DEND4_EX);
 	gpio_mode_setup(PORT_DEND4_IN, GPIO_MODE_AF, GPIO_PUPD_NONE, PIN_DEND4_IN);
@@ -152,18 +153,47 @@ void lpuart_setup(void)
 	usart_set_flow_control(USART2, USART_FLOWCONTROL_NONE); // USART_CR3_RTSE USART_CR3_CTSE
 
 	usart_enable(USART2); // USART_CR1_UE
+	*/
+	rcc_periph_clock_enable(RCC_LPUART1);
+	gpio_mode_setup(PORT_DEND4_EX, GPIO_MODE_AF, GPIO_PUPD_NONE, PIN_DEND4_EX);
+	gpio_mode_setup(PORT_DEND4_IN, GPIO_MODE_AF, GPIO_PUPD_NONE, PIN_DEND4_IN);
+
+	gpio_set_af(PORT_DEND4_EX, GPIO_AF6, PIN_DEND4_EX);
+	gpio_set_af(PORT_DEND4_IN, GPIO_AF6, PIN_DEND4_IN);
+
+	//usart_set_baudrate(LPUART1, 10); // USART_BRR
+	//USART_BRR(LPUART1) = 0x682AA; // 9600 baud
+	USART_BRR(LPUART1) = 0x1A0AA; // 38400 baud
+	usart_set_databits(LPUART1, 8);  // USART_CR1_M
+	usart_set_stopbits(LPUART1, USART_STOPBITS_1); //USART_CR2_STOP
+	usart_set_mode(LPUART1, USART_MODE_TX_RX); //USART_CR1_RE USART_CR1_TE
+	usart_set_parity(LPUART1, USART_PARITY_NONE);// USART_CR1_PS USART_CR1_PCE
+	usart_set_flow_control(LPUART1, USART_FLOWCONTROL_NONE); // USART_CR3_RTSE USART_CR3_CTSE
+
+	usart_enable(LPUART1); // USART_CR1_UE
 
 	// enable interrupts
-	//nvic_enable_irq(LPUART1_IRQ);
-	//usart_enable_rx_interrupt(LPUART1); // USART_CR1_RXNEIE
-}
-/*
-void lpuart1_isr(void)
-{
-	
+	nvic_enable_irq(NVIC_LPUART1_IRQ);
+	usart_enable_rx_interrupt(LPUART1); // USART_CR1_RXNEIE
+    /* usart_enable_tx_interrupt(LPUART1); */
+    USART_CR1(LPUART1) |= USART_CR1_RE;
+    USART_CR1(LPUART1) |= USART_CR1_TE;
 }
 
-*/
+void lpuart1_isr(void)
+{
+    if ((USART_ISR(LPUART1) & USART_ISR_RXNE) != 0){
+        readNID();
+        USART_RQR(LPUART1) = 0b1000;
+        USART_CR1(LPUART1) |= USART_CR1_RE;
+    } else if ((USART_ISR(LPUART1) & USART_ISR_TXE) != 0){
+        /* USART_CR1(LPUART1) |= USART_CR1_TE; */
+        writeNID();
+        USART_RQR(LPUART1) |= USART_RQR_TXFRQ;
+    }
+    USART_ICR(LPUART1) = USART_ISR(LPUART1);
+}
+
 void setAsInput(uint32_t port, uint32_t pin)
 {
 	// setup gpio as an input pin
@@ -217,27 +247,33 @@ void exti4_15_isr(void)
 {
 	// interrupt handler for pins 4-15
 	if ((EXTI_PR & PIN_DEND3_IN) != 0){
-		active_input_pins[8] = PIN_DEND3_IN;
+        ACTIVATE_INPUT(8, PIN_DEND3_IN);
 		EXTI_PR |= PIN_DEND3_IN;
 	} else if ((EXTI_PR & PIN_DEND3_EX) != 0){
+        ACTIVATE_INPUT(7, PIN_DEND3_EX);
 		active_input_pins[7] = PIN_DEND3_EX;
 		EXTI_PR |= PIN_DEND3_EX;
 	} else if ((EXTI_PR & PIN_DEND2_IN) != 0){
 		// pin 6
+        ACTIVATE_INPUT(6, PIN_DEND2_IN);
 		active_input_pins[6] = PIN_DEND2_IN;
 		EXTI_PR |= PIN_DEND2_IN;
 	} else if ((EXTI_PR & PIN_DEND2_EX) != 0){
+        ACTIVATE_INPUT(5, PIN_DEND2_EX);
 		active_input_pins[5] = PIN_DEND2_EX;
 		EXTI_PR |= PIN_DEND2_EX;
 	} else if ((EXTI_PR & PIN_AXON2_IN) != 0){
 		// pin 9
+        ACTIVATE_INPUT(1, PIN_AXON2_IN);
 		active_input_pins[1] = PIN_AXON2_IN;
 		EXTI_PR |= PIN_AXON2_IN;
 	} else if ((EXTI_PR & PIN_AXON3_IN) != 0){
 		// pin 10
+        ACTIVATE_INPUT(2, PIN_AXON3_IN);
 		active_input_pins[2] = PIN_AXON3_IN;
 		EXTI_PR |= PIN_AXON3_IN;
 	} else if ((EXTI_PR & PIN_AXON1_IN) != 0){
+        ACTIVATE_INPUT(0, PIN_AXON1_IN);
 		active_input_pins[0] = PIN_AXON1_IN;
 		EXTI_PR |= PIN_AXON1_IN;
 	}
@@ -256,14 +292,6 @@ void tim_setup(void)
 
 	/* 	Set up TIM2 mode to no clock divider ratio, edge alignment, and up direction */
 	timer_set_mode(TIM2, TIM_CR1_CKD_CK_INT, TIM_CR1_CMS_EDGE, TIM_CR1_DIR_UP);
-
-	// test commands
-	//timer_disable_preload(TIM2);
-	//timer_continuous_mode(TIM2);
-	//TIM_CR1(TIM2) |= TIM_CR1_CEN;
-	//TIM2_EGR |= TIM_EGR_UG;
-	//timer_update_on_any(TIM2);
-
 
 	/*	Set prescaler to 0: 16 MHz clock */
 	timer_set_prescaler(TIM2, 1);

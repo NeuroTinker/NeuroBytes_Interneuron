@@ -17,7 +17,6 @@
 
 //#define BLINK_MESSAGE           0b11111001110001110000000000000000 // (ALL) (KEEP ALIVE=7) (NID) (BLINK) (no data)
 //#define PULSE_MESSAGE           0b11111000010100110000000000000000 // (DOWNSTREAM) (KEEP ALIVE=1) (UPSTREAM) (PULSE) (no data)
-#define DATA_MESSAGE            0b10000000000001000000000000000000 // (NID) (KEEP ALIVE=0) (CHANNEL= NONE) (DATA) (no data)
 //#define DEND_PING               0b10010000010100010000000000000000 // (DOWNSTREAM) (KEEP ALIVE=1) (UPSTREAM) (PING) (no data)
 #define NID_PING                0b10110001110000010000000000000000 // (ALL) (KEEP ALIVE=7) (NID) (PING) (no data)
 #define NID_IDENTIFY_REQUEST    0b10110001110001010000000000000101 // (ALL) (KEEP ALIVE=7) (NID) (IDENTIFY) (data=0b101 : channel 2)
@@ -33,14 +32,22 @@
 #define DOWNSTREAM_PING_HEADER      0b011
 #define BLINK_HEADER                0b001
 #define NID_PING_HEADER             0b110
+#define NID_GLOBAL_HEADER           0b100
+#define DATA_HEADER                 0b010
 
-#define PULSE_MESSAGE               0b11111
-#define DOWNSTREAM_PING_MESSAGE     0b10110
-#define BLINK_MESSAGE               0b10011
-#define NID_PING_MESSAGE            0b1110100000000
+#define PULSE_MESSAGE               0b11111000000000000000000000000000
+#define DOWNSTREAM_PING_MESSAGE     0b10110000000000000000000000000000
+#define BLINK_MESSAGE               0b10011000000000000000000000000000
+#define NID_PING_MESSAGE            0b11101000000000000000000000000000
+#define DATA_MESSAGE                0b10101000000000000000000000000000 // (NID) (KEEP ALIVE=0) (CHANNEL= NONE) (DATA) (no data)
 
-#define IDENTIFY_TIME       50 // 250 ms
+#define IDENTIFY_COMMAND            0b000001
 
+#define NID_PING_DATA_LENGTH        6
+
+#define IDENTIFY_TIME       500 // 250 ms
+
+#define LPUART1_I NUM_INPUTS + 1
 /*
     This and comm.c define all communication protocol
 
@@ -114,6 +121,7 @@ typedef struct{
 // pin numbers 0*,1*,2,3*,4,5*,6*,7*,8,9,10,13,14*,15* (asterisk indicates repeated pin)
 // total 14 unique pin numbers and 8 repeated pins
 
+
 typedef enum{
     NID         =   0b00,
     DOWNSTREAM  =   0b11,
@@ -163,8 +171,7 @@ typedef struct read_buffer_t{
     uint32_t message;
     uint8_t bits_left_to_read;
     read_handler_t callback;
-}read_buffer_t;
-
+} read_buffer_t;
 
 extern uint16_t complimentary_pins[11];
 extern volatile uint16_t active_input_pins[11];
@@ -193,10 +200,11 @@ void writeBit(void);
 
 void writeAll(void);
 void writeDownstream(void);
-void writeNID(void);
 
 bool processMessageHeader(read_buffer_t * read_buffer_ptr);
 bool processNIDPing(read_buffer_t * read_buffer_ptr);
+bool processGlobalCommand(read_buffer_t * read_buffer_ptr);
+bool processDataMessage(read_buffer_t * read_buffer_ptr);
 
 // received message handlers
 void receivePulse(uint32_t message);
@@ -208,7 +216,9 @@ void receiveNIDBlink(void);
 void addWrite(message_buffers_t buffer, uint32_t message);
 void commInit(void);
 
-//void lpuartSendNID()
-
-
+void addNIDWrite(uint32_t message);
+void writeNIDByte(uint8_t byte);
+uint16_t readNIDByte(void);
+void readNID(void);
+void writeNID(void);
 #endif

@@ -69,9 +69,6 @@ int main(void)
 		if (main_tick == 1){
 			// main tick every 5 ms
 			main_tick = 0;
-			//usart_send_blocking(LPUART1, 0b111); // USART_ISR_TXE USART_TDR
-			//usart_recv_blocking(LPUART1);
-			usart_send_blocking(USART2, 0b11111);
 			// check to see if nid ping hasn't been received in last NID_PING_TIME ticks
 			if (nid_ping_time++ > NID_PING_TIME){
 				// nid no longer connected
@@ -85,8 +82,6 @@ int main(void)
 				// send downstream ping through axon
 				addWrite(DOWNSTREAM_BUFF, DOWNSTREAM_PING_MESSAGE);
 				send_ping_time = 0;
-				
-				//addWrite(DOWNSTREAM_BUFF, NID_PING_MESSAGE);
 			}
 
 			/*
@@ -100,13 +95,13 @@ int main(void)
 			// check for clear channel command
 			if (identify_time < IDENTIFY_TIME){
 				identify_time += 1;
-				if (identify_channel == 0){
-					// setting identify channel 0 clears identify_channel
-					nid_channel = 0;
-				} else if (identify_channel == nid_channel && identify_time == 0){
-					// clear nid_channel if NID is trying to set a new NeuroByte to the current nid_channel
-					nid_channel = 0;
-				}
+				/* if (identify_channel == 0){ */
+				/* 	// setting identify channel 0 clears identify_channel */
+				/* 	nid_channel = 0; */
+				/* } else if (identify_channel == nid_channel && identify_time == 0){ */
+				/* 	// clear nid_channel if NID is trying to set a new NeuroByte to the current nid_channel */
+				/* 	nid_channel = 0; */
+				/* } */
 			}
 
 			// check identify button
@@ -153,12 +148,13 @@ int main(void)
 				// send data every DATA_TIME ticks
 				if (data_time++ > DATA_TIME){
 					data_time = 0;
-					message = DATA_MESSAGE | (uint16_t) neuron.potential | (nid_channel << 19) | (nid_distance << 22);
+                    /* message = (((uint32_t) DATA_MESSAGE)) | ((uint16_t) neuron.potential); */
+                    message = (((uint32_t) DATA_MESSAGE)) | ((uint16_t)0b1010101010101010);
 					addWrite(NID_BUFF,message);
 				}
 			}
 
-			getFingerprint();
+			/* getFingerprint(); */
 			
 			/*
 				Check dendrites for pings and adjut pins accordingly.
