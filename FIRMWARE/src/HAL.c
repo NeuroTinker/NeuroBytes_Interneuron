@@ -20,17 +20,23 @@ void clock_setup(void)
 
 void sys_tick_handler(void)
 {
+    gpio_set(PORT_AXON1_EX, PIN_AXON1_EX);
     if (++tick >= 50){
 		main_tick = 1;
 		tick = 0;
 	}
 
+    gpio_clear(PORT_AXON1_EX, PIN_AXON1_EX);
 	if (read_tick++ >= 2){
+        gpio_set(PORT_AXON1_EX, PIN_AXON1_EX);
 		writeBit();
+        gpio_clear(PORT_AXON1_EX, PIN_AXON1_EX);
 		read_tick = 0;
 	}
 
+    gpio_set(PORT_AXON1_EX, PIN_AXON1_EX);
 	readBit(read_tick);
+    gpio_clear(PORT_AXON1_EX, PIN_AXON1_EX);
 	
     MMIO32((TIM21_BASE) + 0x10) &= ~(1<<0); //clear the interrupt register
 }
@@ -40,7 +46,7 @@ void systick_setup(int xms)
     systick_set_clocksource(STK_CSR_CLKSOURCE_EXT);
     STK_CVR = 0;
     //systick_set_reload(2 * xms);
-	systick_set_reload(180);
+	systick_set_reload(180); //180
     systick_counter_enable();
     systick_interrupt_enable();
 }
@@ -367,9 +373,9 @@ void tim2_isr(void)
 
 void LEDFullWhite(void) 
 {
-	timer_set_oc_value(TIM2, TIM_OC2, 500);
-	timer_set_oc_value(TIM2, TIM_OC3, 500);
-	timer_set_oc_value(TIM2, TIM_OC4, 500);
+	timer_set_oc_value(TIM2, TIM_OC2, 150);
+	timer_set_oc_value(TIM2, TIM_OC3, 150);
+	timer_set_oc_value(TIM2, TIM_OC4, 150);
 }
 
 void setLED(uint16_t r, uint16_t g, uint16_t b)

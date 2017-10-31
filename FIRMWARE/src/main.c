@@ -75,6 +75,7 @@ int main(void)
 				nid_distance = 100; // reset nid_keep_alive
 				nid_pin = 0; // clear the nid pin
 				nid_pin_out = 0;
+				nid_i = 13; // make this a macro like NO_NID_I
 			}
 			
 			// send a downstream ping every SEND_PING_TIME ticks
@@ -143,16 +144,6 @@ int main(void)
 				button_press_time = 0;
 			}
 			
-			// send current membrane potential to NID if currently identified by NID
-			if (nid_channel != 0){
-				// send data every DATA_TIME ticks
-				if (data_time++ > DATA_TIME){
-					data_time = 0;
-                    /* message = (((uint32_t) DATA_MESSAGE)) | ((uint16_t) neuron.potential); */
-                    message = (((uint32_t) DATA_MESSAGE)) | ((uint16_t)0b1010101010101010);
-					addWrite(NID_BUFF,message);
-				}
-			}
 
 			/* getFingerprint(); */
 			
@@ -171,6 +162,22 @@ int main(void)
 			neuron.potential = calcNeuronPotential(&neuron);
 			neuron.potential += neuron.fire_potential;
 			neuron.fire_potential += neuron.leaky_current;
+
+			// send current membrane potential to NID if currently identified by NID
+			if (nid_channel != 0){
+				// send data every DATA_TIME ticks
+				if (data_time++ > DATA_TIME){
+					data_time = 0;
+                    message = (((uint32_t) DATA_MESSAGE)) | ((uint16_t) neuron.potential);
+                    /* message = (((uint32_t) DATA_MESSAGE)) | ((uint16_t)0b1010101010101010); */
+                    /* message = 0b1010101010101010 << 15; */
+					addWrite(NID_BUFF,message);
+				} else if (neuron.potential > MEMBRANE_THRESHOLD){
+                    data_time = 0;
+                    message = (((uint32_t) DATA_MESSAGE)) | ((uint16_t) neuron.potential);
+                    addWrite(NID_BUFF, message);
+                }
+			}
 
 			// if membrane potential is greater than threshold, fire
 			if (neuron.potential > MEMBRANE_THRESHOLD){

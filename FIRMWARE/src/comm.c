@@ -15,7 +15,7 @@ volatile uint16_t active_input_pins[11] = {[0 ... 10] = 0};
 
 volatile uint8_t active_input_tick[11] = {[0 ... 10] = 0};
 
-volatile uint16_t active_output_pins[11] = {PIN_AXON1_EX, PIN_AXON2_EX,PIN_AXON3_EX, [3 ... 10] = 0};
+volatile uint16_t active_output_pins[11] = {PIN_AXON1_EX, PIN_AXON2_EX, PIN_AXON3_EX, [3 ... 10] = 0};
 
 volatile uint32_t dendrite_pulses[4] = {0,0,0,0};
 volatile uint8_t dendrite_pulse_count = 0;
@@ -28,7 +28,7 @@ volatile uint16_t nid_pin = 0;
 uint32_t nid_port = 0;
 volatile uint16_t nid_pin_out = 0;
 uint32_t nid_port_out = 0;
-uint8_t nid_i      =    4;
+uint8_t nid_i      =    13;
 volatile uint8_t  nid_distance = 100; // max uint8_t
 
 uint32_t lpuart_message;
@@ -251,35 +251,47 @@ bool processNIDPing(read_buffer_t * read_buffer_ptr)
 {
     uint32_t message;
     uint8_t i = read_buffer_ptr->i;
+    static uint8_t ping_count = 0; // ping_count locks the nid to a certain pin after receiving enough least-distance pings
 
     uint8_t distance = (read_buffer_ptr->message & 0b1111110) >> 1;
 
     if (i != nid_i){
         // NID ping was  not received on the existing nid_pin
         if (distance < nid_distance){
-            // the received NID ping is closer to the NID so set new NID pin
-            nid_i = i; 
-            if (nid_i != LPUART1_I){
-                nid_pin = active_input_pins[i]; // nid input
-                nid_pin_out = complimentary_pins[i]; // nid output
-                nid_port = active_input_ports[i];
-                nid_port_out = complimentary_ports[i];
-                nid_ping_time = 0;
-                setAsOutput(nid_port_out, nid_pin_out);
-            }else{
-                nid_port_out = LPUART1;
+            if (ping_count < 3){
+                // the received NID ping is closer to the NID so set new NID pin
+                nid_i = i; 
+                if (nid_i != LPUART1_I){
+                    nid_pin = active_input_pins[i]; // nid input
+                    nid_pin_out = complimentary_pins[i]; // nid output
+                    nid_port = active_input_ports[i];
+                    nid_port_out = complimentary_ports[i];
+                    setAsOutput(nid_port_out, nid_pin_out);
+                }else{
+                    nid_port_out = LPUART1;
+                }
+                nid_distance = distance;
+                ping_count = 0;
+            } else {
+                ping_count -= 1;
             }
-            nid_distance = distance;
-
         } else {
             return false;
         }
     }
 
-    nid_ping_time = 0; // main() will reset nid pin when this reaches NID_PING_TIME
-    message = NID_PING_MESSAGE | ((distance+1)<<(32-5-NID_PING_DATA_LENGTH));
-    addWrite(ALL_BUFF, message); // forward message to the rest of the network
-    write_buffer.source_pin = i;
+    if (distance == nid_distance){
+        if (ping_count < 5) ping_count += 1;
+        nid_ping_time = 0; // main() will reset nid pin when this reaches NID_PING_TIME
+        message = NID_PING_MESSAGE | ((distance+1)<<(32-5-NID_PING_DATA_LENGTH)); // DEBUG need typecasting?
+        write_buffer.source_pin = i;    
+        addWrite(ALL_BUFF, message); // forward message to the rest of the network
+    } else if (--ping_count == 0){
+        nid_distance = 100;
+        nid_pin_out = 0;
+        nid_i = 13;
+    }
+
     return false;
 }
 
@@ -466,7 +478,7 @@ void readNID(void)
     read_buffer_t nid_read_buffer = { .message=0, .bits_left_to_read=5, .callback=processMessageHeader, .i=LPUART1_I};
     message <<= 8;
     message |= readNIDByte();
-    if (++i == 4){
+    if (++i == 4){ // TODO need to flush if nid gets disconnected
         /* Process message */
         do{
             while (nid_read_buffer.bits_left_to_read > 0){

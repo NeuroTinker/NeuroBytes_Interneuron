@@ -180,6 +180,8 @@ extern volatile uint16_t active_output_pins[11];
 extern uint32_t active_output_ports[11];
 extern volatile uint8_t active_input_tick[11];
 
+extern uint8_t nid_i;
+
 // flags for main()
 extern volatile uint8_t dendrite_pulse_flag[11];
 extern volatile uint8_t blink_flag;
