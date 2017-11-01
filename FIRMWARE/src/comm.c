@@ -222,7 +222,7 @@ bool processMessageHeader(read_buffer_t * read_buffer_ptr)
 bool processDataMessage(read_buffer_t * read_buffer_ptr)
 {
     addWrite(NID_BUFF, read_buffer_ptr->message);
-    blink_flag = 1;
+    //blink_flag = 1;
     return false;
 }
 

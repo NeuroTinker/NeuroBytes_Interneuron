@@ -20,23 +20,17 @@ void clock_setup(void)
 
 void sys_tick_handler(void)
 {
-    gpio_set(PORT_AXON1_EX, PIN_AXON1_EX);
     if (++tick >= 50){
 		main_tick = 1;
 		tick = 0;
 	}
 
-    gpio_clear(PORT_AXON1_EX, PIN_AXON1_EX);
 	if (read_tick++ >= 2){
-        gpio_set(PORT_AXON1_EX, PIN_AXON1_EX);
 		writeBit();
-        gpio_clear(PORT_AXON1_EX, PIN_AXON1_EX);
 		read_tick = 0;
 	}
 
-    gpio_set(PORT_AXON1_EX, PIN_AXON1_EX);
 	readBit(read_tick);
-    gpio_clear(PORT_AXON1_EX, PIN_AXON1_EX);
 	
     MMIO32((TIM21_BASE) + 0x10) &= ~(1<<0); //clear the interrupt register
 }
@@ -107,8 +101,8 @@ void gpio_setup(void)
 	
 	setAsInput(PORT_DEND3_EX, PIN_DEND3_EX);
 	setAsInput(PORT_DEND3_IN, PIN_DEND3_IN);
-	/* setAsInput(PORT_DEND4_EX, PIN_DEND4_EX); */
-	/* setAsInput(PORT_DEND4_IN, PIN_DEND4_IN); */
+	setAsInput(PORT_DEND4_EX, PIN_DEND4_EX);
+	setAsInput(PORT_DEND4_IN, PIN_DEND4_IN);
 
 
 	// enable external interrupts
@@ -125,7 +119,6 @@ void lpuart_setup(void)
 {
 	// seutp lpuart interface (for communicating with NID)
 	// NOTE: this ocnverts the swd interface to lpuart so debugging with swd will be disables
-	/*
 	rcc_periph_clock_enable(RCC_LPUART1);
 
 	gpio_mode_setup(PORT_LPUART1_RX, GPIO_MODE_AF, GPIO_PUPD_NONE, PIN_LPUART1_RX);
@@ -134,41 +127,12 @@ void lpuart_setup(void)
 	gpio_set_af(PORT_LPUART1_RX, GPIO_AF6, PIN_LPUART1_RX);
 	gpio_set_af(PORT_LPUART1_TX, GPIO_AF6, PIN_LPUART1_TX);
 
-	usart_set_baudrate(LPUART1, 9600); // USART_BRR
-	usart_set_databits(LPUART1, 8);  // USART_CR1_M
-	usart_set_stopbits(LPUART1, USART_STOPBITS_1); //USART_CR2_STOP
-	usart_set_mode(LPUART1, USART_MODE_TX_RX); //USART_CR1_RE USART_CR1_TE
-	usart_set_parity(LPUART1, USART_PARITY_NONE);// USART_CR1_PS USART_CR1_PCE
-	usart_set_flow_control(LPUART1, USART_FLOWCONTROL_NONE); // USART_CR3_RTSE USART_CR3_CTSE
+	/* gpio_mode_setup(PORT_DEND4_EX, GPIO_MODE_AF, GPIO_PUPD_NONE, PIN_DEND4_EX); */
+	/* gpio_mode_setup(PORT_DEND4_IN, GPIO_MODE_AF, GPIO_PUPD_NONE, PIN_DEND4_IN); */
 
-	usart_enable(LPUART1); // USART_CR1_UE
-	*/
-	/*
-	rcc_periph_clock_enable(RCC_USART2);
-	gpio_mode_setup(PORT_DEND4_EX, GPIO_MODE_AF, GPIO_PUPD_NONE, PIN_DEND4_EX);
-	gpio_mode_setup(PORT_DEND4_IN, GPIO_MODE_AF, GPIO_PUPD_NONE, PIN_DEND4_IN);
+	/* gpio_set_af(PORT_DEND4_EX, GPIO_AF6, PIN_DEND4_EX); */
+	/* gpio_set_af(PORT_DEND4_IN, GPIO_AF6, PIN_DEND4_IN); */
 
-	gpio_set_af(PORT_DEND4_EX, GPIO_AF4, PIN_DEND4_EX);
-	gpio_set_af(PORT_DEND4_IN, GPIO_AF4, PIN_DEND4_IN);
-
-	usart_set_baudrate(USART2, 9600); // USART_BRR
-	usart_set_databits(USART2, 8);  // USART_CR1_M
-	usart_set_stopbits(USART2, USART_STOPBITS_1); //USART_CR2_STOP
-	usart_set_mode(USART2, USART_MODE_TX_RX); //USART_CR1_RE USART_CR1_TE
-	usart_set_parity(USART2, USART_PARITY_NONE);// USART_CR1_PS USART_CR1_PCE
-	usart_set_flow_control(USART2, USART_FLOWCONTROL_NONE); // USART_CR3_RTSE USART_CR3_CTSE
-
-	usart_enable(USART2); // USART_CR1_UE
-	*/
-	rcc_periph_clock_enable(RCC_LPUART1);
-	gpio_mode_setup(PORT_DEND4_EX, GPIO_MODE_AF, GPIO_PUPD_NONE, PIN_DEND4_EX);
-	gpio_mode_setup(PORT_DEND4_IN, GPIO_MODE_AF, GPIO_PUPD_NONE, PIN_DEND4_IN);
-
-	gpio_set_af(PORT_DEND4_EX, GPIO_AF6, PIN_DEND4_EX);
-	gpio_set_af(PORT_DEND4_IN, GPIO_AF6, PIN_DEND4_IN);
-
-	//usart_set_baudrate(LPUART1, 10); // USART_BRR
-	//USART_BRR(LPUART1) = 0x682AA; // 9600 baud
 	USART_BRR(LPUART1) = 0x1A0AA; // 38400 baud
 	usart_set_databits(LPUART1, 8);  // USART_CR1_M
 	usart_set_stopbits(LPUART1, USART_STOPBITS_1); //USART_CR2_STOP

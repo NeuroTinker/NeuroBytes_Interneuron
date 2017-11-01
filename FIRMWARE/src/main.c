@@ -17,6 +17,7 @@
 #define SEND_PING_TIME		80 // 80
 #define BUTTON_PRESS_TIME	2
 #define BUTTON_HOLD_TIME    100
+#define LPUART_SETUP_TIME	100
 
 static uint32_t fingerprint[3] __attribute__((section (".fingerprint"))) __attribute__ ((__used__)) = {
 	1, // device id
@@ -36,6 +37,7 @@ int main(void)
 	uint16_t	fire_delay_time = 0;
 	int16_t 	depression_time = 0;
 	uint8_t		fire_flag = 0;
+	uint16_t	lpuart_setup_time = 0;
 
 	// button debounce variables
 	uint16_t	button_press_time = 0; 
@@ -61,7 +63,7 @@ int main(void)
 	systick_setup(100); // systick in microseconds
 	gpio_setup();
 	tim_setup();
-	lpuart_setup();
+	//lpuart_setup();
 
 	// main processing routine	
 	for(;;)
@@ -83,6 +85,13 @@ int main(void)
 				// send downstream ping through axon
 				addWrite(DOWNSTREAM_BUFF, DOWNSTREAM_PING_MESSAGE);
 				send_ping_time = 0;
+			}
+
+			if (lpuart_setup_time < LPUART_SETUP_TIME){
+				lpuart_setup_time += 1;
+			} else if (lpuart_setup_time == LPUART_SETUP_TIME){
+				lpuart_setup_time += 1;
+				lpuart_setup();
 			}
 
 			/*
@@ -138,6 +147,7 @@ int main(void)
 						neuron.learning_state = HEBB;
 					} else if (neuron.learning_state == HEBB){
 						neuron.learning_state = NONE;
+						//lpuart_setup();
 					}
 					button_armed = 0;
 				}
