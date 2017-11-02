@@ -292,38 +292,6 @@ void tim_setup(void)
 
 	// Enable TIM2 interrupts (600 us)
 	timer_enable_irq(TIM2, TIM_DIER_UIE);
-
-	// setup TIM21
-
-	MMIO32((RCC_BASE) + 0x34) |= (1<<2); //Enable TIM21
-    MMIO32((RCC_BASE) + 0x24) |= (1<<2); //Set reset bit, TIM21
-    MMIO32((RCC_BASE) + 0x24) &= ~(1<<2); //Clear reset bit, TIM21
-
-    /*    TIM21 control register 1 (TIMx_CR1): */
-    MMIO32((TIM21_BASE) + 0x00) &= ~((1<<5) | (1<<6)); //Edge-aligned (default setting)
-    MMIO32((TIM21_BASE) + 0x00) &= ~((1<<9) | (1<<10)); //No clock division (default setting)
-    MMIO32((TIM21_BASE) + 0x00) &= ~(1<<4); //Up direction (default setting)
-           
-    /*    TIM21 interrupt enable register (TIMx_DIER): */
-    MMIO32((TIM21_BASE) + 0x0C) |= (1<<0); //Enable update interrupts
-
-    /*    TIM21 prescaler (TIMx_PSC): */
-    MMIO32((TIM21_BASE) + 0x28) = 7; //prescaler = clk/8 (see datasheet, they add one for convenience)
-
-    /*    TIM21 auto-reload register (TIMx_ARR): */
-    MMIO32((TIM21_BASE) + 0x2C) = 200; //100 us interrupts (with clk/8 prescaler)
-   
-    /*    Enable TIM21 counter: */
-    MMIO32((TIM21_BASE) + 0x00) |= (1<<0);
-
-	//nvic_enable_irq(NVIC_TIM21_IRQ);
-    nvic_set_priority(NVIC_TIM21_IRQ, 1);
-}
-
-
-void tim21_isr(void)
-{
-	// TIM21 routine is now in systick interrupt
 }
 
 void tim2_isr(void)
