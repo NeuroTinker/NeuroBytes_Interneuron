@@ -32,6 +32,8 @@
 
 #define NID_PING_DATA_LENGTH        6
 
+#define CLOSER_PING_COUNT           3
+
 #define IDENTIFY_TIME       500 // 250 ms
 
 #define LPUART1_I NUM_INPUTS + 1
@@ -179,6 +181,9 @@ extern volatile uint8_t nid_distance;
 
 extern volatile uint16_t nid_pin;
 extern volatile uint16_t nid_pin_out;
+
+extern volatile uint8_t closer_ping_count;
+extern volatile uint8_t closer_distance;
 
 extern volatile uint16_t identify_time;
 extern uint8_t identify_channel;

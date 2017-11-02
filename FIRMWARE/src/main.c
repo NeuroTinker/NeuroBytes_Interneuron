@@ -18,6 +18,7 @@
 #define BUTTON_PRESS_TIME	2
 #define BUTTON_HOLD_TIME    100
 #define LPUART_SETUP_TIME	100
+#define CHANGE_NID_TIME 	250
 
 static uint32_t fingerprint[3] __attribute__((section (".fingerprint"))) __attribute__ ((__used__)) = {
 	1, // device id
@@ -38,6 +39,7 @@ int main(void)
 	int16_t 	depression_time = 0;
 	uint8_t		fire_flag = 0;
 	uint16_t	lpuart_setup_time = 0;
+	uint8_t		change_nid_time = 0;
 
 	// button debounce variables
 	uint16_t	button_press_time = 0; 
@@ -78,6 +80,12 @@ int main(void)
 				nid_pin = 0; // clear the nid pin
 				nid_pin_out = 0;
 				nid_i = 13; // make this a macro like NO_NID_I
+			}
+
+			if (change_nid_time++ > CHANGE_NID_TIME){
+				change_nid_time = 0;
+				closer_distance = nid_distance;
+				closer_ping_count = 0;
 			}
 			
 			// send a downstream ping every SEND_PING_TIME ticks
