@@ -50,7 +50,7 @@
 #define PORT_DEND4_EX   GPIOA
 
 #define PIN_AXON1_EX    GPIO8
-#define PIN_AXON1_IN    GPIO13
+#define PIN_AXON1_IN    GPIO15
 #define PIN_AXON2_EX    GPIO4
 #define PIN_AXON2_IN    GPIO9
 #define PIN_AXON3_EX    GPIO14

@@ -283,7 +283,7 @@ bool processNIDPing(read_buffer_t * read_buffer_ptr)
     }
 
     if (distance == nid_distance){
-        nid_ping_time = 0; // main() will reset nid pin when this reaches NID_PING_TIME
+        nid_ping_time = NID_PING_TIME; // main() will reset nid pin when this reaches NID_PING_TIME
         message = NID_PING_MESSAGE | ((distance+1)<<(32-5-NID_PING_DATA_LENGTH)); // DEBUG need typecasting?
         write_buffer.source_pin = i;    
         addWrite(ALL_BUFF, message); // forward message to the rest of the network

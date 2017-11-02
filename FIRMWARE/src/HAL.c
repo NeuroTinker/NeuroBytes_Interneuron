@@ -32,7 +32,7 @@ void sys_tick_handler(void)
 
 	readBit(read_tick);
 	
-    MMIO32((TIM21_BASE) + 0x10) &= ~(1<<0); //clear the interrupt register
+    //MMIO32((TIM21_BASE) + 0x10) &= ~(1<<0); //clear the interrupt register
 }
 
 void systick_setup(int xms)

@@ -18,7 +18,7 @@
 #define BUTTON_PRESS_TIME	2
 #define BUTTON_HOLD_TIME    100
 #define LPUART_SETUP_TIME	100
-#define CHANGE_NID_TIME 	250
+#define CHANGE_NID_TIME 	200
 
 static uint32_t fingerprint[3] __attribute__((section (".fingerprint"))) __attribute__ ((__used__)) = {
 	1, // device id
@@ -74,12 +74,15 @@ int main(void)
 			// main tick every 5 ms
 			main_tick = 0;
 			// check to see if nid ping hasn't been received in last NID_PING_TIME ticks
-			if (nid_ping_time++ > NID_PING_TIME){
-				// nid no longer connected
-				nid_distance = 100; // reset nid_keep_alive
-				nid_pin = 0; // clear the nid pin
-				nid_pin_out = 0;
-				nid_i = 13; // make this a macro like NO_NID_I
+			if (nid_ping_time > 0){
+				nid_ping_time -= 1;
+				if (nid_ping_time == 0){
+					// nid no longer connected
+					nid_distance = 100; // reset nid_keep_alive
+					nid_pin = 0; // clear the nid pin
+					nid_pin_out = 0;
+					nid_i = 13; // make this a macro like NO_NID_I
+				}
 			}
 
 			if (change_nid_time++ > CHANGE_NID_TIME){

@@ -36,7 +36,7 @@
 
 #define IDENTIFY_TIME       500 // 250 ms
 
-#define LPUART1_I NUM_INPUTS + 1
+#define LPUART1_I 12
 /*
     This and comm.c define all communication protocol
 
