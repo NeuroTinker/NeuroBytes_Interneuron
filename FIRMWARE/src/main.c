@@ -62,7 +62,7 @@ int main(void)
 
 	// setup hardware
 	clock_setup();
-	systick_setup(100); // systick in microseconds
+	systick_setup(); // systick in microseconds
 	gpio_setup();
 	tim_setup();
 	//lpuart_setup();

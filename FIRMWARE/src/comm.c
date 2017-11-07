@@ -34,19 +34,19 @@ uint8_t lpuart_count;
 
 
 /* 
-All available input pins are
-    = {
-        PIN_AXON1_IN,
-        PIN_AXON2_IN,
-        PIN_DEND1_EX,
-        PIN_DEND1_IN, 
-        PIN_DEND2_EX,
-        PIN_DEND2_IN,
-        PIN_DEND3_EX,
-        PIN_DEND3_IN,
-        PIN_DEND4_EX,
-        PIN_DEND4_IN
-    };
+All available input pins are:
+
+PIN_AXON1_IN,
+PIN_AXON2_IN,
+PIN_DEND1_EX,
+PIN_DEND1_IN, 
+PIN_DEND2_EX,
+PIN_DEND2_IN,
+PIN_DEND3_EX,
+PIN_DEND3_IN,
+PIN_DEND4_EX,
+PIN_DEND4_IN
+    
 */
 
 uint32_t active_input_ports[11] = {
@@ -220,13 +220,11 @@ bool processMessageHeader(read_buffer_t * read_buffer_ptr)
 bool processDataMessage(read_buffer_t * read_buffer_ptr)
 {
     addWrite(NID_BUFF, read_buffer_ptr->message);
-    //blink_flag = 1;
     return false;
 }
 
 bool processGlobalCommand(read_buffer_t * read_buffer_ptr)
 {
-    uint8_t i = read_buffer_ptr->i;
     uint32_t message;
 
     uint8_t command = read_buffer_ptr->message & 0b111111;
@@ -445,10 +443,6 @@ void writeNID(void)
             lpuart_message <<= 0x8;
             writeNIDByte(value);
         }
-        /* else{ */
-            /* USART_CR1(LPUART1) &= ~(USART_CR1_TE); */
-            /* usart_disable_tx_interrupt(LPUART1); */
-        /* } */
     } else{
         value = write_buffer.nid[0] & 0x80000000;
         write_buffer.nid[0] <<= 1;
@@ -488,10 +482,6 @@ void readNID(void)
                 message <<= 1;
             }
         } while(nid_read_buffer.callback(&nid_read_buffer));
-
-        nid_read_buffer.message = 0;
-        nid_read_buffer.bits_left_to_read = 4;
-        nid_read_buffer.callback = processMessageHeader;
         i = 0;
     }
 }
