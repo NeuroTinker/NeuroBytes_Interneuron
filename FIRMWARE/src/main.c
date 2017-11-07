@@ -190,8 +190,6 @@ int main(void)
 				if (data_time++ > DATA_TIME){
 					data_time = 0;
                     message = (((uint32_t) DATA_MESSAGE)) | ((uint16_t) neuron.potential);
-                    /* message = (((uint32_t) DATA_MESSAGE)) | ((uint16_t)0b1010101010101010); */
-                    /* message = 0b1010101010101010 << 15; */
 					addWrite(NID_BUFF,message);
 				} else if (neuron.potential > MEMBRANE_THRESHOLD){
                     data_time = 0;
