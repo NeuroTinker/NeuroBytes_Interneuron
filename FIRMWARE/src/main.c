@@ -115,14 +115,14 @@ int main(void)
 
 			// check for clear channel command
 			if (identify_time < IDENTIFY_TIME){
-				identify_time += 1;
-				/* if (identify_channel == 0){ */
-				/* 	// setting identify channel 0 clears identify_channel */
-				/* 	nid_channel = 0; */
-				/* } else if (identify_channel == nid_channel && identify_time == 0){ */
-				/* 	// clear nid_channel if NID is trying to set a new NeuroByte to the current nid_channel */
-				/* 	nid_channel = 0; */
-				/* } */
+				 if (identify_channel == 0){ 
+				 	// setting identify channel 0 clears identify_channel */
+				 	nid_channel = 0; 
+				 } else if (identify_channel == nid_channel && identify_time == 0){ 
+				 	// clear nid_channel if NID is trying to set a new NeuroByte to the current nid_channel */
+				 	nid_channel = 0; 
+				 } 
+				 identify_time += 1;
 			}
 
 			// check identify button
