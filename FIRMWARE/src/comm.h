@@ -29,26 +29,12 @@
 #define DATA_MESSAGE                0b10101000000000000000000000000000 // (NID) (KEEP ALIVE=0) (CHANNEL= NONE) (DATA) (no data)
 
 #define IDENTIFY_COMMAND            0b000001
-
 #define NID_PING_DATA_LENGTH        6
-
 #define CLOSER_PING_COUNT           3
-
 #define IDENTIFY_TIME       500 // 250 ms
-
 #define LPUART1_I 12
 /*
     This and comm.c define all communication protocol
-
-    Messages begin with a 6-bit messsage header
-    1-bit   -   lead high
-    2-bit   -   recipient id
-    2-bit   -   message header
-    1-bit   -   header parity check
-    Some messages include an (optional) data frame:
-    7-bit   -   data header (optional)
-    16-bit  -   data frame
-    3-bit   -   data parity check
 
     message headers:
     0b000  -   Unused
@@ -103,20 +89,6 @@ typedef struct{
     uint8_t data_frame_length;
     uint8_t data_parity_count;
 } message_class_t;
-
-
-// unique pins: 0,1,3,4,5,6,7,8,9,10,13,14,15
-// working dendrites: 1,2,5
-// pin numbers 0*,1*,2,3*,4,5*,6*,7*,8,9,10,13,14*,15* (asterisk indicates repeated pin)
-// total 14 unique pin numbers and 8 repeated pins
-
-
-typedef enum{
-    NID         =   0b00,
-    DOWNSTREAM  =   0b11,
-    ALL         =   0b01,
-    SELECTED    =   0b10
-} device_identifiers;
 
 typedef enum{
     PING        =   0b00,
@@ -199,6 +171,7 @@ bool processMessageHeader(read_buffer_t * read_buffer_ptr);
 bool processNIDPing(read_buffer_t * read_buffer_ptr);
 bool processGlobalCommand(read_buffer_t * read_buffer_ptr);
 bool processDataMessage(read_buffer_t * read_buffer_ptr);
+bool processIdentifyCommand(read_buffer_t * readb_buffer_ptr);
 
 // received message handlers
 void receivePulse(uint32_t message);

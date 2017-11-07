@@ -4,12 +4,9 @@
 
 write_buffer_t write_buffer;
 read_buffer_t read_buffer[11] = {
-    [0 ... 10] = { .message=0, .bits_left_to_read=5, .callback=processMessageHeader}
+    [0 ... 10] = { .message=0, .bits_left_to_read=4, .callback=processMessageHeader}
 }; // fast 'gcc' way to initialize the whole array of read_buffer_t struct
 
-//uint32_t read_buffer[11] = {0,0,0,0,0,0,0,0,0,0,0};
-//uint8_t read_buffer_bits_left[11] = 0,0,0,0,0,0,0,0,0,0,0};
-//void (*read_buffer_callback[11]) (uint32_t);
 
 volatile uint16_t active_input_pins[11] = {[0 ... 10] = 0};
 
@@ -154,7 +151,7 @@ void readBit(uint8_t read_tick)
                     active_input_pins[i] = 0;
                     // reset message buffer
                     read_buffer[i].message = 0;
-                    read_buffer[i].bits_left_to_read = 5;
+                    read_buffer[i].bits_left_to_read = 4;
                     read_buffer[i].callback = processMessageHeader;
                 }
             }
@@ -165,7 +162,7 @@ void readBit(uint8_t read_tick)
 bool processMessageHeader(read_buffer_t * read_buffer_ptr)
 {
     uint8_t i = read_buffer_ptr->i;
-    uint8_t header = (read_buffer_ptr->message & 0b01110) >> 1;
+    uint8_t header = read_buffer_ptr->message & 0b0111;
 
     switch (header){
         case PULSE_HEADER:
@@ -198,19 +195,19 @@ bool processMessageHeader(read_buffer_t * read_buffer_ptr)
             break;
         case NID_PING_HEADER:
             // NID ping received. Read the distance packet and then process it.
-            read_buffer_ptr->bits_left_to_read = 7;
+            read_buffer_ptr->bits_left_to_read = 6;
             read_buffer_ptr->callback = processNIDPing;
             return true;
             break;
         case NID_GLOBAL_HEADER:
             if (i == nid_i){
-                read_buffer_ptr->bits_left_to_read = 7;
+                read_buffer_ptr->bits_left_to_read = 6;
                 read_buffer_ptr->callback = processGlobalCommand;
                 return true;
             }
             break;
         case DATA_HEADER:
-            read_buffer_ptr->bits_left_to_read = 27;
+            read_buffer_ptr->bits_left_to_read = 28;
             read_buffer_ptr->callback = processDataMessage;
             return true;
             break;
@@ -232,19 +229,27 @@ bool processGlobalCommand(read_buffer_t * read_buffer_ptr)
     uint8_t i = read_buffer_ptr->i;
     uint32_t message;
 
-    uint8_t command = (read_buffer_ptr->message & 0b1111110) >> 1;
+    uint8_t command = read_buffer_ptr->message & 0b111111;
 
     switch (command){
         case IDENTIFY_COMMAND:
-            identify_time = 0;
-            identify_channel = 1;
+            read_buffer_ptr->bits_left_to_read = 3;
+            read_buffer_ptr->callback = processIdentifyCommand;
+            return true;
             break;
         default:
             break;
     }
-    message = read_buffer_ptr->message << 20;
+    message = read_buffer_ptr->message << 22;
     addWrite(ALL_BUFF, message);
-    write_buffer.source_pin = i;
+    return false;
+}
+
+bool processIdentifyCommand(read_buffer_t * read_buffer_pty)
+{
+    identify_channel = read_buffer_ptr->message & 0b111;
+    identify_time = 0;
+    addWrite(ALL_BUFF, read_buffer_ptr->message << 19);
     return false;
 }
 
@@ -306,8 +311,6 @@ void addWrite(message_buffers_t buffer, uint32_t message)
             if (nid_i == LPUART1_I){
                 lpuart_message = message;
                 lpuart_count = 0;
-                /* usart_enable_tx_interrupt(LPUART1); */
-                /* USART_CR1(LPUART1) &= ~(USART_CR1_TE); */
                 writeNID(); // write first byte to NID and TXE interrupt will write the rest of the message
             }else{
                 write_buffer.nid[write_buffer.nid_ready_count] = message;
