@@ -189,7 +189,8 @@ int main(void)
 				// send data every DATA_TIME ticks
 				if (data_time++ > DATA_TIME){
 					data_time = 0;
-                    message = (((uint32_t) DATA_MESSAGE)) | ((uint16_t) neuron.potential);
+					message = (((uint32_t) DATA_MESSAGE)) | ((uint16_t) neuron.potential);
+					message |= (nid_channel << 21);
 					addWrite(NID_BUFF,message);
 				} else if (neuron.potential > MEMBRANE_THRESHOLD){
                     data_time = 0;
