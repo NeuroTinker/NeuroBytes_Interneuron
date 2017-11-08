@@ -17,16 +17,13 @@
 #define	NID_PING_TIME		200 // 1000 ms
 #define NID_PING_KEEP_ALIVE     32
 
-#define PULSE_HEADER                0b111 // (DOWNSTREAM) (PULSE)
-#define DOWNSTREAM_PING_HEADER      0b011
-#define BLINK_HEADER                0b001
-#define NID_PING_HEADER             0b110
-#define NID_GLOBAL_HEADER           0b100
-#define DATA_HEADER                 0b010
+#define PULSE_HEADER                0b1111
+#define DOWNSTREAM_PING_HEADER      0b1011
+#define BLINK_HEADER                0b1001
+#define NID_PING_HEADER             0b1110
+#define NID_GLOBAL_HEADER           0b1100
+#define DATA_HEADER                 0b1010
 
-#define PULSE_MESSAGE               0b11111000000000000000000000000000
-#define DOWNSTREAM_PING_MESSAGE     0b10110000000000000000000000000000
-#define BLINK_MESSAGE               0b10011000000000000000000000000000
 #define NID_PING_MESSAGE            0b11100000000000000000000000000000
 #define DATA_MESSAGE                0b10101000000000000000000000000000 // (NID) (KEEP ALIVE=0) (CHANNEL= NONE) (DATA) (no data)
 
@@ -35,6 +32,13 @@
 #define CLOSER_PING_COUNT           3
 #define IDENTIFY_TIME       500 // 250 ms
 #define LPUART1_I 12
+
+#define DOWNSTREAM_BUFFSIZE 3
+#define ALL_BUFFSIZE        5  
+#define NID_BUFFSIZE        5
+
+#define NEXT_BIT(m)   (1 << (m.length-1)) & m.message
+
 /*
     This and comm.c define all communication protocol
 
@@ -48,7 +52,7 @@
     0b110  -   NID Ping (6-bit data + 1-bit parity check)
     0b111  -   Downstream Pulse
 
-    In general, there are three types of communication that are defined in this protocol:
+    There are three types of communication that are defined in this protocol:
     
     1. Network Interface Device (NID) broadcasting to all neurons in the network. 
     
@@ -86,19 +90,16 @@
 */
 
 typedef struct{
-    uint8_t header; // 0b1XXYY -- XX = recipient ID ; YY = message ID
-    uint8_t data_header_length;
-    uint8_t data_frame_length;
-    uint8_t data_parity_count;
-} message_class_t;
+    uint8_t length;
+    uint32_t message;
+} message_t;
 
-typedef enum{
-    PING        =   0b00,
-    PULSE       =   0b111,
-    BLINK       =   0b01,
-    DATA        =   0b11,
-    IDENTIFY    =   0b10
-} message_identifiers;
+extern const message_t pulse_message;
+extern const message_t downstream_ping_message;
+extern const message_t blink_message;
+
+typedef struct read_buffer_t read_buffer_t;
+typedef bool (*read_handler_t) (read_buffer_t *);
 
 typedef enum{
     NONE_BUFF,
@@ -118,17 +119,16 @@ typedef enum{
 typedef struct{
     message_buffers_t   current_buffer;
     uint8_t             write_count;
-    uint32_t            downstream[3];
+    message_t           downstream[DOWNSTREAM_BUFFSIZE];
     uint8_t             downstream_ready_count;
-    uint32_t            nid[5];
+    message_t           nid[NID_BUFFSIZE];
     uint8_t             nid_ready_count;
-    uint32_t            all[5];
+    message_t           all[ALL_BUFFSIZE];
     uint8_t             all_ready_count;
     uint8_t             source_pin;
+    uint8_t             num_bits_to_write;
 } write_buffer_t;
 
-typedef struct read_buffer_t read_buffer_t;
-typedef bool (*read_handler_t) (read_buffer_t *);
 typedef struct read_buffer_t{
     uint8_t i;
     uint32_t message;
@@ -136,20 +136,20 @@ typedef struct read_buffer_t{
     read_handler_t callback;
 } read_buffer_t;
 
-extern const uint16_t complimentary_pins[11];
-extern const uint32_t complimentary_ports[11];
-extern volatile uint16_t active_input_pins[11];
-extern uint32_t active_input_ports[11];
-extern volatile uint16_t active_output_pins[11];
-extern uint32_t active_output_ports[11];
-extern volatile uint8_t active_input_tick[11];
+extern const uint16_t complimentary_pins[NUM_INPUTS];
+extern const uint32_t complimentary_ports[NUM_INPUTS];
+extern volatile uint16_t active_input_pins[NUM_INPUTS];
+extern uint32_t active_input_ports[NUM_INPUTS];
+extern volatile uint16_t active_output_pins[NUM_INPUTS];
+extern uint32_t active_output_ports[NUM_INPUTS];
+extern volatile uint8_t active_input_tick[NUM_INPUTS];
 
 extern uint8_t nid_i;
 
 // flags for main()
-extern volatile uint8_t dendrite_pulse_flag[11];
+extern volatile uint8_t dendrite_pulse_flag[NUM_INPUTS];
 extern volatile uint8_t blink_flag;
-extern volatile uint8_t dendrite_ping_flag[11];
+extern volatile uint8_t dendrite_ping_flag[NUM_INPUTS];
 
 extern volatile uint32_t nid_ping_time;
 extern volatile uint8_t nid_distance;
@@ -183,7 +183,7 @@ void receiveUpstreamPulse(uint32_t message, uint16_t pin);
 void receiveNIDKeepAlive(uint32_t message, uint16_t pin);
 void receiveNIDBlink(void);
 
-void addWrite(message_buffers_t buffer, uint32_t message);
+void addWrite(message_buffers_t buffer, const message_t message);
 void commInit(void);
 
 void addNIDWrite(uint32_t message);

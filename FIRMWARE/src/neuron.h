@@ -4,7 +4,7 @@
 #include "comm.h"
 
 #define DENDRITE_I(i)         ((i-NUM_AXONS) / 2)
-#define IS_EXCITATORY(i)        ((i+1) % 2)
+#define IS_EXCITATORY(i)        (i % 2)
 
 #define MEMBRANE_THRESHOLD      10000
 #define HYPERPOLARIZATION		-10000
@@ -69,7 +69,7 @@ typedef struct{
 // mode independent vars
 int16_t     potential;
 dendrite_t  dendrites[DENDRITE_COUNT];
-uint16_t    dendrite_ping_time[11];
+uint16_t    dendrite_ping_time[NUM_INPUTS];
 neuron_states   state;
 learning_states learning_state; // Hebb learning mode
 

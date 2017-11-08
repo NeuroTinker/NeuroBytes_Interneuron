@@ -6,6 +6,7 @@
 #include <libopencm3/stm32/exti.h>
 #include <libopencm3/stm32/usart.h>
 
+
 #include "comm.h"
 #include "HAL.h"
 #include "neuron.h"
@@ -49,7 +50,7 @@ int main(void)
 	// current channel used to communicate to NID (e.g. CH. 1). 0 if neuron has not been selected by NID
 	uint32_t	nid_channel = 0b000;
 
-	uint32_t	message = 0; // staging variable for constructing messages to send to the communications routine
+	message_t	message; // for constructing messages to send to the communications routine
 
 	int32_t joegenta = 0;
 
@@ -94,7 +95,7 @@ int main(void)
 			// send a downstream ping every SEND_PING_TIME ticks
 			if (send_ping_time++ > SEND_PING_TIME){
 				// send downstream ping through axon
-				addWrite(DOWNSTREAM_BUFF, DOWNSTREAM_PING_MESSAGE);
+				addWrite(DOWNSTREAM_BUFF, downstream_ping_message);
 				send_ping_time = 0;
 			}
 
@@ -150,7 +151,6 @@ int main(void)
 						// temporarily use identify button also as an impulse button
 						neuron.fire_potential += 11000;
 						//neuron.leaky_current += 20;
-						//addWrite(DOWNSTREAM_BUFF, BLINK_MESSAGE);
 					}
 					button_armed = 0;
 				} else if (button_armed == 2){
@@ -184,16 +184,13 @@ int main(void)
 			// send current membrane potential to NID if currently identified by NID
 			if (nid_channel != 0){
 				// send data every DATA_TIME ticks
-				if (data_time++ > DATA_TIME){
+				if (data_time++ > DATA_TIME || neuron.potential > MEMBRANE_THRESHOLD){
 					data_time = 0;
-					message = (((uint32_t) DATA_MESSAGE)) | ((uint16_t) neuron.potential);
-					message |= (nid_channel << 21);
-					addWrite(NID_BUFF,message);
-				} else if (neuron.potential > MEMBRANE_THRESHOLD){
-                    data_time = 0;
-                    message = (((uint32_t) DATA_MESSAGE)) | ((uint16_t) neuron.potential);
-                    addWrite(NID_BUFF, message);
-                }
+					message.length = 32;
+					message.message = (((uint32_t) DATA_MESSAGE)) | ((uint16_t) neuron.potential);
+					message.message |= (nid_channel << 21);
+					addWrite(NID_BUFF,(const message_t) message);
+				}
 			}
 
 			// if membrane potential is greater than threshold, fire
@@ -223,7 +220,7 @@ int main(void)
 				fire_delay_time -= 1;
 			} else if (fire_flag == 1){
 				fire_flag = 0;
-				addWrite(DOWNSTREAM_BUFF, PULSE_MESSAGE);
+				addWrite(DOWNSTREAM_BUFF, pulse_message);
 			}
 			
 			if (neuron.learning_state == HEBB){

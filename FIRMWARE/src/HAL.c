@@ -145,7 +145,6 @@ void lpuart_setup(void)
 	// enable interrupts
 	nvic_enable_irq(NVIC_LPUART1_IRQ);
 	usart_enable_rx_interrupt(LPUART1); // USART_CR1_RXNEIE
-    /* usart_enable_tx_interrupt(LPUART1); */
     USART_CR1(LPUART1) |= USART_CR1_RE;
     USART_CR1(LPUART1) |= USART_CR1_TE;
 }

@@ -29,8 +29,10 @@ uint8_t nid_i      =    13;
 volatile uint8_t  nid_distance = 100; // max uint8_t
 volatile uint8_t closer_ping_count = 0;
 volatile uint8_t closer_distance = 100;
-uint32_t lpuart_message;
-uint8_t lpuart_count;
+
+const message_t pulse_message = {.length=4, .message=PULSE_HEADER};
+const message_t downstream_ping_message = {.length=4, .message=DOWNSTREAM_PING_HEADER};
+const message_t blink_message = {.length=4, .message=BLINK_HEADER};
 
 
 /* 
@@ -114,9 +116,10 @@ uint8_t identify_channel = 0;
 void commInit(void)
 {
     uint8_t i;
-    for (i=0;i<11;i++) read_buffer[i].i = i;
+    for (i=0;i<NUM_INPUTS;i++) read_buffer[i].i = i;
     write_buffer.current_buffer = NONE_BUFF;
     write_buffer.write_count = 0;
+    write_buffer.num_bits_to_write = 1;
 }
 
 void readBit(uint8_t read_tick)
@@ -162,7 +165,7 @@ void readBit(uint8_t read_tick)
 bool processMessageHeader(read_buffer_t * read_buffer_ptr)
 {
     uint8_t i = read_buffer_ptr->i;
-    uint8_t header = read_buffer_ptr->message & 0b0111;
+    uint8_t header = read_buffer_ptr->message & 0b1111;
 
     switch (header){
         case PULSE_HEADER:
@@ -182,7 +185,7 @@ bool processMessageHeader(read_buffer_t * read_buffer_ptr)
                 // set blink_flag => main() will blink led
                 blink_flag = 1;
                 // forward message through network
-                addWrite(ALL_BUFF, BLINK_MESSAGE);
+                addWrite(ALL_BUFF, blink_message);
                 write_buffer.source_pin = i;
             }
             break;
@@ -212,14 +215,13 @@ bool processMessageHeader(read_buffer_t * read_buffer_ptr)
 
 bool processDataMessage(read_buffer_t * read_buffer_ptr)
 {
-    addWrite(NID_BUFF, read_buffer_ptr->message);
+    const message_t frwd_message = {.length=32, .message=read_buffer_ptr->message};
+    addWrite(NID_BUFF, frwd_message);
     return false;
 }
 
 bool processGlobalCommand(read_buffer_t * read_buffer_ptr)
 {
-    uint32_t message;
-
     uint8_t command = read_buffer_ptr->message & 0b111111;
 
     switch (command){
@@ -231,8 +233,8 @@ bool processGlobalCommand(read_buffer_t * read_buffer_ptr)
         default:
             break;
     }
-    message = read_buffer_ptr->message << 22;
-    addWrite(ALL_BUFF, message);
+    const message_t frwd_message = {.length=10, .message=read_buffer_ptr->message};
+    addWrite(ALL_BUFF, frwd_message);
     return false;
 }
 
@@ -240,13 +242,13 @@ bool processIdentifyCommand(read_buffer_t * read_buffer_ptr)
 {
     identify_channel = read_buffer_ptr->message & 0b111;
     identify_time = 0;
-    addWrite(ALL_BUFF, read_buffer_ptr->message << 19);
+    const message_t frwd_message = {.length=13, .message=read_buffer_ptr->message};
+    addWrite(ALL_BUFF, frwd_message);
     return false;
 }
 
 bool processNIDPing(read_buffer_t * read_buffer_ptr)
 {
-    uint32_t message;
     uint8_t i = read_buffer_ptr->i;
 
     uint8_t distance = read_buffer_ptr->message & 0b111111;
@@ -278,17 +280,21 @@ bool processNIDPing(read_buffer_t * read_buffer_ptr)
         }
     }
 
+    const message_t frwd_message = {
+        .length=10,
+        .message= ((read_buffer_ptr->message & 0b1111000000) | (distance+1)) // increment nid distance before forwarding it
+    };
+
     if (distance == nid_distance){
         nid_ping_time = NID_PING_TIME; // main() will reset nid pin when this reaches NID_PING_TIME
-        message = NID_PING_MESSAGE | ((distance+1)<<(32-4-NID_PING_DATA_LENGTH)); // DEBUG need typecasting?
         write_buffer.source_pin = i;    
-        addWrite(ALL_BUFF, message); // forward message to the rest of the network
+        addWrite(ALL_BUFF, frwd_message); // forward message to the rest of the network
     }
 
     return false;
 }
 
-void addWrite(message_buffers_t buffer, uint32_t message)
+void addWrite(message_buffers_t buffer, const message_t message)
 {
     /*
         This function adds a new message to the write buffer.
@@ -299,14 +305,8 @@ void addWrite(message_buffers_t buffer, uint32_t message)
             write_buffer.downstream_ready_count += 1;
             break;
         case NID_BUFF:
-            if (nid_i == LPUART1_I){
-                lpuart_message = message;
-                lpuart_count = 0;
-                writeNID(); // write first byte to NID and TXE interrupt will write the rest of the message
-            }else{
-                write_buffer.nid[write_buffer.nid_ready_count] = message;
-                write_buffer.nid_ready_count += 1;
-            }
+            write_buffer.nid[write_buffer.nid_ready_count] = message;
+            write_buffer.nid_ready_count += 1;
             break;
         case ALL_BUFF:
             write_buffer.all[write_buffer.all_ready_count] = message;
@@ -323,23 +323,23 @@ void writeBit(void)
         Pop 1-bit off the write_buffer and write it to corresponding output pins
     */
     uint8_t i;
-    if (write_buffer.write_count == 33){
+    if (write_buffer.write_count == write_buffer.num_bits_to_write){
         // Message is done being written. Decrement the buffer that was read
         switch (write_buffer.current_buffer){
             case DOWNSTREAM_BUFF:
-                for (i=0; i<2; i++){
+                for (i=0; i<(DOWNSTREAM_BUFFSIZE-1); i++){
                     write_buffer.downstream[i] = write_buffer.downstream[i+1];
                 }
                 write_buffer.downstream_ready_count -= 1;
                 break;
             case NID_BUFF:
-                for (i=0; i<4; i++){
+                for (i=0; i<(NID_BUFFSIZE-1); i++){
                     write_buffer.nid[i] = write_buffer.nid[i+1];
                 }
                 write_buffer.nid_ready_count -= 1;
                 break;
             case ALL_BUFF:
-                for (i=0; i<2; i++){
+                for (i=0; i<(ALL_BUFFSIZE-1); i++){
                     write_buffer.all[i] = write_buffer.all[i+1];
                 }
                 write_buffer.all_ready_count -= 1;
@@ -352,13 +352,16 @@ void writeBit(void)
     }
 
     if (write_buffer.current_buffer == NONE_BUFF){
-        // new message -> assign new buffer to current_buffer
+        // new message. so assign new buffer to current_buffer
         if (write_buffer.downstream_ready_count != 0){
             write_buffer.current_buffer = DOWNSTREAM_BUFF;
+            write_buffer.num_bits_to_write = write_buffer.downstream[0].length + 1;
         } else if (write_buffer.nid_ready_count != 0){ 
             write_buffer.current_buffer = NID_BUFF;
+            write_buffer.num_bits_to_write = write_buffer.nid[0].length + 1;
         } else if (write_buffer.all_ready_count != 0){
             write_buffer.current_buffer = ALL_BUFF;
+            write_buffer.num_bits_to_write = write_buffer.all[0].length + 1;
         }
     } else{
         // write 1-bit
@@ -377,27 +380,24 @@ void writeBit(void)
                 break;
         }
     }
-    if (lpuart_count < 4 && nid_i == LPUART1_I){
-        writeNID();//debug
-    }
 }
 
 void writeDownstream(void)
 {
+    uint8_t i;
     uint32_t value;
     // pop next value off of buffer
-    value = write_buffer.downstream[0] & 0x80000000;
-    write_buffer.downstream[0] <<= 1;
+    value = NEXT_BIT(write_buffer.downstream[0]);
+    write_buffer.downstream[0].message <<= 1;
 
-    // we should have both axon out pins be on the same port that way they can be written together
     if (value != 0){
-        gpio_set(PORT_AXON1_EX, PIN_AXON1_EX);
-        gpio_set(PORT_AXON2_EX, PIN_AXON2_EX);
-        gpio_set(PORT_AXON3_EX, PIN_AXON3_EX);
+        for (i=0; i<NUM_AXONS; i++){
+            gpio_set(active_output_ports[i], active_output_pins[i]);
+        }
     }else{
-        gpio_clear(PORT_AXON1_EX, PIN_AXON1_EX);
-        gpio_clear(PORT_AXON2_EX, PIN_AXON2_EX);
-        gpio_clear(PORT_AXON3_EX, PIN_AXON3_EX);
+        for (i=0; i<NUM_AXONS; i++){
+            gpio_clear(active_output_ports[i], active_output_pins[i]);
+        }
     }
 }
 
@@ -411,11 +411,11 @@ void writeAll(void)
 
     uint32_t value;
     // pop next bit off of buffer
-    value = write_buffer.all[0] & 0x80000000;
-    write_buffer.all[0] <<= 1;
+    value = NEXT_BIT(write_buffer.all[0]);
+    write_buffer.all[0].message <<= 1;
 
     // write to all output pins except for the pin the message was received on
-    for (i=0;i<11;i++){
+    for (i=0;i<NUM_INPUTS;i++){
         if ((active_output_pins[i] != 0) && (active_output_pins[i] != complimentary_pins[write_buffer.source_pin])){
             if (value != 0){
                 gpio_set(active_output_ports[i], active_output_pins[i]);
@@ -430,15 +430,14 @@ void writeNID(void)
 {
     uint32_t value;
     if (nid_port_out == LPUART1){
-        if (lpuart_count++ <= 4){
-            value = lpuart_message & (0xFF << 0x18);
-            value >>= 0x18;
-            lpuart_message <<= 0x8;
-            writeNIDByte(value);
-        }
+        value = write_buffer.nid[0].message & (0xFF << 0x18);
+        value >>= 0x18;
+        write_buffer.nid[0].message <<= 0x8;
+        write_buffer.write_count += 7; // lpuart writes 8 bits at a time instead of 1 bit
+        writeNIDByte(value);
     } else{
-        value = write_buffer.nid[0] & 0x80000000;
-        write_buffer.nid[0] <<= 1;
+        value = NEXT_BIT(write_buffer.nid[0]);
+        write_buffer.nid[0].message <<= 1;
 
         if (value != 0){
             gpio_set(nid_port_out, nid_pin_out);
