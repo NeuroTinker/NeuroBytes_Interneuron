@@ -323,7 +323,7 @@ void writeBit(void)
         Pop 1-bit off the write_buffer and write it to corresponding output pins
     */
     uint8_t i;
-    if (write_buffer.write_count == write_buffer.num_bits_to_write){
+    if (write_buffer.write_count >= write_buffer.num_bits_to_write){
         // Message is done being written. Decrement the buffer that was read
         switch (write_buffer.current_buffer){
             case DOWNSTREAM_BUFF:
@@ -433,7 +433,7 @@ void writeNID(void)
         value = write_buffer.nid[0].message & (0xFF << 0x18);
         value >>= 0x18;
         write_buffer.nid[0].message <<= 0x8;
-        write_buffer.write_count += 7; // lpuart writes 8 bits at a time instead of 1 bit
+        write_buffer.write_count += 8; // lpuart writes 8 bits at a time instead of 1 bit
         writeNIDByte(value);
     } else{
         value = NEXT_BIT(write_buffer.nid[0]);
