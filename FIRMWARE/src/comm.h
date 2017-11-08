@@ -11,6 +11,8 @@
 #include "HAL.h"
 
 #define NUM_INPUTS 11
+#define NUM_AXONS   3
+#define COMPLIMENTARY_I(i)  i + (i % 2) - ((i+1) % 2)
 #define DEND_PING_TIME		200 // 1000 ms
 #define	NID_PING_TIME		200 // 1000 ms
 #define NID_PING_KEEP_ALIVE     32
@@ -134,7 +136,8 @@ typedef struct read_buffer_t{
     read_handler_t callback;
 } read_buffer_t;
 
-extern uint16_t complimentary_pins[11];
+extern const uint16_t complimentary_pins[11];
+extern const uint32_t complimentary_ports[11];
 extern volatile uint16_t active_input_pins[11];
 extern uint32_t active_input_ports[11];
 extern volatile uint16_t active_output_pins[11];

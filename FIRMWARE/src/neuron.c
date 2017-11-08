@@ -66,7 +66,7 @@ void checkDendrites(neuron_t * n)
 {
 	uint8_t i;
 	
-	for (i=3; i<11; i++){
+	for (i=NUM_AXONS; i<NUM_INPUTS; i++){
 		
 		// check if dendrite has received a new ping
 		if (dendrite_ping_flag[i] != 0){
@@ -76,18 +76,11 @@ void checkDendrites(neuron_t * n)
 			n->dendrite_ping_time[i] = DEND_PING_TIME;
 		} else if (n->dendrite_ping_time[i] == 1){	
 			// dendrite ping has expired; reset the dendrite to inputs		
-			if (i % 2 != 0){
-				// i=3,5,7,9
-				setAsInput(active_input_ports[i+1], complimentary_pins[i]);
-				active_output_pins[i+1] = 0;
-			} else{
-				// i=4,6,8,10
-				setAsInput(active_input_ports[i-1], complimentary_pins[i]);
-				active_output_pins[i-1] = 0;
-			}
-			
+			setAsInput(complimentary_ports[i], complimentary_pins[i]);
+			active_output_pins[COMPLIMENTARY_I(i)] = 0;
 		}
 		
+		// incremenet dendrite_ping_time
 		if (n->dendrite_ping_time[i] > 0){
 			n->dendrite_ping_time[i] -= 1;
 		}
@@ -96,55 +89,13 @@ void checkDendrites(neuron_t * n)
 		if (dendrite_pulse_flag[i] != 0){
 			dendrite_pulse_flag[i] = 0;
 
-			switch (input_pins[i]){
-				case PIN_DEND1_EX:
-					n->dendrites[0].type = EXCITATORY;
-					n->dendrites[0].state = ON;
-					n->dendrites[0].pulse_time = 0;
-					break;
-				case PIN_DEND1_IN:
-					n->dendrites[0].type = INHIBITORY;
-					n->dendrites[0].state = ON;
-					n->dendrites[0].pulse_time = 0;
-					break;
-				case PIN_DEND2_EX:
-					n->dendrites[1].type = EXCITATORY;
-					n->dendrites[1].state = ON;
-					n->dendrites[1].pulse_time = 0;
-					break;
-				case PIN_DEND2_IN:
-					n->dendrites[1].type = INHIBITORY;
-					n->dendrites[1].state = ON;
-					n->dendrites[1].pulse_time = 0;
-					break;
-				case PIN_DEND3_EX:
-					n->dendrites[2].type = EXCITATORY;
-					n->dendrites[2].state = ON;
-					n->dendrites[2].pulse_time = 0;
-					break;
-				case PIN_DEND3_IN:
-					n->dendrites[2].type = INHIBITORY;
-					n->dendrites[2].state = ON;
-					n->dendrites[2].pulse_time = 0;
-					break;
-				case PIN_DEND4_EX:
-					n->dendrites[3].type = EXCITATORY;
-					n->dendrites[3].state = ON;
-					n->dendrites[3].pulse_time = 0;
-					break;
-				case PIN_DEND4_IN:
-					n->dendrites[3].type = INHIBITORY;
-					n->dendrites[3].state = ON;
-					n->dendrites[3].pulse_time = 0;
-					break;
-				
-				default:
-					break;
-			}
+			n->dendrites[DENDRITE_I(i)].type = ((IS_EXCITATORY(i)) ? EXCITATORY : INHIBITORY);
+			n->dendrites[DENDRITE_I(i)].state = ON;
+			n->dendrites[DENDRITE_I(i)].pulse_time = 0;
 		}
 	}
 	
-	for (i=0; i<DENDRITE_COUNT; i++){
+	for (i=0; i < DENDRITE_COUNT; i++){
 		// switch dendrite off when pulse has expired
 		if(n->dendrites[i].state == ON){
 			if (n->dendrites[i].pulse_time == 0)

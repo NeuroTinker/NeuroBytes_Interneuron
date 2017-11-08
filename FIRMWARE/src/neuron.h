@@ -3,6 +3,9 @@
 
 #include "comm.h"
 
+#define DENDRITE_I(i)         ((i-NUM_AXONS) / 2)
+#define IS_EXCITATORY(i)        ((i+1) % 2)
+
 #define MEMBRANE_THRESHOLD      10000
 #define HYPERPOLARIZATION		-10000
 #define DENDRITE_COUNT          4

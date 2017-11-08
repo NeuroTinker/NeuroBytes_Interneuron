@@ -77,7 +77,7 @@ uint32_t active_output_ports[11] = {
     PORT_DEND4_IN
 };
 
-uint16_t complimentary_pins[11] = {
+const uint16_t complimentary_pins[11] = {
     PIN_AXON1_EX,
     PIN_AXON2_EX,
     PIN_AXON3_EX,
@@ -91,7 +91,7 @@ uint16_t complimentary_pins[11] = {
     PIN_DEND4_EX
 };
 
-uint32_t complimentary_ports[11] = {
+const uint32_t complimentary_ports[11] = {
     PORT_AXON1_EX,
     PORT_AXON2_EX,
     PORT_AXON3_EX,
@@ -170,17 +170,10 @@ bool processMessageHeader(read_buffer_t * read_buffer_ptr)
             break;
         case DOWNSTREAM_PING_HEADER:
             /* Check to make sure it's a dendrite */
-            if (i > 2){
+            if (i >= NUM_AXONS){
                 dendrite_ping_flag[i] = 1;
-                if (i % 2 != 0){
-                    // excitatory
-                    setAsOutput(active_input_ports[i+1], complimentary_pins[i]);
-                    active_output_pins[i+1] = complimentary_pins[i];
-                } else{
-                    // inhibitory
-                    setAsOutput(active_input_ports[i-1], complimentary_pins[i]);
-                    active_output_pins[i-1] = complimentary_pins[i];
-                }
+                setAsOutput(complimentary_ports[i], complimentary_pins[i]);
+                active_output_pins[COMPLIMENTARY_I(i)] = complimentary_pins[i];
                 active_output_pins[i] = 0; // might not be neccesary
             }
             break;

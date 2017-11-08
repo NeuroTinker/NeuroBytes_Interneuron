@@ -164,10 +164,7 @@ int main(void)
 				}
 				button_press_time = 0;
 			}
-			
-
-			/* getFingerprint(); */
-			
+						
 			/*
 				Check dendrites for pings and adjut pins accordingly.
 				Also check dendrites for pulses and calculate new membrane potential.
