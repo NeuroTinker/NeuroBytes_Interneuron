@@ -41,6 +41,7 @@ int main(void)
 	uint8_t		fire_flag = 0;
 	uint16_t	lpuart_setup_time = 0;
 	uint8_t		change_nid_time = 0;
+	int16_t		fire_data = 0; // hack to make sure a pulse sends peak neuron potential and hyperpolarization  data
 
 	// button debounce variables
 	uint16_t	button_press_time = 0; 
@@ -184,10 +185,20 @@ int main(void)
 			// send current membrane potential to NID if currently identified by NID
 			if (nid_channel != 0){
 				// send data every DATA_TIME ticks
-				if (data_time++ > DATA_TIME || neuron.potential > MEMBRANE_THRESHOLD){
+				if (data_time++ > DATA_TIME){
+					if (fire_data > 0){
+						if (fire_data == 1){
+							message.message = (((uint32_t) DATA_MESSAGE)) | ((uint16_t) HYPERPOLARIZATION);
+							fire_data = 0;						
+						} else {
+							message.message = (((uint32_t) DATA_MESSAGE)) | ((uint16_t) fire_data);	
+							fire_data = 1;						
+						}
+					} else {
+						message.message = (((uint32_t) DATA_MESSAGE)) | ((uint16_t) neuron.potential);						
+					}
 					data_time = 0;
 					message.length = 32;
-					message.message = (((uint32_t) DATA_MESSAGE)) | ((uint16_t) neuron.potential);
 					message.message |= (nid_channel << 21);
 					addWrite(NID_BUFF,(const message_t) message);
 				}
@@ -210,6 +221,8 @@ int main(void)
 					calcDendriteWeightings(&neuron);
 				}
 				depression_time = 0;
+
+				fire_data = neuron.potential; // hack to send fire data to NID
 
 				// send downstream pulse
 				fire_delay_time = FIRE_DELAY_TIME;

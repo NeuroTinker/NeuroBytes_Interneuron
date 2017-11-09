@@ -13,14 +13,13 @@
 
 #define DENDRITE_ALIVE_TIME     200
 #define FIRE_LED_TIME           5
-#define FIRE_DELAY_TIME         20
+#define FIRE_DELAY_TIME         100
 
 #define LEARNING_WINDOW         50
 #define LEARNING_CHANGE         500
 #define MAX_WEIGHTING           18000
 
 #define DEPRESSION_TIME         50
-
 
 typedef enum{
 NC =   0,
