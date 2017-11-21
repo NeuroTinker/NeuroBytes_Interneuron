@@ -301,30 +301,24 @@ void exti4_15_isr(void)
 		EXTI_PR |= PIN_DEND3_IN;
 	} else if ((EXTI_PR & PIN_DEND3_EX) != 0){
         ACTIVATE_INPUT(7, PIN_DEND3_EX);
-		active_input_pins[7] = PIN_DEND3_EX;
 		EXTI_PR |= PIN_DEND3_EX;
 	} else if ((EXTI_PR & PIN_DEND2_IN) != 0){
 		// pin 6
         ACTIVATE_INPUT(6, PIN_DEND2_IN);
-		active_input_pins[6] = PIN_DEND2_IN;
 		EXTI_PR |= PIN_DEND2_IN;
 	} else if ((EXTI_PR & PIN_DEND2_EX) != 0){
         ACTIVATE_INPUT(5, PIN_DEND2_EX);
-		active_input_pins[5] = PIN_DEND2_EX;
 		EXTI_PR |= PIN_DEND2_EX;
 	} else if ((EXTI_PR & PIN_AXON2_IN) != 0){
 		// pin 9
         ACTIVATE_INPUT(1, PIN_AXON2_IN);
-		active_input_pins[1] = PIN_AXON2_IN;
 		EXTI_PR |= PIN_AXON2_IN;
 	} else if ((EXTI_PR & PIN_AXON3_IN) != 0){
 		// pin 10
         ACTIVATE_INPUT(2, PIN_AXON3_IN);
-		active_input_pins[2] = PIN_AXON3_IN;
 		EXTI_PR |= PIN_AXON3_IN;
 	} else if ((EXTI_PR & PIN_AXON1_IN) != 0){
         ACTIVATE_INPUT(0, PIN_AXON1_IN);
-		active_input_pins[0] = PIN_AXON1_IN;
 		EXTI_PR |= PIN_AXON1_IN;
 	}
 }
