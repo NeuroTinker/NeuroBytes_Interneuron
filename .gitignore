@@ -36,3 +36,4 @@
 
 # Other
 *.json
+.vscode/tags
