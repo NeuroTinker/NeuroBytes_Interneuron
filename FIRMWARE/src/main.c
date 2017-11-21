@@ -92,7 +92,7 @@ int main(void)
 				lpuart_setup_time += 1;
 			} else if (lpuart_setup_time == LPUART_SETUP_TIME){
 				lpuart_setup_time += 1;
-				//lpuart_setup();
+				lpuart_setup();
 			}
 
 			/*
