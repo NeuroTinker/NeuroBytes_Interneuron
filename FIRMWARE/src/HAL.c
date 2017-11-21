@@ -98,7 +98,7 @@ static const uint32_t fingerprint[3] __attribute__((section (".fingerprint"))) _
 	0  // unique id
 };
 
-bool checkVersion(device_id, version) { return device_id == fingerprint[0] && version = fingerprint[1]; }
+bool checkVersion(device_id, version) {return (device_id == fingerprint[0]) && (version = fingerprint[1]) ? true : false;}
 
 void clock_setup(void)
 {
