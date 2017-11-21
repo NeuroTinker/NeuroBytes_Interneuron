@@ -10,8 +10,7 @@
 
 #include "HAL.h"
 
-#define NUM_INPUTS 11
-#define NUM_AXONS   3
+#define MAX_I                   NUM_INPUTS - 1
 #define COMPLIMENTARY_I(i)  i + (i % 2) - ((i+1) % 2)
 #define DEND_PING_TIME		200 // 1000 ms
 #define	NID_PING_TIME		200 // 1000 ms
@@ -25,7 +24,7 @@
 #define DATA_HEADER                 0b1010
 
 #define NID_PING_MESSAGE            0b11100000000000000000000000000000
-#define DATA_MESSAGE                0b10101000000000000000000000000000 // (NID) (KEEP ALIVE=0) (CHANNEL= NONE) (DATA) (no data)
+#define DATA_MESSAGE                0b10100000000000000000000000000000 // (NID) (KEEP ALIVE=0) (CHANNEL= NONE) (DATA) (no data)
 
 #define IDENTIFY_COMMAND            0b000001
 #define NID_PING_DATA_LENGTH        6
@@ -136,20 +135,10 @@ typedef struct read_buffer_t{
     read_handler_t callback;
 } read_buffer_t;
 
-extern const uint16_t complimentary_pins[NUM_INPUTS];
-extern const uint32_t complimentary_ports[NUM_INPUTS];
-extern volatile uint16_t active_input_pins[NUM_INPUTS];
-extern uint32_t active_input_ports[NUM_INPUTS];
-extern volatile uint16_t active_output_pins[NUM_INPUTS];
-extern uint32_t active_output_ports[NUM_INPUTS];
-extern volatile uint8_t active_input_tick[NUM_INPUTS];
-
 extern uint8_t nid_i;
 
 // flags for main()
-extern volatile uint8_t dendrite_pulse_flag[NUM_INPUTS];
 extern volatile uint8_t blink_flag;
-extern volatile uint8_t dendrite_ping_flag[NUM_INPUTS];
 
 extern volatile uint32_t nid_ping_time;
 extern volatile uint8_t nid_distance;

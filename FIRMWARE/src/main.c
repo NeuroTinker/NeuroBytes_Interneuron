@@ -23,7 +23,7 @@
 
 static uint32_t fingerprint[3] __attribute__((section (".fingerprint"))) __attribute__ ((__used__)) = {
 	1, // device id
-	1, // firmware version
+	2, // firmware version
 	0  // unique id
 };
 
@@ -67,7 +67,6 @@ int main(void)
 	systick_setup(); // systick in microseconds
 	gpio_setup();
 	tim_setup();
-	//lpuart_setup();
 
 	// main processing routine	
 	for(;;)
@@ -129,7 +128,6 @@ int main(void)
 
 			// check identify button
 			button_status = gpio_get(PORT_IDENTIFY, PIN_IDENTIFY);
-			//button_status |= PIN_IDENTIFY;
 
 			// if identify button is pressed and identify_time < IDENTIFY_TIME (i.e. NID sent 'identify'' message), set new nid_channel
 			if (button_status == 0){
@@ -159,7 +157,6 @@ int main(void)
 						neuron.learning_state = HEBB;
 					} else if (neuron.learning_state == HEBB){
 						neuron.learning_state = NONE;
-						//lpuart_setup();
 					}
 					button_armed = 0;
 				}

@@ -3,24 +3,12 @@
 #include "HAL.h"
 
 write_buffer_t write_buffer;
-read_buffer_t read_buffer[11] = {
-    [0 ... 10] = { .message=0, .bits_left_to_read=4, .callback=processMessageHeader}
+read_buffer_t read_buffer[NUM_INPUTS] = {
+    [0 ... MAX_I] = { .message=0, .bits_left_to_read=4, .callback=processMessageHeader}
 }; // fast 'gcc' way to initialize the whole array of read_buffer_t struct
 
-
-volatile uint16_t active_input_pins[11] = {[0 ... 10] = 0};
-
-volatile uint8_t active_input_tick[11] = {[0 ... 10] = 0};
-
-volatile uint16_t active_output_pins[11] = {PIN_AXON1_EX, PIN_AXON2_EX, PIN_AXON3_EX, [3 ... 10] = 0};
-
-volatile uint32_t dendrite_pulses[4] = {0,0,0,0};
-volatile uint8_t dendrite_pulse_count = 0;
-
 volatile uint8_t blink_flag = 0;
-
 volatile uint32_t nid_ping_time = 0;
-
 volatile uint16_t nid_pin = 0;
 uint32_t nid_port = 0;
 volatile uint16_t nid_pin_out = 0;
@@ -34,81 +22,6 @@ const message_t pulse_message = {.length=4, .message=PULSE_HEADER};
 const message_t downstream_ping_message = {.length=4, .message=DOWNSTREAM_PING_HEADER};
 const message_t blink_message = {.length=4, .message=BLINK_HEADER};
 
-
-/* 
-All available input pins are:
-
-PIN_AXON1_IN,
-PIN_AXON2_IN,
-PIN_DEND1_EX,
-PIN_DEND1_IN, 
-PIN_DEND2_EX,
-PIN_DEND2_IN,
-PIN_DEND3_EX,
-PIN_DEND3_IN,
-PIN_DEND4_EX,
-PIN_DEND4_IN
-    
-*/
-
-uint32_t active_input_ports[11] = {
-    PORT_AXON1_IN,
-    PORT_AXON2_IN,
-    PORT_AXON3_IN,
-    PORT_DEND1_EX,
-    PORT_DEND1_IN,
-    PORT_DEND2_EX,
-    PORT_DEND2_IN,
-    PORT_DEND3_EX,
-    PORT_DEND3_IN,
-    PORT_DEND4_EX,
-    PORT_DEND4_IN
-};
-
-uint32_t active_output_ports[11] = {
-    PORT_AXON1_EX,
-    PORT_AXON2_EX,
-    PORT_AXON3_EX,
-    PORT_DEND1_EX,
-    PORT_DEND1_IN,
-    PORT_DEND2_EX,
-    PORT_DEND2_IN,
-    PORT_DEND3_EX,
-    PORT_DEND3_IN,
-    PORT_DEND4_EX,
-    PORT_DEND4_IN
-};
-
-const uint16_t complimentary_pins[11] = {
-    PIN_AXON1_EX,
-    PIN_AXON2_EX,
-    PIN_AXON3_EX,
-    PIN_DEND1_IN,
-    PIN_DEND1_EX,
-    PIN_DEND2_IN,
-    PIN_DEND2_EX,
-    PIN_DEND3_IN,
-    PIN_DEND3_EX,
-    PIN_DEND4_IN,
-    PIN_DEND4_EX
-};
-
-const uint32_t complimentary_ports[11] = {
-    PORT_AXON1_EX,
-    PORT_AXON2_EX,
-    PORT_AXON3_EX,
-    PORT_DEND1_IN,
-    PORT_DEND1_EX,
-    PORT_DEND2_IN,
-    PORT_DEND2_EX,
-    PORT_DEND3_IN,
-    PORT_DEND3_EX,
-    PORT_DEND4_IN,
-    PORT_DEND4_EX
-};
-
-volatile uint8_t dendrite_pulse_flag[11] = {[0 ... 10] = 0};
-volatile uint8_t dendrite_ping_flag[11] = {[0 ... 10] = 0};
 uint8_t write_count = 0;
 volatile uint16_t identify_time = IDENTIFY_TIME;
 uint8_t identify_channel = 0;

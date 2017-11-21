@@ -3,13 +3,95 @@
 #include "comm.h"
 #include <libopencm3/stm32/usart.h>
 
-volatile uint8_t toggle = 0;
 volatile uint8_t tick = 0;
 volatile uint8_t main_tick = 0;
 volatile uint8_t read_tick = 0;
 
-static const uint16_t device_id[4] = {1,2,3,4};
+volatile uint16_t active_input_pins[NUM_INPUTS] = {[0 ... 10] = 0};
 
+volatile uint8_t active_input_tick[NUM_INPUTS] = {[0 ... 10] = 0};
+
+volatile uint16_t active_output_pins[NUM_INPUTS] = {PIN_AXON1_EX, PIN_AXON2_EX, PIN_AXON3_EX, [NUM_AXONS ... NUM_INPUTS-1] = 0};
+
+volatile uint32_t dendrite_pulses[NUM_DENDS] = {[0 ... NUM_DENDS-1] = 0};
+volatile uint8_t dendrite_pulse_count = 0;
+
+/* 
+
+All available input pins are:
+
+PIN_AXON1_IN,
+PIN_AXON2_IN,
+PIN_AXON3_IN,
+PIN_DEND1_EX,
+PIN_DEND1_IN, 
+PIN_DEND2_EX,
+PIN_DEND2_IN,
+PIN_DEND3_EX,
+PIN_DEND3_IN,
+PIN_DEND4_EX,
+PIN_DEND4_IN
+    
+*/
+
+uint32_t active_input_ports[NUM_INPUTS] = {
+    PORT_AXON1_IN,
+    PORT_AXON2_IN,
+    PORT_AXON3_IN,
+    PORT_DEND1_EX,
+    PORT_DEND1_IN,
+    PORT_DEND2_EX,
+    PORT_DEND2_IN,
+    PORT_DEND3_EX,
+    PORT_DEND3_IN,
+    PORT_DEND4_EX,
+    PORT_DEND4_IN
+};
+
+uint32_t active_output_ports[NUM_INPUTS] = {
+    PORT_AXON1_EX,
+    PORT_AXON2_EX,
+    PORT_AXON3_EX,
+    PORT_DEND1_EX,
+    PORT_DEND1_IN,
+    PORT_DEND2_EX,
+    PORT_DEND2_IN,
+    PORT_DEND3_EX,
+    PORT_DEND3_IN,
+    PORT_DEND4_EX,
+    PORT_DEND4_IN
+};
+
+const uint16_t complimentary_pins[NUM_INPUTS] = {
+    PIN_AXON1_EX,
+    PIN_AXON2_EX,
+    PIN_AXON3_EX,
+    PIN_DEND1_IN,
+    PIN_DEND1_EX,
+    PIN_DEND2_IN,
+    PIN_DEND2_EX,
+    PIN_DEND3_IN,
+    PIN_DEND3_EX,
+    PIN_DEND4_IN,
+    PIN_DEND4_EX
+};
+
+const uint32_t complimentary_ports[NUM_INPUTS] = {
+    PORT_AXON1_EX,
+    PORT_AXON2_EX,
+    PORT_AXON3_EX,
+    PORT_DEND1_IN,
+    PORT_DEND1_EX,
+    PORT_DEND2_IN,
+    PORT_DEND2_EX,
+    PORT_DEND3_IN,
+    PORT_DEND3_EX,
+    PORT_DEND4_IN,
+    PORT_DEND4_EX
+};
+
+volatile uint8_t dendrite_pulse_flag[NUM_INPUTS] = {[0 ... NUM_INPUTS-1] = 0};
+volatile uint8_t dendrite_ping_flag[NUM_INPUTS] = {[0 ... NUM_INPUTS-1] = 0};
 
 void clock_setup(void)
 {
@@ -31,8 +113,6 @@ void sys_tick_handler(void)
 	}
 
 	readBit(read_tick);
-	
-    //MMIO32((TIM21_BASE) + 0x10) &= ~(1<<0); //clear the interrupt register
 }
 
 void systick_setup()
@@ -126,12 +206,6 @@ void lpuart_setup(void)
 
 	gpio_set_af(PORT_LPUART1_RX, GPIO_AF6, PIN_LPUART1_RX);
 	gpio_set_af(PORT_LPUART1_TX, GPIO_AF6, PIN_LPUART1_TX);
-
-	/* gpio_mode_setup(PORT_DEND4_EX, GPIO_MODE_AF, GPIO_PUPD_NONE, PIN_DEND4_EX); */
-	/* gpio_mode_setup(PORT_DEND4_IN, GPIO_MODE_AF, GPIO_PUPD_NONE, PIN_DEND4_IN); */
-
-	/* gpio_set_af(PORT_DEND4_EX, GPIO_AF6, PIN_DEND4_EX); */
-	/* gpio_set_af(PORT_DEND4_IN, GPIO_AF6, PIN_DEND4_IN); */
 
 	USART_BRR(LPUART1) = 0x1A0AA; // 38400 baud
 	usart_set_databits(LPUART1, 8);  // USART_CR1_M
@@ -284,22 +358,7 @@ void tim_setup(void)
 	timer_enable_oc_output(TIM2, TIM_OC2);
 	timer_enable_oc_output(TIM2, TIM_OC3);
 	timer_enable_oc_output(TIM2, TIM_OC4);
-	
 
-	/*	Enable counter */
-	timer_enable_counter(TIM2);
-
-	// Enable TIM2 interrupts (600 us)
-	timer_enable_irq(TIM2, TIM_DIER_UIE);
-}
-
-void tim2_isr(void)
-{
-	
-	if (timer_get_flag(TIM2, TIM_SR_UIF)){
-		timer_clear_flag(TIM2, TIM_SR_UIF);
-	}
-	
 }
 
 void LEDFullWhite(void) 

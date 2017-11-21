@@ -11,6 +11,13 @@
 
 #include "comm.h"
 
+#define NUM_INPUTS 11
+#define HAS_AXONS   true
+#define HAS_DENDS   true
+#define NUM_AXONS   3
+#define NUM_DENDS   4
+#define COMPLIMENTARY_I(i)  i + (i % 2) - ((i+1) % 2)
+
 /*
     Define all pins
 */
@@ -66,6 +73,17 @@
 #define PIN_DEND4_EX    GPIO2
 
 #define ACTIVATE_INPUT(I, PIN)   active_input_pins[(I)] = PIN; active_input_tick[(I)] = (read_tick + 2) % 3
+
+extern const uint16_t complimentary_pins[NUM_INPUTS];
+extern const uint32_t complimentary_ports[NUM_INPUTS];
+extern volatile uint16_t active_input_pins[NUM_INPUTS];
+extern uint32_t active_input_ports[NUM_INPUTS];
+extern volatile uint16_t active_output_pins[NUM_INPUTS];
+extern uint32_t active_output_ports[NUM_INPUTS];
+extern volatile uint8_t active_input_tick[NUM_INPUTS];
+
+extern volatile uint8_t dendrite_pulse_flag[NUM_INPUTS];
+extern volatile uint8_t dendrite_ping_flag[NUM_INPUTS];
 
 /*
     Two clocks:
