@@ -40,9 +40,6 @@ int main(void)
 	uint8_t		button_armed = 0;
 	uint16_t	button_status = 0;
 
-	// current channel used to communicate to NID (e.g. CH. 1). 0 if neuron has not been selected by NID
-	uint32_t	nid_channel = 0b000;
-
 	message_t	message; // for constructing messages to send to the communications routine
 
 	int32_t joegenta = 0;
@@ -95,7 +92,31 @@ int main(void)
 				lpuart_setup_time += 1;
 			} else if (lpuart_setup_time == LPUART_SETUP_TIME){
 				lpuart_setup_time += 1;
-				lpuart_setup();
+				//lpuart_setup();
+			}
+
+			/*
+				Check to see if any comms flags have been set.
+				Process any data that came from the NID.
+			*/
+
+			if (comms_flag != 0){
+				switch (comms_flag){
+					case DEND1:
+						neuron.dendrites[0].magnitude = comms_data;
+						break;
+					case DEND2:
+						neuron.dendrites[1].magnitude = comms_data;
+						break;
+					case DEND3:
+						neuron.dendrites[2].magnitude = comms_data;
+						break;
+					case DEND4:
+						neuron.dendrites[3].magnitude = comms_data;
+						break;
+				}
+				comms_flag = 0;
+				comms_data = 0;
 			}
 
 			/*

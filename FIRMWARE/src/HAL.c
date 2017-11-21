@@ -330,7 +330,7 @@ void tim_setup(void)
 	//timer_reset(TIM2);
 
 	// Setup TIM2 interrupts	rcc_set_sysclk_source(RCC_HSI16);
-	nvic_enable_irq(NVIC_TIM2_IRQ);
+	//nvic_enable_irq(NVIC_TIM2_IRQ);
 	//nvic_set_priority(NVIC_TIM2_IRQ, 2);
 	//rcc_periph_reset_pulse(RST_TIM2);
 
