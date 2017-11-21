@@ -1,6 +1,5 @@
 
 #include "HAL.h"
-#include "comm.h"
 #include <libopencm3/stm32/usart.h>
 
 volatile uint8_t tick = 0;

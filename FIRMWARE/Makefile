@@ -17,13 +17,13 @@
 ## along with this library.  If not, see <http://www.gnu.org/licenses/>.
 ##
 
-BINARY = main
+BINARY = src/main
 
-OBJS = comm.o HAL.o neuron.o
+OBJS = common/comm.o src/HAL.o common/neuron.o
 
-OPENCM3_DIR = ../../libopencm3
+OPENCM3_DIR = ../libopencm3
 
-BIN_DIR = ../bin
+BIN_DIR = bin
 
 LDSCRIPT = $(OPENCM3_DIR)/lib/stm32/l0/stm32l0xx4.ld
 

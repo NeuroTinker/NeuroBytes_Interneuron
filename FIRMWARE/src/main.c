@@ -7,8 +7,8 @@
 #include <libopencm3/stm32/usart.h>
 
 
-#include "comm.h"
 #include "HAL.h"
+#include "comm.h"
 #include "neuron.h"
 
 #define BLINK_TIME			40

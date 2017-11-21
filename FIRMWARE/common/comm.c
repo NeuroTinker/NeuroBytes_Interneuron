@@ -1,6 +1,5 @@
 
 #include "comm.h"
-#include "HAL.h"
 
 write_buffer_t write_buffer;
 read_buffer_t read_buffer[NUM_INPUTS] = {
