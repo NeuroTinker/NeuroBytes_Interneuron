@@ -92,6 +92,14 @@ const uint32_t complimentary_ports[NUM_INPUTS] = {
 volatile uint8_t dendrite_pulse_flag[NUM_INPUTS] = {[0 ... NUM_INPUTS-1] = 0};
 volatile uint8_t dendrite_ping_flag[NUM_INPUTS] = {[0 ... NUM_INPUTS-1] = 0};
 
+static const uint32_t fingerprint[3] __attribute__((section (".fingerprint"))) __attribute__ ((__used__)) = {
+	1, // device id
+	2, // firmware version
+	0  // unique id
+};
+
+bool checkVersion(device_id, version) { return device_id == fingerprint[0] && version = fingerprint[1]; }
+
 void clock_setup(void)
 {
 	// STM32F0 command:	rcc_clock_setup_in_hsi_out_48mhz();

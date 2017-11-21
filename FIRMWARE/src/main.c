@@ -6,7 +6,6 @@
 #include <libopencm3/stm32/exti.h>
 #include <libopencm3/stm32/usart.h>
 
-
 #include "HAL.h"
 #include "comm.h"
 #include "neuron.h"
@@ -20,13 +19,6 @@
 #define BUTTON_HOLD_TIME    100
 #define LPUART_SETUP_TIME	100
 #define CHANGE_NID_TIME 	200
-
-static uint32_t fingerprint[3] __attribute__((section (".fingerprint"))) __attribute__ ((__used__)) = {
-	1, // device id
-	2, // firmware version
-	0  // unique id
-};
-
 
 int main(void)
 {
