@@ -120,6 +120,8 @@ void sys_tick_handler(void)
 	}
 
 	readBit(read_tick);
+	
+    MMIO32((TIM21_BASE) + 0x10) &= ~(1<<0); //clear the interrupt register
 }
 
 void systick_setup()
@@ -330,7 +332,7 @@ void tim_setup(void)
 	//timer_reset(TIM2);
 
 	// Setup TIM2 interrupts	rcc_set_sysclk_source(RCC_HSI16);
-	//nvic_enable_irq(NVIC_TIM2_IRQ);
+	nvic_enable_irq(NVIC_TIM2_IRQ);
 	//nvic_set_priority(NVIC_TIM2_IRQ, 2);
 	//rcc_periph_reset_pulse(RST_TIM2);
 
@@ -360,6 +362,20 @@ void tim_setup(void)
 	timer_enable_oc_output(TIM2, TIM_OC3);
 	timer_enable_oc_output(TIM2, TIM_OC4);
 
+	/*	Enable counter */
+	timer_enable_counter(TIM2);
+
+	// Enable TIM2 interrupts (600 us)
+	timer_enable_irq(TIM2, TIM_DIER_UIE);
+}
+
+void tim2_isr(void)
+{
+	
+	if (timer_get_flag(TIM2, TIM_SR_UIF)){
+		timer_clear_flag(TIM2, TIM_SR_UIF);
+	}
+	
 }
 
 void LEDFullWhite(void) 
