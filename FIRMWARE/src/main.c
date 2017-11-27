@@ -206,17 +206,17 @@ int main(void)
 				addWrite(DOWNSTREAM_BUFF, PULSE_MESSAGE);
 			}
 			
-			if (neuron.learning_state == HEBB){
+			// if (neuron.learning_state == HEBB){
 
-				if (++depression_time >= DEPRESSION_TIME){
-					for (i=0; i<DENDRITE_COUNT; i++){
-						neuron.dendrites[i].magnitude -= neuron.dendrites[i].base_magnitude;
-						neuron.dendrites[i].magnitude *= 511;
-						neuron.dendrites[i].magnitude /= 512;
-						neuron.dendrites[i].magnitude += neuron.dendrites[i].base_magnitude;
-					}
-				}		
-			}	
+			// 	if (++depression_time >= DEPRESSION_TIME){
+			// 		for (i=0; i<DENDRITE_COUNT; i++){
+			// 			neuron.dendrites[i].magnitude -= neuron.dendrites[i].base_magnitude;
+			// 			neuron.dendrites[i].magnitude *= 511;
+			// 			neuron.dendrites[i].magnitude /= 512;
+			// 			neuron.dendrites[i].magnitude += neuron.dendrites[i].base_magnitude;
+			// 		}
+			// 	}		
+			// }	
 			joegenta = 0;
 			for (i=0; i<DENDRITE_COUNT; i++){
 				joegenta += neuron.dendrites[i].magnitude - neuron.dendrites[i].base_magnitude;
