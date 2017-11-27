@@ -17,6 +17,7 @@
 #define NUM_AXONS   3
 #define NUM_DENDS   4
 #define COMPLIMENTARY_I(i)  i + (i % 2) - ((i+1) % 2)
+#define IS_EXCITATORY(i)        (i % 2)
 
 /*
     Define all pins

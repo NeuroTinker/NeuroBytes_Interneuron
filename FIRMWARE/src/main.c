@@ -220,7 +220,7 @@ int main(void)
 				neuron.state = FIRE;
 				neuron.fire_potential = HYPERPOLARIZATION;
 				neuron.fire_time = PULSE_LENGTH;
-				for (i=0; i<DENDRITE_COUNT; i++){
+				for (i=0; i<NUM_DENDS; i++){
 					neuron.dendrites[i].current_value = 0;
 					neuron.dendrites[i].state = OFF;
 					if (neuron.learning_state == HEBB){
@@ -249,7 +249,7 @@ int main(void)
 			if (neuron.learning_state == HEBB){
 
 				if (++depression_time >= DEPRESSION_TIME){
-					for (i=0; i<DENDRITE_COUNT; i++){
+					for (i=0; i<NUM_DENDS; i++){
 						neuron.dendrites[i].magnitude -= neuron.dendrites[i].base_magnitude;
 						neuron.dendrites[i].magnitude *= 511;
 						neuron.dendrites[i].magnitude /= 512;
@@ -258,7 +258,7 @@ int main(void)
 				}		
 			}	
 			joegenta = 0;
-			for (i=0; i<DENDRITE_COUNT; i++){
+			for (i=0; i<NUM_DENDS; i++){
 				joegenta += neuron.dendrites[i].magnitude - neuron.dendrites[i].base_magnitude;
 			}
 			
