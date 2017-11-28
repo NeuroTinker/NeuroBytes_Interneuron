@@ -129,13 +129,11 @@ int main(void)
 
 			// check for clear channel command
 			if (identify_time < IDENTIFY_TIME){
-				 if (identify_channel == 0){ 
-				 	// setting identify channel 0 clears identify_channel */
-				 	nid_channel = 0; 
-				 } else if (identify_channel == nid_channel && identify_time == 0){ 
-				 	// clear nid_channel if NID is trying to set a new NeuroByte to the current nid_channel */
-				 	nid_channel = 0; 
-				 } 
+				if (identify_time > 0){
+					if ((identify_channel == 0) || (identify_channel == nid_channel)){
+						nid_channel = 0;
+					}
+				}
 				 identify_time += 1;
 			}
 
@@ -157,13 +155,8 @@ int main(void)
 				if (button_armed == 0){
 					button_press_time = 0;
 				} else if (button_armed == 1){
-					if (identify_time < IDENTIFY_TIME){
-						nid_channel = identify_channel;
-					} else{
-						// temporarily use identify button also as an impulse button
-						neuron.fire_potential += 11000;
-						//neuron.leaky_current += 20;
-					}
+					nid_channel = identify_channel;
+					identify_time = 1;
 					button_armed = 0;
 				} else if (button_armed == 2){
 					if (neuron.learning_state == NONE){
