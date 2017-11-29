@@ -89,7 +89,7 @@ int main(void)
 					nid_distance = 100; // reset nid_keep_alive
 					nid_pin = 0; // clear the nid pin
 					nid_pin_out = 0;
-					nid_i = 13; // make this a macro like NO_NID_I
+					nid_i = NO_NID_I;
 				}
 			}
 
@@ -172,7 +172,7 @@ int main(void)
 				// button not pressed
 				if (button_armed == 0){
 					button_press_time = 0;
-				} else if (button_armed == 1){
+				} else if (button_armed == 1 && nid_i != NO_NID_I){
 					nid_channel = identify_channel;
 					identify_time = 1;
 					button_armed = 0;
