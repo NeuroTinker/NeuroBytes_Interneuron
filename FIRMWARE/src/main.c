@@ -56,15 +56,15 @@ int main(void)
 	neuron_t 	neuron;
 	neuronInit(&neuron);
 
-	n->dendrites[0].magnitude = 15000;
-	n->dendrites[1].magnitude = 8000;
-	n->dendrites[2].magnitude = 8000;
-	n->dendrites[3].magnitude = 15000;
+	neuron.dendrites[0].magnitude = 15000;
+	neuron.dendrites[1].magnitude = 8000;
+	neuron.dendrites[2].magnitude = 8000;
+	neuron.dendrites[3].magnitude = 15000;
 
-	n->dendrites[0].base_magnitude = 15000;
-	n->dendrites[1].base_magnitude = 8000;
-	n->dendrites[2].base_magnitude = 8000;
-	n->dendrites[3].base_magnitude = 15000;
+	neuron.dendrites[0].base_magnitude = 15000;
+	neuron.dendrites[1].base_magnitude = 8000;
+	neuron.dendrites[2].base_magnitude = 8000;
+	neuron.dendrites[3].base_magnitude = 15000;
 
 	// initialize communication buffers
 	commInit();
