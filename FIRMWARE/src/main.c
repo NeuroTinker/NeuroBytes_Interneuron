@@ -20,6 +20,14 @@
 #define LPUART_SETUP_TIME	100
 #define CHANGE_NID_TIME 	200
 
+typedef enum{
+    CURRENT     =   0b0001,
+    DEND1       =   0b0010,
+    DEND2       =   0b0011,
+    DEND3       =   0b0100,
+    DEND4       =   0b0101
+} parameter_identifiers;
+
 int main(void)
 {
 	uint8_t		i;
