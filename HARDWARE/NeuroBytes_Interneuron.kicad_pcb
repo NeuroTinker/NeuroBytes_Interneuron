@@ -1,24 +1,26 @@
-(kicad_pcb (version 4) (host pcbnew 4.0.7-e1-6374~58~ubuntu14.04.1)
+(kicad_pcb (version 4) (host pcbnew 4.0.7-e2-6376~58~ubuntu14.04.1)
 
   (general
-    (links 83)
+    (links 101)
     (no_connects 0)
-    (area 130.957187 77.474012 189.496654 102.653506)
+    (area 123.4 55.4 221.257146 138.425)
     (thickness 1.6)
-    (drawings 255)
+    (drawings 257)
     (tracks 413)
     (zones 0)
     (modules 31)
     (nets 39)
   )
 
-  (page A4)
+  (page A)
   (title_block
     (title "NeuroBytes Interneuron")
     (date 2017-05-15)
     (rev C)
     (company "NeuroTinker, LLC")
-    (comment 1 "License: GPL v3")
+    (comment 1 "(C) 2017 Zach Fredin")
+    (comment 2 "Drawing No. ZF-11425")
+    (comment 3 "License: CC-BY-SA 4.0")
   )
 
   (layers
@@ -2105,6 +2107,8 @@
       (xy 0.0254 -1.294521) (xy 0.352635 -1.271346)) (layer F.Mask) (width 0.01))
   )
 
+  (gr_line (start 128.53 102.5) (end 133.53 102.5) (layer F.Fab) (width 0.2))
+  (gr_line (start 131.03 100) (end 131.03 105) (layer F.Fab) (width 0.2))
   (gr_text 4 (at 148.43 100.7) (layer F.Mask)
     (effects (font (size 1.2 1.2) (thickness 0.17)))
   )
