@@ -147,12 +147,12 @@ int main(void)
 
 			// check for clear channel command
 			if (identify_time < IDENTIFY_TIME){
-				if (identify_time > 0){
+				if (identify_time == 0){
 					if ((identify_channel == 0) || (identify_channel == nid_channel)){
 						nid_channel = 0;
 					}
 				}
-				 identify_time += 1;
+				identify_time += 1;
 			}
 
 			// check identify button
