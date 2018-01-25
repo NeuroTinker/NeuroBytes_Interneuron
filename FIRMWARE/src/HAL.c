@@ -250,6 +250,7 @@ void setAsInput(uint32_t port, uint32_t pin)
 {
 	// setup gpio as an input pin
 	gpio_mode_setup(port, GPIO_MODE_INPUT, GPIO_PUPD_PULLDOWN, pin);
+	gpio_set_output_options(port, GPIO_OTYPE_PP, GPIO_OSPEED_LOW, pin);
 
 	// setup interrupt for the pin going high
 	exti_select_source(pin, port);

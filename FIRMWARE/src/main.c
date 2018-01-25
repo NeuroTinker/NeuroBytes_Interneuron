@@ -10,6 +10,8 @@
 #include "comm.h"
 #include "neuron.h"
 
+#define DBG
+
 #define BLINK_TIME			40
 #define DATA_TIME			10
 #define DEND_PING_TIME		200 // 1000 ms
@@ -25,7 +27,8 @@ typedef enum{
     DEND1       =   0b0010,
     DEND2       =   0b0011,
     DEND3       =   0b0100,
-    DEND4       =   0b0101
+	DEND4       =   0b0101,
+	DELAY 		=	0b0111
 } parameter_identifiers;
 
 int main(void)
@@ -42,6 +45,9 @@ int main(void)
 	uint16_t	lpuart_setup_time = 0;
 	uint8_t		change_nid_time = 0;
 	int16_t		fire_data = 0; // hack to make sure a pulse sends peak neuron potential and hyperpolarization  data
+	uint16_t	fire_delay_time_reset = FIRE_DELAY_TIME;
+	fire_delay_time_reset = 40; // temporary
+	uint16_t	fire_delay_overflow = 0; // used if firing period is less than delay time.
 
 	// button debounce variables
 	uint16_t	button_press_time = 0; 
@@ -57,14 +63,14 @@ int main(void)
 	neuronInit(&neuron);
 
 	neuron.dendrites[0].magnitude = 15000;
-	neuron.dendrites[1].magnitude = 8000;
-	neuron.dendrites[2].magnitude = 8000;
-	neuron.dendrites[3].magnitude = 15000;
+	neuron.dendrites[1].magnitude = 4000;
+	neuron.dendrites[2].magnitude = 4000;
+	neuron.dendrites[3].magnitude = 8000;
 
 	neuron.dendrites[0].base_magnitude = 15000;
-	neuron.dendrites[1].base_magnitude = 8000;
-	neuron.dendrites[2].base_magnitude = 8000;
-	neuron.dendrites[3].base_magnitude = 15000;
+	neuron.dendrites[1].base_magnitude = 4000;
+	neuron.dendrites[2].base_magnitude = 4000;
+	neuron.dendrites[3].base_magnitude = 8000;
 
 	// initialize communication buffers
 	commInit();
@@ -74,6 +80,10 @@ int main(void)
 	systick_setup(); // systick in microseconds
 	gpio_setup();
 	tim_setup();
+
+	#ifdef DBG
+	blink_time = BLINK_TIME;
+	#endif
 
 	// main processing routine	
 	for(;;)
@@ -131,6 +141,10 @@ int main(void)
 						break;
 					case DEND4:
 						neuron.dendrites[3].magnitude = comms_data;
+						break;
+					case DELAY:
+						fire_delay_time_reset = comms_data;
+					default:
 						break;
 				}
 				comms_flag = 0;
@@ -246,13 +260,22 @@ int main(void)
 				fire_data = neuron.potential; // hack to send fire data to NID
 
 				// send downstream pulse
-				fire_delay_time = FIRE_DELAY_TIME;
+				if (fire_delay_time == 0){
+					fire_delay_time = fire_delay_time_reset;
+					fire_delay_overflow = 0;
+				} else {
+					fire_delay_overflow = fire_delay_time_reset - fire_delay_time;
+				}
 				fire_flag = 1;
+			} else if (neuron.potential < HYPERPOLARIZATION){
+				neuron.potential = HYPERPOLARIZATION;
 			}
 
 			if (fire_delay_time > 0){
 				fire_delay_time -= 1;
 			} else if (fire_flag == 1){
+				if (fire_delay_overflow > 0)
+					fire_delay_time = fire_delay_overflow; // TODO: make this an actual FIFO buffer of fire timings
 				fire_flag = 0;
 				addWrite(DOWNSTREAM_BUFF, pulse_message);
 			}
