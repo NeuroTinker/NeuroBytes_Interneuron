@@ -10,7 +10,7 @@
 #include "comm.h"
 #include "neuron.h"
 
-// #define DBG
+#define DBG
 
 #define BLINK_TIME			40
 #define DATA_TIME			10
@@ -120,9 +120,9 @@ int main(void)
 				lpuart_setup_time += 1;
 			} else if (lpuart_setup_time == LPUART_SETUP_TIME){
 				lpuart_setup_time += 1;
-				#ifndef DBG
-				lpuart_setup();
-				#endif
+				// #ifndef DBG
+				// lpuart_setup();
+				// #endif
 			}
 
 			/*
