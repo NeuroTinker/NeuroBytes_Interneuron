@@ -82,7 +82,7 @@ int main(void)
 	tim_setup();
 
 	#ifdef DBG
-	blink_time = BLINK_TIME;
+	blink_flag = 1;
 	#endif
 
 	// main processing routine	
@@ -120,7 +120,9 @@ int main(void)
 				lpuart_setup_time += 1;
 			} else if (lpuart_setup_time == LPUART_SETUP_TIME){
 				lpuart_setup_time += 1;
+				#ifndef DBG
 				lpuart_setup();
+				#endif
 			}
 
 			/*
@@ -280,7 +282,7 @@ int main(void)
 				addWrite(DOWNSTREAM_BUFF, pulse_message);
 			}
 			
-			// if (neuron.learning_state == HEBB){
+			if (neuron.learning_state == HEBB){
 
 				if (++depression_time >= DEPRESSION_TIME){
 					for (i=0; i<NUM_DENDS; i++){
