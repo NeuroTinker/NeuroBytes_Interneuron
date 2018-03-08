@@ -63,13 +63,13 @@ int main(void)
 	neuronInit(&neuron);
 
 	neuron.dendrites[0].magnitude = 15000;
-	neuron.dendrites[1].magnitude = 6000;
-	neuron.dendrites[2].magnitude = 6000;
+	neuron.dendrites[1].magnitude = 7000;
+	neuron.dendrites[2].magnitude = 7000;
 	neuron.dendrites[3].magnitude = 11000;
 
 	neuron.dendrites[0].base_magnitude = 15000;
-	neuron.dendrites[1].base_magnitude = 6000;
-	neuron.dendrites[2].base_magnitude = 6000;
+	neuron.dendrites[1].base_magnitude = 7000;
+	neuron.dendrites[2].base_magnitude = 7000;
 	neuron.dendrites[3].base_magnitude = 11000;
 
 	// initialize communication buffers
