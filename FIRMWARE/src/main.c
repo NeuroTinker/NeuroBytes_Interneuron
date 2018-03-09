@@ -23,12 +23,15 @@
 #define CHANGE_NID_TIME 	200
 
 typedef enum{
-    CURRENT     =   0b0001,
-    DEND1       =   0b0010,
-    DEND2       =   0b0011,
-    DEND3       =   0b0100,
-	DEND4       =   0b0101,
-	DELAY 		=	0b0111
+	DECAY 		=	0b0000,
+    DEND1       =   0b0001,
+    DEND2       =   0b0010,
+    DEND3       =   0b0011,
+	DEND4       =   0b0100,
+	THRESHOLD 	=	0b0101,
+	DEPRESSION	=	0b0111,
+	LWINDOW		=	0b1000,
+	DELAY		=	0b1101
 } parameter_identifiers;
 
 int main(void)
@@ -54,6 +57,10 @@ int main(void)
 	uint8_t		button_armed = 0;
 	uint16_t	button_status = 0;
 
+	uint8_t		decay_delay_time = 0;
+	uint8_t		DECAY_DELAY_TIME = 1;
+
+	int32_t		threshold_potential = MEMBRANE_THRESHOLD;
 	message_t	message; // for constructing messages to send to the communications routine
 
 	int32_t joegenta = 0;
@@ -132,6 +139,8 @@ int main(void)
 
 			if (comms_flag != 0){
 				switch (comms_flag){
+					case DECAY:
+						DECAY_DELAY_TIME = comms_data;
 					case DEND1:
 						neuron.dendrites[0].magnitude = comms_data;
 						break;
@@ -144,6 +153,8 @@ int main(void)
 					case DEND4:
 						neuron.dendrites[3].magnitude = comms_data;
 						break;
+					case THRESHOLD:
+						threshold_potential = comms_data;
 					case DELAY:
 						fire_delay_time_reset = comms_data;
 					default:
@@ -210,7 +221,10 @@ int main(void)
 			checkDendrites(&neuron);
 			
 			// decay old dendrite contributions to the membrane potential
-			dendriteDecayStep(&neuron);
+			if (++decay_delay_time >= DECAY_DELAY_TIME){
+				decay_delay_time = 0;
+				dendriteDecayStep(&neuron);
+			}
 			// decay the firing potential
 			membraneDecayStep(&neuron);
 
