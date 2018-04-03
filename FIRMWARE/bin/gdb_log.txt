@@ -1,0 +1,228 @@
+#0  blocking_handler () at ../../cm3/vector.c:105
+No locals.
+#1  <signal handler called>
+No symbol table info available.
+#2  0x08000212 in processMessageHeader (read_buffer_ptr=<optimized out>) at comm.c:169
+        i = 0 '\000'
+        header = <optimized out>
+#3  0x0800012a in readBit (read_tick=<optimized out>) at comm.c:137
+        i = 0 '\000'
+        value = <optimized out>
+#4  0x080005ac in sys_tick_handler () at HAL.c:36
+No locals.
+#5  <signal handler called>
+No symbol table info available.
+#6  0x08000e34 in main () at main.c:69
+        i = <optimized out>
+        blink_time = 2
+        data_time = 0
+        send_ping_time = 44
+        fire_delay_time = 0
+        depression_time = 0
+        fire_flag = 0 '\000'
+        button_press_time = 0
+        button_armed = 0 '\000'
+        button_status = <optimized out>
+        nid_channel = 0
+        message = <optimized out>
+        joegenta = <optimized out>
+        neuron = {potential = 0, dendrites = {{port = 77858840, pin = 65151, state = OFF, status = (CONNECTED | unknown: 222), 
+              type = EXCITATORY, alive_time = 50, magnitude = 15000, base_magnitude = 15000, current_value = 0, nid_flag = 123 '{', 
+              read_flag = 252 '\374', read_time = 130 '\202', pulse_time = 50 '2', timestamp = 50}, {port = 3468648361, pin = 16514, 
+              state = OFF, status = (unknown: 128), type = EXCITATORY, alive_time = 50, magnitude = 8000, base_magnitude = 8000, 
+              current_value = 0, nid_flag = 112 'p', read_flag = 0 '\000', read_time = 255 '\377', pulse_time = 50 '2', timestamp = 50}, 
+            {port = 93585664, pin = 27579, state = OFF, status = (CONNECTED | unknown: 102), type = EXCITATORY, alive_time = 50, 
+              magnitude = 8000, base_magnitude = 8000, current_value = 0, nid_flag = 237 '\355', read_flag = 113 'q', 
+              read_time = 32 ' ', pulse_time = 50 '2', timestamp = 50}, {port = 1610600415, pin = 128, state = OFF, 
+              status = (CONNECTED | unknown: 64), type = EXCITATORY, alive_time = 50, magnitude = 15000, base_magnitude = 15000, 
+              current_value = 0, nid_flag = 32 ' ', read_flag = 161 '\241', read_time = 117 'u', pulse_time = 50 '2', timestamp = 50}}, 
+          dendrite_ping_time = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53683}, state = INTEGRATE, learning_state = NONE, fire_time = 0, 
+          fire_potential = 0, hebb_time = 0, time_multiple = 249 '\371', ms_count = 34896, leaky_current = 0}
+Starting program: /home/jarod/neurotinker/interneuron/FIRMWARE/bin/main.elf 
+
+Program received signal SIGTRAP, Trace/breakpoint trap.
+blocking_handler () at ../../cm3/vector.c:105
+105		while (1);
+#0  blocking_handler () at ../../cm3/vector.c:105
+No locals.
+#1  <signal handler called>
+No symbol table info available.
+#2  0x08000212 in processMessageHeader (read_buffer_ptr=<optimized out>) at comm.c:169
+        i = 0 '\000'
+        header = <optimized out>
+#3  0x0800012a in readBit (read_tick=<optimized out>) at comm.c:137
+        i = 0 '\000'
+        value = <optimized out>
+#4  0x080005ac in sys_tick_handler () at HAL.c:36
+No locals.
+#5  <signal handler called>
+No symbol table info available.
+#6  0x08000e34 in main () at main.c:69
+        i = <optimized out>
+        blink_time = 0
+        data_time = 0
+        send_ping_time = 24
+        fire_delay_time = 0
+        depression_time = 0
+        fire_flag = 0 '\000'
+        button_press_time = 0
+        button_armed = 0 '\000'
+        button_status = <optimized out>
+        nid_channel = 0
+        message = <optimized out>
+        joegenta = <optimized out>
+        neuron = {potential = 0, dendrites = {{port = 77858840, pin = 65151, state = OFF, status = (CONNECTED | unknown: 222), 
+              type = EXCITATORY, alive_time = 50, magnitude = 15000, base_magnitude = 15000, current_value = 0, nid_flag = 123 '{', 
+              read_flag = 252 '\374', read_time = 130 '\202', pulse_time = 50 '2', timestamp = 50}, {port = 3468648361, pin = 16514, 
+              state = OFF, status = (unknown: 128), type = EXCITATORY, alive_time = 50, magnitude = 8000, base_magnitude = 8000, 
+              current_value = 0, nid_flag = 112 'p', read_flag = 0 '\000', read_time = 255 '\377', pulse_time = 50 '2', timestamp = 50}, 
+            {port = 93585664, pin = 27579, state = OFF, status = (CONNECTED | unknown: 102), type = EXCITATORY, alive_time = 50, 
+              magnitude = 8000, base_magnitude = 8000, current_value = 0, nid_flag = 237 '\355', read_flag = 113 'q', 
+              read_time = 32 ' ', pulse_time = 50 '2', timestamp = 50}, {port = 1610600415, pin = 128, state = OFF, 
+              status = (CONNECTED | unknown: 64), type = EXCITATORY, alive_time = 50, magnitude = 15000, base_magnitude = 15000, 
+              current_value = 0, nid_flag = 32 ' ', read_flag = 161 '\241', read_time = 117 'u', pulse_time = 50 '2', timestamp = 50}}, 
+          dendrite_ping_time = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 51117}, state = INTEGRATE, learning_state = NONE, fire_time = 0, 
+          fire_potential = 0, hebb_time = 0, time_multiple = 249 '\371', ms_count = 34896, leaky_current = 0}
+Reading symbols from main.elf...done.
+Loading section .text, size 0x21d8 lma 0x8000000
+Loading section .data, size 0x154 lma 0x80021d8
+Loading section .fingerprint, size 0xc lma 0x8003e00
+Start address 0x8001634, load size 9016
+Transfer rate: 6 KB/sec, 819 bytes/write.
+Starting program: /home/jarod/neurotinker/interneuron/FIRMWARE/bin/main.elf 
+
+Program received signal SIGTRAP, Trace/breakpoint trap.
+blocking_handler () at ../../cm3/vector.c:105
+105		while (1);
+#0  blocking_handler () at ../../cm3/vector.c:105
+No locals.
+#1  <signal handler called>
+No symbol table info available.
+#2  0x08000212 in processMessageHeader (read_buffer_ptr=<optimized out>) at comm.c:169
+        i = 0 '\000'
+        header = <optimized out>
+#3  0x0800012a in readBit (read_tick=<optimized out>) at comm.c:137
+        i = 0 '\000'
+        value = <optimized out>
+#4  0x080005ac in sys_tick_handler () at HAL.c:36
+No locals.
+#5  <signal handler called>
+No symbol table info available.
+#6  0x08000e34 in main () at main.c:69
+        i = <optimized out>
+        blink_time = 0
+        data_time = 0
+        send_ping_time = 42
+        fire_delay_time = 0
+        depression_time = 0
+        fire_flag = 0 '\000'
+        button_press_time = 0
+        button_armed = 0 '\000'
+        button_status = <optimized out>
+        nid_channel = 0
+        message = <optimized out>
+        joegenta = <optimized out>
+        neuron = {potential = 0, dendrites = {{port = 77858840, pin = 65151, state = OFF, status = (CONNECTED | unknown: 222), 
+              type = EXCITATORY, alive_time = 50, magnitude = 15000, base_magnitude = 15000, current_value = 0, nid_flag = 123 '{', 
+              read_flag = 252 '\374', read_time = 130 '\202', pulse_time = 50 '2', timestamp = 50}, {port = 3468648361, pin = 16514, 
+              state = OFF, status = (unknown: 128), type = EXCITATORY, alive_time = 50, magnitude = 8000, base_magnitude = 8000, 
+              current_value = 0, nid_flag = 112 'p', read_flag = 0 '\000', read_time = 255 '\377', pulse_time = 50 '2', timestamp = 50}, 
+            {port = 93585664, pin = 27579, state = OFF, status = (CONNECTED | unknown: 102), type = EXCITATORY, alive_time = 50, 
+              magnitude = 8000, base_magnitude = 8000, current_value = 0, nid_flag = 237 '\355', read_flag = 113 'q', 
+              read_time = 32 ' ', pulse_time = 50 '2', timestamp = 50}, {port = 1610600415, pin = 128, state = OFF, 
+              status = (CONNECTED | unknown: 64), type = EXCITATORY, alive_time = 50, magnitude = 15000, base_magnitude = 15000, 
+              current_value = 0, nid_flag = 32 ' ', read_flag = 161 '\241', read_time = 117 'u', pulse_time = 50 '2', timestamp = 50}}, 
+          dendrite_ping_time = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 50419}, state = INTEGRATE, learning_state = NONE, fire_time = 0, 
+          fire_potential = 0, hebb_time = 0, time_multiple = 249 '\371', ms_count = 34896, leaky_current = 0}
+Reading symbols from main.elf...done.
+Loading section .text, size 0x21cc lma 0x8000000
+Loading section .data, size 0x154 lma 0x80021cc
+Loading section .fingerprint, size 0xc lma 0x8003e00
+Start address 0x8001628, load size 9004
+Transfer rate: 6 KB/sec, 818 bytes/write.
+Starting program: /home/jarod/neurotinker/interneuron/FIRMWARE/bin/main.elf 
+
+Program terminated with signal SIGLOST, Resource lost.
+The program no longer exists.
+Reading symbols from main.elf...done.
+Target voltage: 4.9V
+Available Targets:
+No. Att Driver
+ 1      STM32L0x
+Attaching to program: /home/jarod/neurotinker/interneuron/FIRMWARE/bin/main.elf, Remote target
+
+[Remote target] #2 stopped.
+0x08000e26 in main () at main.c:69
+69			if (main_tick == 1){
+Loading section .text, size 0x21c8 lma 0x8000000
+Loading section .data, size 0x154 lma 0x80021c8
+Loading section .fingerprint, size 0xc lma 0x8003e00
+Start address 0x8001624, load size 9000
+Transfer rate: 6 KB/sec, 818 bytes/write.
+Starting program: /home/jarod/neurotinker/interneuron/FIRMWARE/bin/main.elf 
+
+Program received signal SIGINT, Interrupt.
+0x08000e28 in main () at main.c:69
+69			if (main_tick == 1){
+Detaching from program: /home/jarod/neurotinker/interneuron/FIRMWARE/bin/main.elf, Remote target
+Target voltage: 4.9V
+Available Targets:
+No. Att Driver
+ 1      STM32L0x
+Attaching to program: /home/jarod/neurotinker/interneuron/FIRMWARE/bin/main.elf, Remote target
+
+[Remote target] #1 stopped.
+0x08000e32 in main () at main.c:73
+73				if (nid_ping_time++ > NID_PING_TIME){
+Loading section .text, size 0x21c8 lma 0x8000000
+Loading section .data, size 0x154 lma 0x80021c8
+Loading section .fingerprint, size 0xc lma 0x8003e00
+Start address 0x8001624, load size 9000
+Transfer rate: 6 KB/sec, 818 bytes/write.
+Starting program: /home/jarod/neurotinker/interneuron/FIRMWARE/bin/main.elf 
+
+Program received signal SIGINT, Interrupt.
+0x08000e28 in main () at main.c:69
+69			if (main_tick == 1){
+Reading symbols from main.elf...done.
+Loading section .text, size 0x21c8 lma 0x8000000
+Loading section .data, size 0x154 lma 0x80021c8
+Loading section .fingerprint, size 0xc lma 0x8003e00
+Start address 0x8001624, load size 9000
+Transfer rate: 6 KB/sec, 818 bytes/write.
+Detaching from program: /home/jarod/neurotinker/interneuron/FIRMWARE/bin/main.elf, Remote target
+Target voltage: 4.9V
+Available Targets:
+No. Att Driver
+ 1      STM32L0x
+Attaching to program: /home/jarod/neurotinker/interneuron/FIRMWARE/bin/main.elf, Remote target
+
+[Remote target] #1 stopped.
+main () at main.c:69
+69			if (main_tick == 1){
+Loading section .text, size 0x21c8 lma 0x8000000
+Loading section .data, size 0x154 lma 0x80021c8
+Loading section .fingerprint, size 0xc lma 0x8003e00
+Start address 0x8001624, load size 9000
+Transfer rate: 6 KB/sec, 818 bytes/write.
+Starting program: /home/jarod/neurotinker/interneuron/FIRMWARE/bin/main.elf 
+
+Program terminated with signal SIGLOST, Resource lost.
+The program no longer exists.
+Quit
+Target voltage: 4.9V
+Available Targets:
+No. Att Driver
+ 1      STM32L0x
+Target voltage: 4.9V
+Available Targets:
+No. Att Driver
+ 1      STM32L0x
+Attaching to program: /home/jarod/neurotinker/interneuron/FIRMWARE/bin/main.elf, Remote target
+
+[Remote target] #2 stopped.
+0x08000d94 in dendriteDecayStep (n=0x20000750) at neuron.c:215
+215			n->dendrites[i].current_value = (n->dendrites[i].current_value * 63 ) / 64;
+Loading section .text, size 0x21c8 lma 0x8000000
+Error writing data to flash
+Detaching from program: /home/jarod/neurotinker/interneuron/FIRMWARE/bin/main.elf, Remote target

@@ -1,0 +1,1 @@
+/usr/bin/cc -g   CMakeFiles/FIRMWARE.dir/common/comm.c.o CMakeFiles/FIRMWARE.dir/common/neuron.c.o CMakeFiles/FIRMWARE.dir/src/HAL.c.o CMakeFiles/FIRMWARE.dir/src/main.c.o  -o FIRMWARE 

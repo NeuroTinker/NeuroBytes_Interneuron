@@ -58,7 +58,7 @@ int main(void)
 	uint16_t	button_status = 0;
 
 	uint8_t		decay_delay_time = 0;
-	uint8_t		DECAY_DELAY_TIME = 1;
+	uint8_t		DECAY_DELAY_TIME = 3;
 
 	int32_t		threshold_potential = MEMBRANE_THRESHOLD;
 	message_t	message; // for constructing messages to send to the communications routine
@@ -70,13 +70,13 @@ int main(void)
 	neuronInit(&neuron);
 
 	neuron.dendrites[0].magnitude = 15000;
-	neuron.dendrites[1].magnitude = 7000;
-	neuron.dendrites[2].magnitude = 7000;
+	neuron.dendrites[1].magnitude = 4300;
+	neuron.dendrites[2].magnitude = 4300;
 	neuron.dendrites[3].magnitude = 11000;
 
 	neuron.dendrites[0].base_magnitude = 15000;
-	neuron.dendrites[1].base_magnitude = 7000;
-	neuron.dendrites[2].base_magnitude = 7000;
+	neuron.dendrites[1].base_magnitude = 4300;
+	neuron.dendrites[2].base_magnitude = 4300;
 	neuron.dendrites[3].base_magnitude = 11000;
 
 	// initialize communication buffers
@@ -175,8 +175,8 @@ int main(void)
 			// check for clear channel command
 			if (identify_time < IDENTIFY_TIME){
 				if (identify_time == 0){
-					if ((identify_channel == 0) || (identify_channel == nid_channel)){
-						nid_channel = 0;
+					if ((identify_channel == IDENTIFY_CLEAR) || (identify_channel == nid_channel)){
+						// nid_channel = 0;
 					}
 				}
 				identify_time += 1;
@@ -184,6 +184,8 @@ int main(void)
 
 			// check identify button
 			button_status = gpio_get(PORT_IDENTIFY, PIN_IDENTIFY);
+			// button_status = 0;
+			nid_channel = 1;
 
 			// if identify button is pressed and identify_time < IDENTIFY_TIME (i.e. NID sent 'identify'' message), set new nid_channel
 			if (button_status == 0){
@@ -200,7 +202,14 @@ int main(void)
 				if (button_armed == 0){
 					button_press_time = 0;
 				} else if (button_armed == 1 && nid_i != NO_NID_I){
-					nid_channel = identify_channel;
+					if (identify_channel != IDENTIFY_STOP) {
+						if (nid_channel != identify_channel) {
+							nid_channel = identify_channel;
+							message.message = ((uint32_t) DATA_TYPE_MESSAGE | ((uint32_t) nid_channel << 20) | ((uint32_t) getFingerprint()));
+							message.length = 32;
+							addWrite(NID_BUFF, (const message_t) message);
+						}
+					}	
 					identify_time = 1;
 					button_armed = 0;
 				} else if (button_armed == 2){
