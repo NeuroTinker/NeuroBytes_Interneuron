@@ -9,6 +9,7 @@
 #include "HAL.h"
 #include "comm.h"
 #include "neuron.h"
+#include "izhi.h"
 
 // #define DBG
 
@@ -68,6 +69,14 @@ int main(void)
 	// initialize neuron
 	neuron_t 	neuron;
 	neuronInit(&neuron);
+
+	// initialize izhi neuron
+	ineuron_t spiky_i;
+	RS_i(&spiky_i);
+
+	for (i = 0; i < 100; i++) {
+		step_i(&spiky_i, 0, 3);
+	}
 
 	neuron.dendrites[0].magnitude = 15000;
 	neuron.dendrites[1].magnitude = 4300;
@@ -142,16 +151,16 @@ int main(void)
 					case DECAY:
 						DECAY_DELAY_TIME = comms_data;
 					case DEND1:
-						neuron.dendrites[0].magnitude = comms_data;
+						spiky_i.a_inv = comms_data;
 						break;
 					case DEND2:
-						neuron.dendrites[1].magnitude = comms_data;
+						spiky_i.b_inv = comms_data;
 						break;
 					case DEND3:
-						neuron.dendrites[2].magnitude = comms_data;
+						spiky_i.c = comms_data;
 						break;
 					case DEND4:
-						neuron.dendrites[3].magnitude = comms_data;
+						spiky_i.d = comms_data;
 						break;
 					case THRESHOLD:
 						threshold_potential = comms_data;
@@ -237,6 +246,8 @@ int main(void)
 			// decay the firing potential
 			membraneDecayStep(&neuron);
 
+			step_i(&spiky_i, 10 * spiky_i.scale, 3);
+
 			// current membrane potential comes from dendrites and any left over firing potential
 			neuron.potential = calcNeuronPotential(&neuron);
 			neuron.potential += neuron.fire_potential;
@@ -246,17 +257,7 @@ int main(void)
 			if (nid_channel != 0){
 				// send data every DATA_TIME ticks
 				if (data_time++ > DATA_TIME){
-					if (fire_data > 0){
-						if (fire_data == 1){
-							message.message = (((uint32_t) DATA_MESSAGE)) | ((uint16_t) HYPERPOLARIZATION);
-							fire_data = 0;						
-						} else {
-							message.message = (((uint32_t) DATA_MESSAGE)) | ((uint16_t) fire_data);	
-							fire_data = 1;						
-						}
-					} else {
-						message.message = (((uint32_t) DATA_MESSAGE)) | ((uint16_t) neuron.potential);						
-					}
+					message.message = (((uint32_t) DATA_MESSAGE)) | ((uint16_t) ((int16_t)(spiky_i.potential / 8192)));						
 					data_time = 0;
 					message.length = 32;
 					message.message |= (nid_channel << 21);

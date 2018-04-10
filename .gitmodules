@@ -7,3 +7,6 @@
 [submodule "FIRMWARE/common"]
 	path = FIRMWARE/common
 	url = https://github.com/neurotinker/neurobytes_common
+[submodule "FIRMWARE/izhi"]
+	path = FIRMWARE/izhi
+	url = https://github.com/patrickyeon/izhi-neurons
