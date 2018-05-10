@@ -10,7 +10,7 @@
 #include "comm.h"
 #include "neuron.h"
 
-// #define DBG
+#define DBG
 
 #define BLINK_TIME			40
 #define DATA_TIME			10
@@ -264,9 +264,9 @@ int main(void)
 				for (i=0; i<NUM_DENDS; i++){
 					neuron.dendrites[i].current_value = 0;
 					neuron.dendrites[i].state = OFF;
-					if (neuron.learning_state == HEBB){
-						calcDendriteWeightings(&neuron);
-					}
+					// if (neuron.learning_state == HEBB){
+					// 	calcDendriteWeightings(&neuron);
+					// }
 				}
 				if (neuron.learning_state == HEBB){
 					calcDendriteWeightings(&neuron);
@@ -343,7 +343,7 @@ int main(void)
 					if (neuron.potential > 5000){
 						setLED((neuron.potential / 50), (200 - neuron.potential / 50) / 2, 0);
 					} else{
-						joegenta /= 8;
+						joegenta /= 16;
 						if (joegenta / 80 > 240){
 							setLED(180,0,180);
 						} else if (joegenta > 0){
