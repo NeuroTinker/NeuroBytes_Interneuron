@@ -22,6 +22,13 @@
 #define LPUART_SETUP_TIME	100
 #define CHANGE_NID_TIME 	200
 
+#define _learning_brightness
+#define _learning_led (pot, joe) (setLED())
+
+#define	MAX_ZACHNESS		64
+#define MIN_ZACHNESS		32
+
+
 typedef enum{
 	DECAY 		=	0b0000,
     DEND1       =   0b0001,
@@ -64,6 +71,9 @@ int main(void)
 	message_t	message; // for constructing messages to send to the communications routine
 
 	int32_t joegenta = 0;
+	int32_t zachness = 0;
+	int32_t blue = 0;
+	int32_t red = 0;
 
 	// initialize neuron
 	neuron_t 	neuron;
@@ -334,28 +344,71 @@ int main(void)
 					neuron.state = INTEGRATE;
 				}
 				if (neuron.learning_state == HEBB){
-					setLED(200,100,200);
+					setLED(200,120,200);
 				} else{
 					LEDFullWhite();
 				}
 			} else if (neuron.state == INTEGRATE){
 				if (neuron.learning_state == HEBB){
-					if (neuron.potential > 5000){
-						setLED((neuron.potential / 50), (200 - neuron.potential / 50) / 2, 0);
-					} else{
-						joegenta /= 16;
-						if (joegenta / 80 > 240){
-							setLED(180,0,180);
-						} else if (joegenta > 0){
-							setLED(40 + joegenta, 0, 40 + joegenta);
-						} else if (joegenta < -10000){
-							setLED(40,0, 40);
-						} else if (joegenta < 0){
-							setLED(40, 0, 40);
-						} else{
-							setLED(40,0,40);
-						}
+					if (neuron.potential > 10000) {
+						red = 200;
+						blue = 100;
+						// max magenta
+					} else if (neuron.potential < -10000) {
+						// min brightness
+						red = 0;
+						blue = 200;
+					} else if (neuron.potential < 0) {
+						// temp min brightness
+						red = 100 + (neuron.potential / 100);
+						blue = 150 - (neuron.potential / 200);
+					} else if (neuron.potential > 0) {
+						// calculate
+						red = 100 + (neuron.potential / 100);
+						blue = 150 - (neuron.potential / 200);
+					} else {
+						red = 100;
+						blue = 150;
 					}
+
+					joegenta /= 256; // up to 187
+					if (joegenta < 120) {
+						red *= (joegenta + 20);
+						red /= 40;
+						blue *= (joegenta + 20);
+						blue /= 40;
+					}
+					setLED(red, 0, blue);
+
+					// if (neuron.potential > 10000){
+					// 	setLED(200,0,100);
+					// } else if (neuron.potential > 0){
+					// 	setLED(neuron.potential / 50, 0, 200 - (neuron.potential / 50));
+					// } else if (neuron.potential < -10000){
+					// 	setLED(0,0, 200);
+					// } else if (neuron.potential < 0){
+					// 	setLED(200 + (neuron.potential / 50), 0, -1 * neuron.potential / 50);
+					// } else{
+					// 	setLED(100,0,150);
+					// }
+
+					// if (neuron.potential > 10000){
+					// 	setLED((neuron.potential / 50), (200 - neuron.potential / 50) / 2, 0);
+					// } else{
+					// 	/* joegenta can be up to 12000 */
+					// 	joegenta /= 64; /* joegenta up to 187 */
+					// 	if (joegenta > 140){
+					// 		setLED(180,0,180);
+					// 	} else if (joegenta > 0){
+					// 		setLED(40 + joegenta, 0, 40 + joegenta);
+					// 	} else if (joegenta < -10000){
+					// 		setLED(40,0, 40);
+					// 	} else if (joegenta < 0){
+					// 		setLED(40, 0, 40);
+					// 	} else{
+					// 		setLED(40,0,40);
+					// 	}
+					// }
 				} else{
 					if (neuron.potential > 10000){
 						setLED(200,0,0);
