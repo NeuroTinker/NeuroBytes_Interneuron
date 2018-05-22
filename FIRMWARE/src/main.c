@@ -21,14 +21,25 @@
 #define BUTTON_HOLD_TIME    100
 #define LPUART_SETUP_TIME	100
 #define CHANGE_NID_TIME 	200
+#define HEBB_LEARNING_DELAY 1000
+
+#define _learning_brightness
+#define _learning_led (pot, joe) (setLED())
+
+#define	MAX_ZACHNESS		64
+#define MIN_ZACHNESS		32
+
 
 typedef enum{
-    CURRENT     =   0b0001,
-    DEND1       =   0b0010,
-    DEND2       =   0b0011,
-    DEND3       =   0b0100,
-	DEND4       =   0b0101,
-	DELAY 		=	0b0111
+	DECAY 		=	0b0000,
+    DEND1       =   0b0001,
+    DEND2       =   0b0010,
+    DEND3       =   0b0011,
+	DEND4       =   0b0100,
+	THRESHOLD 	=	0b0101,
+	DEPRESSION	=	0b0111,
+	LWINDOW		=	0b1000,
+	DELAY		=	0b1101
 } parameter_identifiers;
 
 int main(void)
@@ -54,23 +65,31 @@ int main(void)
 	uint8_t		button_armed = 0;
 	uint16_t	button_status = 0;
 
+	uint8_t		decay_delay_time = 0;
+	uint8_t		DECAY_DELAY_TIME = 1;
+
+	int32_t		threshold_potential = MEMBRANE_THRESHOLD;
 	message_t	message; // for constructing messages to send to the communications routine
 
 	int32_t joegenta = 0;
+	int32_t zachness = 0;
+	int32_t blue = 0;
+	int32_t red = 0;
+	uint32_t hebb_learning_delay = 0;
 
 	// initialize neuron
 	neuron_t 	neuron;
 	neuronInit(&neuron);
 
 	neuron.dendrites[0].magnitude = 15000;
-	neuron.dendrites[1].magnitude = 4000;
-	neuron.dendrites[2].magnitude = 4000;
-	neuron.dendrites[3].magnitude = 8000;
+	neuron.dendrites[1].magnitude = 6000;
+	neuron.dendrites[2].magnitude = 6000;
+	neuron.dendrites[3].magnitude = 11000;
 
 	neuron.dendrites[0].base_magnitude = 15000;
-	neuron.dendrites[1].base_magnitude = 4000;
-	neuron.dendrites[2].base_magnitude = 4000;
-	neuron.dendrites[3].base_magnitude = 8000;
+	neuron.dendrites[1].base_magnitude = 6000;
+	neuron.dendrites[2].base_magnitude = 6000;
+	neuron.dendrites[3].base_magnitude = 11000;
 
 	// initialize communication buffers
 	commInit();
@@ -88,7 +107,7 @@ int main(void)
 	// main processing routine	
 	for(;;)
 	{
-		if (main_tick == 1){
+		if (main_tick == 1 && pause_flag == 0){
 			// main tick every 5 ms
 			main_tick = 0;
 			// check to see if nid ping hasn't been received in last NID_PING_TIME ticks
@@ -132,6 +151,8 @@ int main(void)
 
 			if (comms_flag != 0){
 				switch (comms_flag){
+					case DECAY:
+						DECAY_DELAY_TIME = comms_data;
 					case DEND1:
 						neuron.dendrites[0].magnitude = comms_data;
 						break;
@@ -144,6 +165,8 @@ int main(void)
 					case DEND4:
 						neuron.dendrites[3].magnitude = comms_data;
 						break;
+					case THRESHOLD:
+						threshold_potential = comms_data;
 					case DELAY:
 						fire_delay_time_reset = comms_data;
 					default:
@@ -210,7 +233,10 @@ int main(void)
 			checkDendrites(&neuron);
 			
 			// decay old dendrite contributions to the membrane potential
-			dendriteDecayStep(&neuron);
+			if (++decay_delay_time >= DECAY_DELAY_TIME){
+				decay_delay_time = 0;
+				dendriteDecayStep(&neuron);
+			}
 			// decay the firing potential
 			membraneDecayStep(&neuron);
 
@@ -250,12 +276,13 @@ int main(void)
 				for (i=0; i<NUM_DENDS; i++){
 					neuron.dendrites[i].current_value = 0;
 					neuron.dendrites[i].state = OFF;
-					if (neuron.learning_state == HEBB){
-						calcDendriteWeightings(&neuron);
-					}
+					// if (neuron.learning_state == HEBB){
+					// 	calcDendriteWeightings(&neuron);
+					// }
 				}
 				if (neuron.learning_state == HEBB){
 					calcDendriteWeightings(&neuron);
+					hebb_learning_delay = 0;
 				}
 				depression_time = 0;
 
@@ -282,8 +309,8 @@ int main(void)
 				addWrite(DOWNSTREAM_BUFF, pulse_message);
 			}
 			
-			if (neuron.learning_state == HEBB){
-
+			if ((neuron.learning_state == HEBB) && (hebb_learning_delay++ >= HEBB_LEARNING_DELAY)){
+				hebb_learning_delay = hebb_learning_delay >= HEBB_LEARNING_DELAY ? HEBB_LEARNING_DELAY : hebb_learning_delay;
 				if (++depression_time >= DEPRESSION_TIME){
 					for (i=0; i<NUM_DENDS; i++){
 						neuron.dendrites[i].magnitude -= neuron.dendrites[i].base_magnitude;
@@ -320,28 +347,59 @@ int main(void)
 					neuron.state = INTEGRATE;
 				}
 				if (neuron.learning_state == HEBB){
-					setLED(200,100,200);
+					setLED(200,120,200);
 				} else{
 					LEDFullWhite();
 				}
 			} else if (neuron.state == INTEGRATE){
 				if (neuron.learning_state == HEBB){
-					if (neuron.potential > 5000){
-						setLED((neuron.potential / 50), (200 - neuron.potential / 50) / 2, 0);
-					} else{
-						joegenta /= 8;
-						if (joegenta / 80 > 240){
-							setLED(180,0,180);
-						} else if (joegenta > 0){
-							setLED(40 + joegenta, 0, 40 + joegenta);
-						} else if (joegenta < -10000){
-							setLED(40,0, 40);
-						} else if (joegenta < 0){
-							setLED(40, 0, 40);
-						} else{
-							setLED(40,0,40);
-						}
+					if (neuron.potential > 10000) {
+						red = 200;
+						blue = 0;
+						// max magenta
+					} else if (neuron.potential < -10000) {
+						// min brightness
+						red = 0;
+						blue = 200;
+					} else if (neuron.potential < 0) {
+						// temp min brightness
+						red = 100 + (neuron.potential / 100);
+						blue = 100 - (neuron.potential / 100);
+					} else if (neuron.potential > 0) {
+						// calculate
+						red = 100 + (neuron.potential / 100);
+						blue = 100 - (neuron.potential / 100);
+					} else {
+						red = 100;
+						blue = 100;
 					}
+
+					joegenta /= 256; // up to 187
+					if (joegenta < 120) {
+						red *= (joegenta + 20);
+						red /= 40;
+						blue *= (joegenta + 20);
+						blue /= 40;
+					}
+					setLED(red, 0, blue);
+
+					// if (neuron.potential > 10000){
+					// 	setLED((neuron.potential / 50), (200 - neuron.potential / 50) / 2, 0);
+					// } else{
+					// 	/* joegenta can be up to 12000 */
+					// 	joegenta /= 64; /* joegenta up to 187 */
+					// 	if (joegenta > 140){
+					// 		setLED(180,0,180);
+					// 	} else if (joegenta > 0){
+					// 		setLED(40 + joegenta, 0, 40 + joegenta);
+					// 	} else if (joegenta < -10000){
+					// 		setLED(40,0, 40);
+					// 	} else if (joegenta < 0){
+					// 		setLED(40, 0, 40);
+					// 	} else{
+					// 		setLED(40,0,40);
+					// 	}
+					// }
 				} else{
 					if (neuron.potential > 10000){
 						setLED(200,0,0);
