@@ -353,47 +353,35 @@ int main(void)
 				}
 			} else if (neuron.state == INTEGRATE){
 				if (neuron.learning_state == HEBB){
-					// if (neuron.potential > 10000) {
-					// 	red = 200;
-					// 	blue = 0;
-					// 	// max magenta
-					// } else if (neuron.potential < -10000) {
-					// 	// min brightness
-					// 	red = 0;
-					// 	blue = 200;
-					// } else if (neuron.potential < 0) {
-					// 	// temp min brightness
-					// 	red = 100 + (neuron.potential / 100);
-					// 	blue = 100 - (neuron.potential / 100);
-					// } else if (neuron.potential > 0) {
-					// 	// calculate
-					// 	red = 100 + (neuron.potential / 100);
-					// 	blue = 100 - (neuron.potential / 100);
-					// } else {
-					// 	red = 100;
-					// 	blue = 100;
-					// }
-
-					// joegenta /= 256; // up to 187
-					// if (joegenta < 120) {
-					// 	red *= (joegenta + 20);
-					// 	red /= 40;
-					// 	blue *= (joegenta + 20);
-					// 	blue /= 40;
-					// }
-					// setLED(red, 0, blue);
-
-					if (neuron.potential > 10000){
-						setLED(200,0,100);
-					} else if (neuron.potential > 0){
-						setLED(neuron.potential / 50, 0, 200 - (neuron.potential / 50));
-					} else if (neuron.potential < -10000){
-						setLED(0,0, 200);
-					} else if (neuron.potential < 0){
-						setLED(200 + (neuron.potential / 50), 0, -1 * neuron.potential / 50);
-					} else{
-						setLED(100,0,150);
+					if (neuron.potential > 10000) {
+						red = 200;
+						blue = 0;
+						// max magenta
+					} else if (neuron.potential < -10000) {
+						// min brightness
+						red = 0;
+						blue = 200;
+					} else if (neuron.potential < 0) {
+						// temp min brightness
+						red = 100 + (neuron.potential / 100);
+						blue = 100 - (neuron.potential / 100);
+					} else if (neuron.potential > 0) {
+						// calculate
+						red = 100 + (neuron.potential / 100);
+						blue = 100 - (neuron.potential / 100);
+					} else {
+						red = 100;
+						blue = 100;
 					}
+
+					joegenta /= 256; // up to 187
+					if (joegenta < 120) {
+						red *= (joegenta + 20);
+						red /= 40;
+						blue *= (joegenta + 20);
+						blue /= 40;
+					}
+					setLED(red, 0, blue);
 
 					// if (neuron.potential > 10000){
 					// 	setLED((neuron.potential / 50), (200 - neuron.potential / 50) / 2, 0);
