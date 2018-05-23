@@ -1,7 +1,7 @@
 (kicad_pcb (version 4) (host pcbnew 4.0.7-e2-6376~58~ubuntu14.04.1)
 
   (general
-    (links 104)
+    (links 101)
     (no_connects 0)
     (area 123.4 55.4 221.257146 138.425)
     (thickness 1.6)
@@ -184,8 +184,6 @@
     (add_net "Net-(U1-Pad26)")
     (add_net "Net-(U1-Pad6)")
     (add_net "Net-(U2-Pad4)")
-    (add_net "Net-(U3-Pad1)")
-    (add_net "Net-(U3-Pad4)")
     (add_net RESET)
     (add_net SWCLK)
     (add_net SWDIO)
@@ -2055,6 +2053,7 @@
   (module KiCad_Footprints:ZF_LED_RGB_SunLED_XZMDKCBDDG45S-9_cast (layer B.Cu) (tedit 58B5B64A) (tstamp 58F6CC6D)
     (at 150 90 180)
     (path /58B4B5D1)
+    (attr smd)
     (fp_text reference D1 (at 0 -2.3 180) (layer Cmts.User)
       (effects (font (size 1 1) (thickness 0.15)))
     )

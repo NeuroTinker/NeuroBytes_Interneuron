@@ -100,7 +100,7 @@
       (mirror false)
       (drillshape 0)
       (scaleselection 1)
-      (outputdirectory ../../../NeuroTinker_RFQ_Sept2017/NeuroBytes_Interneuron/))
+      (outputdirectory ""))
   )
 
   (net 0 "")
