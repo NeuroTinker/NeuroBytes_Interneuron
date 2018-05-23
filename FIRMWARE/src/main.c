@@ -82,13 +82,13 @@ int main(void)
 	neuronInit(&neuron);
 
 	neuron.dendrites[0].magnitude = 15000;
-	neuron.dendrites[1].magnitude = 6000;
-	neuron.dendrites[2].magnitude = 6000;
+	neuron.dendrites[1].magnitude = 7000;
+	neuron.dendrites[2].magnitude = 7000;
 	neuron.dendrites[3].magnitude = 11000;
 
 	neuron.dendrites[0].base_magnitude = 15000;
-	neuron.dendrites[1].base_magnitude = 6000;
-	neuron.dendrites[2].base_magnitude = 6000;
+	neuron.dendrites[1].base_magnitude = 7000;
+	neuron.dendrites[2].base_magnitude = 7000;
 	neuron.dendrites[3].base_magnitude = 11000;
 
 	// initialize communication buffers
@@ -139,9 +139,9 @@ int main(void)
 				lpuart_setup_time += 1;
 			} else if (lpuart_setup_time == LPUART_SETUP_TIME){
 				lpuart_setup_time += 1;
-				// #ifndef DBG
-				// lpuart_setup();
-				// #endif
+				#ifndef DBG
+				lpuart_setup();
+				#endif
 			}
 
 			/*
@@ -213,6 +213,7 @@ int main(void)
 					button_press_time = 0;
 				} else if (button_armed == 1 && nid_i != NO_NID_I){
 					nid_channel = identify_channel;
+					message.message = (((uint32_t) DATA_TYPE_MESSAGE)) | ((const uint16_t) (getFingerprint()));
 					identify_time = 1;
 					button_armed = 0;
 				} else if (button_armed == 2){
@@ -347,7 +348,12 @@ int main(void)
 					neuron.state = INTEGRATE;
 				}
 				if (neuron.learning_state == HEBB){
-					setLED(200,120,200);
+					// needs to vary between 50 and 320
+					joegenta /= 256;
+					joegenta *= 3;
+					joegenta += 100;
+					if (joegenta > 350) joegenta = 350;
+					setLED(joegenta, joegenta, joegenta);
 				} else{
 					LEDFullWhite();
 				}
@@ -380,7 +386,14 @@ int main(void)
 						red /= 40;
 						blue *= (joegenta + 20);
 						blue /= 40;
+					} else {
+						red *= 130;
+						red /= 40;
+						blue *= 130;
+						blue /= 40;
 					}
+					if (red > 300) red = 300;
+					if (blue > 300) blue = 300;
 					setLED(red, 0, blue);
 
 					// if (neuron.potential > 10000){
