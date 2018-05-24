@@ -214,7 +214,7 @@ int main(void)
 				} else if (button_armed == 1 && nid_i != NO_NID_I){
 					nid_channel = identify_channel;
 					message.length = 32;
-					message.message = (((uint32_t) DATA_TYPE_MESSAGE)) | (((uint32_t) nid_channel) << 22));
+					message.message = (((uint32_t) DATA_TYPE_MESSAGE) | (((uint32_t) nid_channel) << 22));
 					message.message |=  ((const uint16_t) (getFingerprint()));
 					addWrite(NID_BUFF, (const message_t) message);
 					identify_time = 1;
@@ -266,7 +266,7 @@ int main(void)
 					}
 					data_time = 0;
 					message.length = 32;
-					message.message |= (nid_channel << 21);
+					message.message |= (nid_channel << 22);
 					addWrite(NID_BUFF,(const message_t) message);
 				}
 			}
