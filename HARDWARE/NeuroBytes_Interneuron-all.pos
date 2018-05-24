@@ -1,0 +1,35 @@
+### Module positions - created on Wed May 23 18:02:02 2018 ###
+### Printed by Pcbnew version kicad 4.0.7-e2-6376~58~ubuntu14.04.1
+## Unit = mm, Angle = deg.
+## Side : All
+# Ref     Val                    Package                                 PosX       PosY       Rot  	Side
+C1        1u0                    C0603                        		38.2000    21.2500  270.0000  bottom
+C2        10u                    C1206                        		28.7000    21.2500  180.0000  bottom
+C3        0u1                    C0402                    		40.4700    16.0000  135.0000  bottom
+C4        1u0                    C0603                        		32.2500    21.2500  270.0000  bottom
+C5        0u1                    C0402                    		48.8000    10.4000    8.0000  bottom
+D1        LED_RABG               4-SMT    				18.9700    12.5000  180.0000  bottom
+P1        JST GH 4-POS           JST_GH_4POS                            18.7000    20.6000   88.0000  bottom
+P2        JST GH 4-POS           JST_GH_4POS                             2.9000    20.5000  180.0000  bottom
+P3        JST GH 4-POS           JST_GH_4POS                             6.0000     6.0000  225.0000  bottom
+P4        JST GH 4-POS           JST_GH_4POS                            18.7000     3.3000  277.0000  bottom
+P5        JST GH 4-POS           JST_GH_4POS                            55.6000    10.5000    0.0000  bottom
+P6        JST GH 4-POS           JST_GH_4POS                            43.7000    21.8000   95.0000  bottom
+P7        JST GH 4-POS           JST_GH_4POS                            52.5000    19.0000   45.0000  bottom
+P8        JST_GH_5-pos           JST_GH_5POS                       	44.8000     8.0000  278.0000  bottom
+Q1        MMBT3904               SOT23-3L                               25.5000    10.0000   90.0000  bottom
+Q2        MMBT3904               SOT23-3L                               28.5000    12.5000   90.0000  bottom
+Q3        MMBT3904               SOT23-3L                               22.5000     7.5000   90.0000  bottom
+R1        150                    R0402                        		24.0000    12.5000    0.0000  bottom
+R2        100                    R0402                        		24.0000    13.5000    0.0000  bottom
+R3        100                    R0402                        		14.4700    12.5000   90.0000  bottom
+R4        JMP                    R0402                        		33.7000     9.9000   90.0000  bottom
+R5        1k                     R0402                        		29.0000    10.0000    0.0000  bottom
+R6        1k                     R0402                        		32.0000    12.5000    0.0000  bottom
+R7        1k                     R0402                        		26.1000     7.5000    0.0000  bottom
+REF**     ZF_Fiducial-1mm        Fiducial-1mm                           11.8700     3.4000    0.0000  bottom
+REF**     ZF_Fiducial-1mm        Fiducial-1mm                           24.7000    19.2000    0.0000  bottom
+SW1       SW_PUSH_TL3330AF130QG  4-SMT                   		32.7000     4.9000  192.0000  bottom
+U1        STM32L011Gx            UFQFPN28-050                        	37.9700    12.5000  135.0000  bottom
+U2        TLV702                 SOT23-5L                               35.2000    21.2500  270.0000  bottom
+## End

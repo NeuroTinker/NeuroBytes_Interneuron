@@ -1,18 +1,4 @@
-Title,NeuroBytes Interneuron
-Revision,C
-Date,2017-05-15
-Generated,Thu 21 Sep 2017 04:38:36 PM CDT
-Company,NeuroTinker, LLC
-Comment 1,License: GPL v3
-Comment 2,
-Comment 3,
-Comment 4,
-Total Parts,27
-Total Unique Parts,14
-
-
-
-Ref,Qty,Value,Link,Mfr,Mfr Part #,Package,RoHS,Subs Allowed,
+Ref,Qty,Value,Link,Mfr,Mfr Part #,Package,RoHS,Subs Allowed
 C3 C5 ,2,0u1,https://www.digikey.com/product-detail/en/taiyo-yuden/LMK105BJ104KV-F/587-1227-2-ND/930579,Taiyo Yuden,LMK105BJ104KV-F,C0402,Yes,Yes
 C1 C4 ,2,1u0,https://www.digikey.com/product-detail/en/taiyo-yuden/LMK107B7105KA-T/587-1242-2-ND/930594,Taiyo Yuden,LMK107B7105KA-T,C0603,Yes,Yes
 C2 ,1,10u,https://www.digikey.com/product-detail/en/taiyo-yuden/EMK316B7106KL-TD/587-2395-2-ND/2178914,Taiyo Yuden,EMK316B7106KL-TD ,C1206,Yes,Yes
@@ -27,9 +13,9 @@ R5 R6 R7 ,3,1k,https://www.digikey.com/product-detail/en/yageo/RC0402FR-071KL/31
 SW1 ,1,SW_PUSH_TL3330AF130QG,https://www.digikey.com/product-detail/en/e-switch/TL3330AF130QG/EG4388TR-ND/1426835,E-Switch,TL3330AF130QG,SMT,Yes,No
 U1 ,1,STM32L011Gx,http://www.mouser.com/ProductDetail/STMicroelectronics/STM32L011G4U6/?qs=sGAEpiMZZMuoKKEcg8mMKFZaGHZhaFFC%252b5Ex1OjcSxhBnExI6VEL3Q%3d%3d,ST Microelectronics,STM32L011G4U6,28-UFQFN,Yes,No
 U2 ,1,TLV702,https://www.digikey.com/product-detail/en/on-semiconductor/NCP114BSN330T1G/NCP114BSN330T1GOSTR-ND/6560606,ON Semiconductor,NCP114BSN330T1G,SOT-23-5,Yes,Yes
-
-
-
-
-BOM made with KICAD_BOM_WIZARD (https://github.com/HashDefineElectronics/KiCad_BOM_Wizard.git)
-Generated Thu 21 Sep 2017 04:38:36 PM CDT
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
+BOM made with KICAD_BOM_WIZARD (https://github.com/HashDefineElectronics/KiCad_BOM_Wizard.git),,,,,,,,
+Generated Wed 23 May 2018 02:46:01 PM CDT,,,,,,,,
