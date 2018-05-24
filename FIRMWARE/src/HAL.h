@@ -101,7 +101,6 @@ typedef struct{
 extern volatile uint8_t main_tick;
 extern volatile uint8_t tick;
 static const uint16_t gamma_lookup[1024];
-static const uint16_t device_id[4];
 
 void systick_setup(void);
 void clock_setup(void);
@@ -112,7 +111,7 @@ void LEDFullWhite(void);
 void setLED(uint16_t r, uint16_t g, uint16_t b);
 void setAsInput(uint32_t port, uint32_t pin);
 void setAsOutput(uint32_t port, uint32_t pin);
-const uint16_t * getFingerprint(void);
+const uint16_t getFingerprint(void);
 
 
 #endif

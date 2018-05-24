@@ -416,9 +416,9 @@ void setLED(uint16_t r, uint16_t g, uint16_t b)
 	}
 }
 
-const uint16_t * getFingerprint(void)
+const uint16_t getFingerprint(void)
 {
-	return device_id;
+	return fingerprint[0];
 }
 
 

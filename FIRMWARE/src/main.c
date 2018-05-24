@@ -213,7 +213,10 @@ int main(void)
 					button_press_time = 0;
 				} else if (button_armed == 1 && nid_i != NO_NID_I){
 					nid_channel = identify_channel;
-					message.message = (((uint32_t) DATA_TYPE_MESSAGE)) | ((const uint16_t) (getFingerprint()));
+					message.length = 32;
+					message.message = (((uint32_t) DATA_TYPE_MESSAGE)) | (((uint32_t) nid_channel) << 22));
+					message.message |=  ((const uint16_t) (getFingerprint()));
+					addWrite(NID_BUFF, (const message_t) message);
 					identify_time = 1;
 					button_armed = 0;
 				} else if (button_armed == 2){
