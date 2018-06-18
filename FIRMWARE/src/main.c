@@ -29,6 +29,11 @@
 #define	MAX_ZACHNESS		64
 #define MIN_ZACHNESS		32
 
+enum {
+	BLINK	=	0b0000,
+	PAUSE	=	0b0001,
+
+}
 
 typedef enum{
 	DECAY 		=	0b0000,
@@ -399,23 +404,6 @@ int main(void)
 					if (blue > 300) blue = 300;
 					setLED(red, 0, blue);
 
-					// if (neuron.potential > 10000){
-					// 	setLED((neuron.potential / 50), (200 - neuron.potential / 50) / 2, 0);
-					// } else{
-					// 	/* joegenta can be up to 12000 */
-					// 	joegenta /= 64; /* joegenta up to 187 */
-					// 	if (joegenta > 140){
-					// 		setLED(180,0,180);
-					// 	} else if (joegenta > 0){
-					// 		setLED(40 + joegenta, 0, 40 + joegenta);
-					// 	} else if (joegenta < -10000){
-					// 		setLED(40,0, 40);
-					// 	} else if (joegenta < 0){
-					// 		setLED(40, 0, 40);
-					// 	} else{
-					// 		setLED(40,0,40);
-					// 	}
-					// }
 				} else{
 					if (neuron.potential > 10000){
 						setLED(200,0,0);
