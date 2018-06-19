@@ -29,11 +29,10 @@
 #define	MAX_ZACHNESS		64
 #define MIN_ZACHNESS		32
 
-enum {
+typedef enum {
 	BLINK	=	0b0000,
-	PAUSE	=	0b0001,
-
-}
+	PAUSE	=	0b0001
+} command_id;
 
 typedef enum{
 	DECAY 		=	0b0000,
