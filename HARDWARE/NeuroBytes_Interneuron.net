@@ -1,7 +1,7 @@
 (export (version D)
   (design
     (source /home/zach/Documents/NeuroTinker/Products/NeuroBytes_Interneuron/HARDWARE/NeuroBytes_Interneuron.sch)
-    (date "Wed 23 May 2018 02:45:59 PM CDT")
+    (date "Wed 08 Aug 2018 02:31:19 PM CDT")
     (tool "Eeschema 4.0.7-e2-6376~58~ubuntu14.04.1")
     (sheet (number 1) (name /) (tstamps /)
       (title_block
@@ -82,7 +82,7 @@
       (tstamp 58B5C9D0))
     (comp (ref C1)
       (value 1u0)
-      (footprint KiCad_Footprints:ZF_SMD_NonPol_0603)
+      (footprint Capacitors_SMD:C_0603_HandSoldering)
       (fields
         (field (name Mfr) "Taiyo Yuden")
         (field (name "Mfr Part #") LMK107B7105KA-T)
@@ -355,7 +355,7 @@
       (tstamp 59C44052))
     (comp (ref C4)
       (value 1u0)
-      (footprint KiCad_Footprints:ZF_SMD_NonPol_0603)
+      (footprint Capacitors_SMD:C_0603_HandSoldering)
       (fields
         (field (name Mfr) "Taiyo Yuden")
         (field (name "Mfr Part #") LMK107B7105KA-T)
@@ -510,10 +510,10 @@
         (pin (num 1) (name 1) (type passive))
         (pin (num 2) (name 2) (type passive)))))
   (libraries
-    (library (logical device)
-      (uri /usr/share/kicad/library/device.lib))
     (library (logical transistors)
       (uri /usr/share/kicad/library/transistors.lib))
+    (library (logical device)
+      (uri /usr/share/kicad/library/device.lib))
     (library (logical NeuroTinker_schematic_symbols)
       (uri /home/zach/Documents/NeuroTinker/Products/NeuroBytes_Interneuron/HARDWARE/NeuroBytes_Schematic_Lib/NeuroTinker_schematic_symbols.lib))
     (library (logical NeuroBytes_Interneuron-cache)
